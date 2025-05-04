@@ -4,7 +4,7 @@ const gsmarena = require("gsmarena-api");
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function scrapeGsmarena(query, retries = 5, delayMs = 2000) {
-    console.log(`[Scraper] Starting search for query: ${query} using gsmarena-api (Attempt ${4 - retries})`);
+    console.log(`[Scraper] Starting search for query: ${query} using gsmarena-api (Attempt ${6 - retries})`); // Adjusted retry count log
     try {
         // Search for devices first to get the device ID
         const devices = await gsmarena.search.search(query);
