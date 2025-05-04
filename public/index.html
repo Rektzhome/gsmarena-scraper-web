@@ -529,9 +529,48 @@
                                     <h3 class="text-base font-semibold mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">${category}</h3>
                                     <ul class="text-sm space-y-1">`;
                     for (const key in data[category]) {
-                        content += `<li class="flex justify-between items-start">
-                                        <span class="font-medium text-gray-600 dark:text-gray-400 mr-2">${key}:</span>
-                                        <span class="text-right">${data[category][key]}</span>
+                        let value = data[category][key];
+                        let displayValue;
+
+                        if (typeof value === 'object' && value !== null) {
+                            if (Array.isArray(value)) {
+                                // Handle arrays (like detailSpec, quickSpec)
+                                displayValue = '<ul class="list-disc list-inside pl-4 mt-1 space-y-1 text-left">'; // Align left for readability
+                                value.forEach(item => {
+                                    if (typeof item === 'object' && item !== null) {
+                                        // Assuming items are objects like { key: '...', value: '...' } or similar structure
+                                        displayValue += '<li>';
+                                        if (item.key && item.value) { // Specific check for key/value structure
+                                            displayValue += `<span class="font-semibold">${item.key}:</span> ${item.value}`;
+                                        } else { // Generic object display within array
+                                            let itemParts = [];
+                                            for (const subKey in item) {
+                                                itemParts.push(`<span class="font-semibold">${subKey}:</span> ${item[subKey]}`);
+                                            }
+                                            displayValue += itemParts.join(', ');
+                                        }
+                                        displayValue += '</li>';
+                                    } else {
+                                        displayValue += `<li>${item}</li>`; // Handle simple array items
+                                    }
+                                });
+                                displayValue += '</ul>';
+                            } else {
+                                // Handle plain objects
+                                displayValue = '<ul class="list-disc list-inside pl-4 mt-1 space-y-1 text-left">'; // Align left
+                                 for (const subKey in value) {
+                                     displayValue += `<li><span class="font-semibold">${subKey}:</span> ${value[subKey]}</li>`;
+                                 }
+                                 displayValue += '</ul>';
+                            }
+                        } else {
+                            displayValue = value; // Simple value (string, number, etc.)
+                        }
+
+                        // Use flex-col for better alignment when value is complex
+                        content += `<li class="flex flex-col items-start py-1">
+                                        <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">${key}:</span>
+                                        <div class="text-left w-full pl-2 text-gray-600 dark:text-gray-400">${displayValue}</div>
                                     </li>`;
                     }
                     content += `    </ul>
