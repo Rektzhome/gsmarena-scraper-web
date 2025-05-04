@@ -1,12 +1,14 @@
 diff --git a/node_modules/gsmarena-api/src/services/catalog.js b/node_modules/gsmarena-api/src/services/catalog.js
-index 4566131..2a3dca1 100644
+index 4566131..08656ce 100644
 --- a/node_modules/gsmarena-api/src/services/catalog.js
 +++ b/node_modules/gsmarena-api/src/services/catalog.js
-@@ -86,7 +86,7 @@ const getDevice = async (device) => {
+@@ -85,8 +85,8 @@ const getDevice = async (device) => {
+     quickSpec.push({ name: 'Battery size', value: batterySize });
      quickSpec.push({ name: 'Battery type', value: batteryType });
  
-     const name = $('.specs-phone-name-title').text();
+-    const name = $('.specs-phone-name-title').text();
 -    const img = $('.specs-photo-main a img').attr('src');
++    const name = $("h1.section.nobor").text(); // Updated selector based on mobile HTML
 +    const img = $(".specs-cp-pic-rating img").attr("src"); // Updated selector based on screenshot
  
      const specNode = $('table');
