@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<!-- Set lang="id" for Indonesian language -->
+<html lang="id" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencarian Ponsel GSMArena</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Poppins) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Alpine.js for simple interactions (like carousel) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        // Configure Tailwind CSS
+        tailwind.config = {
+            darkMode: 'class', // Enable class-based dark mode
+            theme: {
+                extend: {
+                    fontFamily: {
+                        // Set Poppins as the default sans-serif font
+                        sans: ["Poppins", "sans-serif"],
+                    },
+                    colors: {
+                        ios: {
+                            blue: '#007AFF',
+                            gray: {
+                                100: '#F2F2F7',
+                                200: '#E5E5EA',
+                                300: '#D1D1D6',
+                                400: '#C7C7CC',
+                                500: '#AEAEB2',
+                                600: '#8E8E93',
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Basic scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        /* Hide scrollbar visually but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Style for the modal */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal.hidden .modal-content {
+            transform: scale(0.95);
+        }
+
+        /* Simple spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #007AFF; /* iOS blue */
+            animation: spin 1s ease infinite;
+        }
+        .dark .spinner {
+             border: 4px solid rgba(255, 255, 255, 0.1);
+             border-left-color: #007AFF;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modern Spinner */
+        .modern-spinner {
+          display: inline-block;
+          position: relative;
+          width: 60px;
+          height: 60px;
+        }
+        .modern-spinner div {
+          box-sizing: border-box;
+          display: block;
+          position: absolute;
+          width: 48px;
+          height: 48px;
+          margin: 6px;
+          border: 4px solid #007AFF;
+          border-radius: 50%;
+          animation: modern-spinner-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          border-color: #007AFF transparent transparent transparent;
+        }
+        .dark .modern-spinner div {
+          border-color: #007AFF transparent transparent transparent;
+        }
+        .modern-spinner div:nth-child(1) { animation-delay: -0.45s; }
+        .modern-spinner div:nth-child(2) { animation-delay: -0.3s; }
+        .modern-spinner div:nth-child(3) { animation-delay: -0.15s; }
+        @keyframes modern-spinner-anim {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* Carousel card width */
+        .carousel-card {
+            width: 180px; /* Adjust as needed */
+            flex-shrink: 0;
+        }
+
+        /* Ensure sticky elements work correctly */
+        body {
+            padding-top: 4rem; /* Adjust based on navbar height */
+        }
+        /* Animation for blobs */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+
+        /* Animation for header text */
+        @keyframes fade-in-scale {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in-scale {
+            animation: fade-in-scale 0.8s ease-out forwards;
+        }
+
+        /* Animations for Complex Header */
+        @keyframes slide-in-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-in-up {
+            animation: slide-in-up 0.6s ease-out forwards;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .animation-delay-200 {
+            animation-delay: 0.2s;
+        }
+        .animation-delay-1000 {
+            animation-delay: 1s;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased pt-24"> <!-- Increased padding-top -->
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Title -->
+                <div class="flex-shrink-0 flex items-center">
+                    <!-- Placeholder SVG Logo -->
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+                    </svg>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>
+                </div>
+                <!-- Dark Mode Toggle -->
+                <div class="flex items-center">
+                    <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue">
+                        <!-- Sun icon -->
+                        <svg id="icon-sun" class="h-6 w-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12h2.25m.386-6.364l1.591 1.591" />
+                        </svg>
+                        <!-- Moon icon -->
+                        <svg id="icon-moon" class="h-6 w-6 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- New Complex Header -->
+        <section id="complex-header" class="mb-12 relative overflow-hidden rounded-xl" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
+            <div class="h-64 md:h-80 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center relative">
+                <!-- Subtle background pattern -->
+                <div class="absolute inset-0 opacity-5 dark:opacity-10" style="background-image: radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, transparent 0.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px;"></div>
+
+                <div class="text-center z-10 px-4">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight leading-tight animate-slide-in-up">
+                        <span class="text-blue-600">Hp</span>Gaul Explorer
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-xl mx-auto animate-slide-in-up animation-delay-200">
+                        Temukan, Bandingkan, Kuasai. Spesifikasi ponsel terlengkap di ujung jarimu.
+                    </p>
+                </div>
+
+                <!-- Floating elements example (optional, requires more JS/CSS for complex animation) -->
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-200 dark:bg-blue-900 rounded-full filter blur-2xl opacity-50 animate-pulse-slow"></div>
+                <div class="absolute -top-10 -right-10 w-52 h-52 bg-purple-200 dark:bg-purple-900 rounded-full filter blur-2xl opacity-50 animate-pulse-slow animation-delay-1000"></div>
+            </div>
+            <!-- Add a subtle shadow/border that appears on scroll -->
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-t from-gray-200 dark:from-gray-700 transition-opacity duration-300" :class="{ 'opacity-100': scrolled, 'opacity-0': !scrolled }"></div>
+        </section>
+
+        <!-- Search Section -->
+        <section id="search-section-container" class="mb-12 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">Cari Spesifikasi Ponsel</h2>
+            <div class="mb-4">
+                <label for="search-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Masukkan Nama Ponsel</label>
+                <div class="flex rounded-md shadow-sm">
+                    <input type="text" id="search-input" class="flex-1 block w-full rounded-none rounded-l-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:border-ios-blue focus:ring-ios-blue sm:text-sm px-4 py-2" placeholder="Contoh: Samsung Galaxy S24 Ultra">
+                    <button id="search-button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-ios-blue hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue disabled:opacity-50 disabled:cursor-not-allowed">
+                        <!-- Search Icon -->
+                        <svg class="h-5 w-5 mr-2 hidden sm:inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                        Cari
+                    </button>
+                </div>
+            </div>
+            <!-- Loading Spinner (Modernized) -->
+            <div id="loading" class="text-center py-6 hidden">
+                <div class="modern-spinner mx-auto"><div></div><div></div><div></div><div></div></div>
+                <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Mencari data... Proses ini mungkin memerlukan waktu.</p>
+            </div>
+            <!-- Results Area (Moved inside search section) -->
+            <section id="results-section" class="hidden mt-6">
+                 <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Hasil Pencarian</h2>
+                 <div id="results" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Search results will be populated here -->
+                 </div>
+            </section>
+            <!-- Error Message Area (Moved inside search section) -->
+            <div id="error-message" class="text-center py-6 hidden">
+                <p class="text-red-600 dark:text-red-400 font-medium"></p>
+            </div>
+        </section>
+
+        <!-- Carousel Sections -->
+        <section class="mb-12">
+            <h2 class="text-lg font-semibold mb-4 text-white bg-blue-600 dark:bg-blue-700 px-3 py-1.5 rounded-lg inline-flex items-center"><span class="mr-2">📱</span>Populer Saat Ini</h2>
+            <div id="carousel-popular" class="flex overflow-x-auto space-x-4 p-1 no-scrollbar">
+                <!-- Popular phone cards will be populated here -->
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-lg font-semibold mb-4 text-white bg-blue-600 dark:bg-blue-700 px-3 py-1.5 rounded-lg inline-flex items-center"><span class="mr-2">🔥</span>Sedang Trending</h2>
+            <div id="carousel-trending" class="flex overflow-x-auto space-x-4 p-1 no-scrollbar">
+                <!-- Trending phone cards will be populated here -->
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-lg font-semibold mb-4 text-white bg-blue-600 dark:bg-blue-700 px-3 py-1.5 rounded-lg inline-flex items-center"><span class="mr-2">✨</span>Baru Diluncurkan</h2>
+            <div id="carousel-new" class="flex overflow-x-auto space-x-4 p-1 no-scrollbar">
+                <!-- New phone cards will be populated here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            &copy; 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>. Ditenagai oleh data dari GSMArena.
+        </div>
+    </footer>
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+                <h2 id="modal-title" class="text-lg font-semibold">Detail Ponsel</h2>
+                <button id="modal-close-button" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div id="modal-body" class="p-6">
+                <!-- Phone details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Placeholder Data for Carousels ---
+        const popularPhones = [
+            { name: "Samsung Galaxy S24", img: "https://images.samsung.com/is/image/samsung/p6pim/id/2401/gallery/id-galaxy-s24-sm-s921bzkcxid-539294435?imbypass=true", specs: "Snapdragon 8 Gen 3" },
+            { name: "iPhone 15 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro.jpg", specs: "Apple A17 Bionic" },
+            { name: "Google Pixel 8 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8-pro.jpg", specs: "Google Tensor G3" },
+            { name: "Xiaomi 14", img: "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-14.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "OnePlus 12", img: "https://fdn2.gsmarena.com/vv/bigpic/oneplus-12.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "Asus ROG Phone 8", img: "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8-pro.jpg", specs: "Snapdragon 8 Gen 3" }
+        ];
+        const trendingPhones = [
+            { name: "Nothing Phone (2a)", img: "https://fdn2.gsmarena.com/vv/bigpic/nothing-phone-2a.jpg", specs: "Dimensity 7200 Pro" },
+            { name: "Poco X6 Pro", img: "https://i02.appmifile.com/341_item_id/19/01/2024/d07509b0b1fff33979066174116dc4ad!800x800!85.png", specs: "Dimensity 8300 Ultra" },
+            { name: "Realme 12 Pro+", img: "https://fdn2.gsmarena.com/vv/bigpic/realme-12-pro-plus.jpg", specs: "Snapdragon 7s Gen 2" },
+            { name: "Infinix Note 40 Pro", img: "/static/infinix_note_40_pro.jpeg", specs: "Dimensity 7020" },
+            { name: "Motorola Edge 50 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/motorola-edge-50-pro.jpg", specs: "Snapdragon 7 Gen 3" }
+        ];
+        const newPhones = [
+            { name: "Vivo X100 Ultra", img: "https://fdn2.gsmarena.com/vv/bigpic/vivo-x100-ultra.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "Huawei Pura 70 Ultra", img: "https://fdn2.gsmarena.com/vv/bigpic/huawei-pura70-ultra.jpg", specs: "Kirin 9010" },
+            { name: "Sony Xperia 1 VI", img: "https://fdn2.gsmarena.com/vv/bigpic/sony-xperia-1-vi.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "ZTE Nubia Flip", img: "/static/zte_nubia_flip.jpeg", specs: "Snapdragon 7 Gen 1" },
+            { name: "Oppo Reno12 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/oppo-reno12-pro-cn.jpg", specs: "Dimensity 9200+" }
+        ];
+
+        // --- DOM Elements ---
+        const searchInput = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-button");
+        const loadingDiv = document.getElementById("loading");
+        const resultsDiv = document.getElementById("results");
+        const resultsSection = document.getElementById("results-section");
+        const errorMessageDiv = document.getElementById("error-message");
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+        const htmlElement = document.documentElement;
+        const modal = document.getElementById("modal");
+        const modalTitle = document.getElementById("modal-title");
+        const modalBody = document.getElementById("modal-body");
+        const modalCloseButton = document.getElementById("modal-close-button");
+        const carouselPopular = document.getElementById("carousel-popular");
+        const carouselTrending = document.getElementById("carousel-trending");
+        const carouselNew = document.getElementById("carousel-new");
+
+        // --- Dark Mode Logic ---
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+        darkModeToggle.addEventListener("click", () => {
+            htmlElement.classList.toggle('dark');
+            localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+        });
+
+        // --- Modal Logic ---
+        function openModal() {
+            modal.classList.remove("hidden");
+        }
+        function closeModal() {
+            modal.classList.add("hidden");
+            modalBody.innerHTML = '';
+            modalTitle.textContent = 'Detail Ponsel';
+        }
+        modalCloseButton.addEventListener("click", closeModal);
+        modal.addEventListener("click", (event) => {
+            if (event.target === modal) closeModal();
+        });
+
+        // --- Carousel Population Logic ---
+        function createCarouselCard(phone) {
+            const card = document.createElement("div");
+            card.className = "carousel-card bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200 p-3 text-center";
+            card.innerHTML = `
+                <div class="p-3 flex flex-col items-center flex-grow">
+                    <img src="${phone.img || 'https://via.placeholder.com/100x120?text=N/A'}" alt="${phone.name}" class="w-full h-24 mx-auto mb-2 object-contain"> <!-- Ensure image displays -->
+                    <h3 class="text-sm font-semibold truncate w-full mt-1">${phone.name}</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate w-full">${phone.specs || ''}</p>
+                </div>
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 text-center text-xs text-ios-blue font-medium">
+                    Lihat Detail
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                searchInput.value = phone.name;
+                performSearch();
+                document.getElementById('search-section-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            return card;
+        }
+
+        function populateCarousel(container, phones) {
+            container.innerHTML = ''; // Clear existing
+            phones.forEach(phone => {
+                container.appendChild(createCarouselCard(phone));
+            });
+        }
+
+        populateCarousel(carouselPopular, popularPhones);
+        populateCarousel(carouselTrending, trendingPhones);
+        populateCarousel(carouselNew, newPhones);
+
+        // --- Search & Display Logic ---
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            if (!query) {
+                displayError("Silakan masukkan nama ponsel untuk dicari.");
+                return;
+            }
+
+            resultsDiv.innerHTML = "";
+            resultsSection.classList.add("hidden");
+            errorMessageDiv.classList.add("hidden");
+            loadingDiv.classList.remove("hidden");
+            searchButton.disabled = true;
+            searchInput.disabled = true;
+
+            try {
+                const response = await fetch(`/api/scrape?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                }
+
+                if (data.error) {
+                     displayError(data.error);
+                } else {
+                    displayResultsAsCard(data);
+                    resultsSection.classList.remove("hidden");
+                }
+
+            } catch (error) {
+                console.error("Search failed:", error);
+                displayError(`Pencarian gagal: ${error.message}`);
+            } finally {
+                loadingDiv.classList.add("hidden");
+                searchButton.disabled = false;
+                searchInput.disabled = false;
+            }
+        }
+
+        function displayResultsAsCard(data) {
+            resultsDiv.innerHTML = "";
+            errorMessageDiv.classList.add("hidden");
+
+            const card = document.createElement("div");
+            card.className = "col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200 flex flex-col";
+            card.addEventListener('click', () => showDetailsInModal(data));
+
+            let imageUrl = data["Image URL"] || 'https://via.placeholder.com/150?text=No+Image';
+            let phoneName = data["Phone Name"] || "Nama Tidak Diketahui";
+            let displayInfo = data["Display"]?.Size || "N/A";
+            let cameraInfo = data["Main Camera"]?.Triple?.split(',')[0] || data["Main Camera"]?.Single || "N/A";
+            let batteryInfo = data["Battery"]?.Type || "N/A";
+
+            card.innerHTML = `
+                <div class="p-4 flex flex-col items-center flex-grow"> 
+                    <!-- Image container with centering -->
+                    <div class="w-full flex justify-center mb-4">
+                        <img src="${imageUrl || 'https://via.placeholder.com/150x180?text=N/A'}" alt="${phoneName}" class="w-full h-32 object-contain"> <!-- Ensure image displays -->
+                    </div>
+                    <h3 class="text-lg font-semibold text-center mb-2 truncate w-full">${phoneName}</h3>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 text-center">
+                        <p>Layar: ${displayInfo}</p>
+                        <p>Kamera: ${cameraInfo}</p>
+                        <p>Baterai: ${batteryInfo}</p>
+                    </div>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 text-center text-sm text-ios-blue font-medium">
+                    Lihat Detail
+                </div>
+            `;
+            resultsDiv.appendChild(card);
+        }
+
+        function showDetailsInModal(data) {
+            modalTitle.textContent = data["Phone Name"] || "Detail Ponsel";
+            modalBody.innerHTML = '';
+
+            let content = '';
+            if (data["Image URL"]) {
+                content += `<img src="${data["Image URL"]}" alt="${data["Phone Name"] || "Phone Image"}" class="max-w-[150px] float-right ml-4 mb-4 rounded-lg border border-gray-200 dark:border-gray-700 p-1">`;
+            }
+
+            for (const category in data) {
+                if (category !== "Phone Name" && category !== "Image URL" && typeof data[category] === 'object' && data[category] !== null && Object.keys(data[category]).length > 0) {
+                    content += `<div class="mb-6 clear-both">
+                                    <h3 class="text-base font-semibold mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">${category}</h3>
+                                    <ul class="text-sm space-y-1">`;
+                    for (const key in data[category]) {
+                        content += `<li class="flex justify-between items-start">
+                                        <span class="font-medium text-gray-600 dark:text-gray-400 mr-2">${key}:</span>
+                                        <span class="text-right">${data[category][key]}</span>
+                                    </li>`;
+                    }
+                    content += `    </ul>
+                               </div>`;
+                }
+            }
+            modalBody.innerHTML = content || '<p>Tidak ada detail spesifikasi yang ditemukan.</p>';
+            openModal();
+        }
+
+        function displayError(message) {
+            resultsDiv.innerHTML = "";
+            resultsSection.classList.add("hidden");
+            errorMessageDiv.innerHTML = `<p>${message}</p>`;
+            errorMessageDiv.classList.remove("hidden");
+        }
+
+        // --- Event Listeners ---
+        searchButton.addEventListener("click", performSearch);
+        searchInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                performSearch();
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+
+
