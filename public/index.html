@@ -440,6 +440,13 @@
         populateCarousel(carouselTrending, trendingPhones);
         populateCarousel(carouselNew, newPhones);
 
+        // --- Helper function to get spec value ---
+        function getSpecValue(detailSpec, categoryName, specKey) {
+            const category = detailSpec?.find(cat => cat.category === categoryName);
+            const spec = category?.specifications?.find(sp => sp.key === specKey);
+            return spec?.value || "N/A";
+        }
+
         // --- Search & Display Logic ---
         async function performSearch() {
             const query = searchInput.value.trim();
@@ -488,11 +495,14 @@
             card.className = "col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200 flex flex-col";
             card.addEventListener('click', () => showDetailsInModal(data));
 
-            let imageUrl = data["Image URL"] || 'https://via.placeholder.com/150?text=No+Image';
-            let phoneName = data["Phone Name"] || "Nama Tidak Diketahui";
-            let displayInfo = data["Display"]?.Size || "N/A";
-            let cameraInfo = data["Main Camera"]?.Triple?.split(',')[0] || data["Main Camera"]?.Single || "N/A";
-            let batteryInfo = data["Battery"]?.Type || "N/A";
+            // Use correct keys based on assumed API response structure
+            let imageUrl = data.img || 'https://via.placeholder.com/150?text=No+Image';
+            let phoneName = data.name || "Nama Tidak Diketahui";
+            let displayInfo = getSpecValue(data.detailSpec, "Display", "Size");
+            // Try to get main camera spec (e.g., Triple or Single)
+            let cameraSpec = data.detailSpec?.find(cat => cat.category === "Main Camera")?.specifications?.[0];
+            let cameraInfo = cameraSpec?.value || "N/A"; // Use the value of the first spec in Main Camera
+            let batteryInfo = getSpecValue(data.detailSpec, "Battery", "Type");
 
             card.innerHTML = `
                 <div class="p-4 flex flex-col items-center flex-grow"> 
@@ -515,68 +525,44 @@
         }
 
         function showDetailsInModal(data) {
-            modalTitle.textContent = data["Phone Name"] || "Detail Ponsel";
+            modalTitle.textContent = data.name || "Detail Ponsel"; // Use data.name
             modalBody.innerHTML = '';
 
             let content = '';
-            if (data["Image URL"]) {
-                content += `<img src="${data["Image URL"]}" alt="${data["Phone Name"] || "Phone Image"}" class="max-w-[150px] float-right ml-4 mb-4 rounded-lg border border-gray-200 dark:border-gray-700 p-1">`;
+            if (data.img) { // Use data.img
+                content += `<img src="${data.img}" alt="${data.name || "Phone Image"}" class="max-w-[150px] float-right ml-4 mb-4 rounded-lg border border-gray-200 dark:border-gray-700 p-1">`;
             }
 
-            for (const category in data) {
-                if (category !== "Phone Name" && category !== "Image URL" && typeof data[category] === 'object' && data[category] !== null && Object.keys(data[category]).length > 0) {
-                    content += `<div class="mb-6 clear-both">
-                                    <h3 class="text-base font-semibold mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">${category}</h3>
-                                    <ul class="text-sm space-y-1">`;
-                    for (const key in data[category]) {
-                        let value = data[category][key];
-                        let displayValue;
-
-                        if (typeof value === 'object' && value !== null) {
-                            if (Array.isArray(value)) {
-                                // Handle arrays (like detailSpec, quickSpec)
-                                displayValue = '<ul class="list-disc list-inside pl-4 mt-1 space-y-1 text-left">'; // Align left for readability
-                                value.forEach(item => {
-                                    if (typeof item === 'object' && item !== null) {
-                                        // Assuming items are objects like { key: '...', value: '...' } or similar structure
-                                        displayValue += '<li>';
-                                        if (item.key && item.value) { // Specific check for key/value structure
-                                            displayValue += `<span class="font-semibold">${item.key}:</span> ${item.value}`;
-                                        } else { // Generic object display within array
-                                            let itemParts = [];
-                                            for (const subKey in item) {
-                                                itemParts.push(`<span class="font-semibold">${subKey}:</span> ${item[subKey]}`);
-                                            }
-                                            displayValue += itemParts.join(', ');
-                                        }
-                                        displayValue += '</li>';
-                                    } else {
-                                        displayValue += `<li>${item}</li>`; // Handle simple array items
-                                    }
-                                });
-                                displayValue += '</ul>';
+            // Iterate through detailSpec array if it exists
+            if (Array.isArray(data.detailSpec)) {
+                data.detailSpec.forEach(categoryData => {
+                    if (categoryData.category && Array.isArray(categoryData.specifications)) {
+                        content += `<div class="mb-6 clear-both">
+                                        <h3 class="text-base font-semibold mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">${categoryData.category}</h3>
+                                        <ul class="text-sm space-y-1">`;
+                        categoryData.specifications.forEach(spec => {
+                            if (spec.key && spec.value) {
+                                // Use flex-col for better alignment when value is complex
+                                content += `<li class="flex flex-col items-start py-1">
+                                                <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">${spec.key}:</span>
+                                                <div class="text-left w-full pl-2 text-gray-600 dark:text-gray-400">${spec.value}</div>
+                                            </li>`;
                             } else {
-                                // Handle plain objects
-                                displayValue = '<ul class="list-disc list-inside pl-4 mt-1 space-y-1 text-left">'; // Align left
-                                 for (const subKey in value) {
-                                     displayValue += `<li><span class="font-semibold">${subKey}:</span> ${value[subKey]}</li>`;
-                                 }
-                                 displayValue += '</ul>';
+                                // Fallback for unexpected spec format within array
+                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">${JSON.stringify(spec)}</li>`;
                             }
-                        } else {
-                            displayValue = value; // Simple value (string, number, etc.)
-                        }
-
-                        // Use flex-col for better alignment when value is complex
-                        content += `<li class="flex flex-col items-start py-1">
-                                        <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">${key}:</span>
-                                        <div class="text-left w-full pl-2 text-gray-600 dark:text-gray-400">${displayValue}</div>
-                                    </li>`;
+                        });
+                        content += `    </ul>
+                                   </div>`;
                     }
-                    content += `    </ul>
-                               </div>`;
-                }
+                });
+            } else {
+                 // Fallback if detailSpec is not an array or missing
+                 content += '<p>Struktur detail spesifikasi tidak sesuai format yang diharapkan.</p>';
+                 // Optionally display raw data for debugging
+                 // content += '<pre class="text-xs whitespace-pre-wrap break-all">'+JSON.stringify(data, null, 2)+'</pre>';
             }
+
             modalBody.innerHTML = content || '<p>Tidak ada detail spesifikasi yang ditemukan.</p>';
             openModal();
         }
@@ -597,8 +583,6 @@
         });
 
     </script>
-
 </body>
 </html>
-
 
