@@ -16,11 +16,7 @@
   "author": "Manus",
   "license": "ISC",
   "dependencies": {
-    "@sparticuz/chromium": "^133.0.0",
-    "express": "^4.19.2",
-    "gsmarena-api": "^2.0.5",
-    "playwright": "^1.44.0",
-    "playwright-core": "^1.52.0"
+    "express": "^4.19.2"
   },
   "engines": {
     "node": ">=18.0.0"
