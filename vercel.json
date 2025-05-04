@@ -2,19 +2,16 @@
   "version": 2,
   "builds": [
     {
-      "src": "./index.js",
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/api/scrape",
       "dest": "/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1"
     }
+    // Vercel should automatically handle static files from the 'public' directory
   ],
   "env": {
     "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1"
