@@ -1,7 +1,10 @@
 const gsmarena = require("gsmarena-api");
 
-async function scrapeGsmarena(query) {
-    console.log(`[Scraper] Starting search for query: ${query} using gsmarena-api`);
+// Helper function for delay
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+async function scrapeGsmarena(query, retries = 5, delayMs = 2000) {
+    console.log(`[Scraper] Starting search for query: ${query} using gsmarena-api (Attempt ${4 - retries})`);
     try {
         // Search for devices first to get the device ID
         const devices = await gsmarena.search.search(query);
@@ -24,10 +27,19 @@ async function scrapeGsmarena(query) {
         return details;
 
     } catch (error) {
-        console.error(`[Scraper] Error using gsmarena-api: ${error}`);
+        console.error(`[Scraper] Error details: ${JSON.stringify(error)}`); // Log full error object
         console.error(`[Scraper] Error stack: ${error.stack}`);
-        // Return a structured error consistent with previous attempts
-        return { error: `API request failed: ${error.message}` };
+
+        // Check if it's a rate limit error (429)
+        if (error.status === 429 && retries > 0) {
+            console.warn(`[Scraper] Rate limit hit (429). Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
+            await delay(delayMs);
+            // Retry with one less retry attempt and double the delay (exponential backoff)
+            return scrapeGsmarena(query, retries - 1, delayMs * 2);
+        }
+
+        // Return a structured error for other errors or if retries are exhausted
+        return { error: `API request failed: ${error.message || 'Unknown error'}` };
     }
 }
 
