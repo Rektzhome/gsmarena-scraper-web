@@ -24,7 +24,7 @@
     "playwright-core": "^1.44.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.x"
   },
   "devDependencies": {
     "patch-package": "^8.0.0"
