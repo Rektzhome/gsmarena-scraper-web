@@ -6,3 +6,4 @@ node_modules/
 # Playwright cache
 .cache/
 
+.vercel
