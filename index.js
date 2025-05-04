@@ -1,11 +1,11 @@
 const express = require("express");
 const path = require("path");
-const { getMockData } = require("./scraper"); // Changed import
+const { scrapeGsmarena } = require("./scraper");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Simple in-memory cache with expiration (less critical now, but can keep)
+// Simple in-memory cache with expiration
 const cache = new Map();
 const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour
 
@@ -32,32 +32,33 @@ app.get("/api/scrape", async (req, res) => {
         return res.status(200).json(cachedData.data);
     }
 
-    console.log(`[Cache] MISS for query: ${query}. Using mock data.`);
+    console.log(`[Cache] MISS for query: ${query}. Proceeding to scrape.`);
 
     try {
-        // Use mock data function instead of scraper
-        const details = getMockData(query);
-
+        const details = await scrapeGsmarena(query);
         if (details.error) {
             // Log the specific error for debugging
-            console.error(`Mock data error for query '${query}':`, details.error);
-            // If mock data function returned an error (e.g., not found)
-            if (details.error.includes("No mock data")) {
+            console.error(`Scraping error for query '${query}':`, details.error);
+            // If scraper returned an error object, send appropriate status
+            if (details.error.includes("No phone found")) {
                  res.status(404).json(details);
+            } else if (details.error.includes("API request failed")) {
+                 // Keep the generic error for rate limit or other API failures after retries
+                 res.status(500).json({ error: "Scraping failed internally. Please try again later." });
             } else {
-                 // Handle other potential errors
+                 // Handle other potential scraper errors
                  res.status(500).json({ error: details.error });
             }
         } else {
             // Store successful result in cache
-            console.log(`[Cache] Storing mock result for query: ${query}`);
+            console.log(`[Cache] Storing result for query: ${query}`);
             cache.set(cacheKey, { data: details, timestamp: Date.now() });
             res.status(200).json(details);
         }
     } catch (error) {
         // Catch unexpected errors during the process
         console.error(`Server error processing query '${query}':`, error);
-        res.status(500).json({ error: "Internal server error processing mock data." });
+        res.status(500).json({ error: "Internal server error during scraping process." });
     }
 });
 
