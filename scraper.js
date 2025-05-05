@@ -1,89 +1,103 @@
 #!/usr/bin/env node
 const axios = require("axios");
 const cheerio = require("cheerio");
+// HttpsProxyAgent is not needed if Axios handles proxy correctly with separate ports
+// const { HttpsProxyAgent } = require("https-proxy-agent");
 
 // --- Configuration ---
 const CRAWLBASE_API_TOKEN = "JVQkq9LLyulShydkElsbSQ"; // User provided token
 const GSMARENA_BASE_URL = "https://www.gsmarena.com/";
-// Use Crawlbase Smart Proxy configuration
-const CRAWLBASE_PROXY_PORT = 8010; // As per documentation example for HTTP/HTTPS
+// Use Crawlbase Smart Proxy configuration with correct ports
 const CRAWLBASE_PROXY_HOST = "smartproxy.crawlbase.com";
+const CRAWLBASE_HTTP_PORT = 8010; // Port for HTTP targets
+const CRAWLBASE_HTTPS_PORT = 8011; // Port for HTTPS targets (as per documentation text)
 
 // --- Helper Functions ---
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+// Construct proxy URLs for HTTP and HTTPS
+const httpProxyUrl = `http://${CRAWLBASE_API_TOKEN}:@${CRAWLBASE_PROXY_HOST}:${CRAWLBASE_HTTP_PORT}`;
+const httpsProxyUrl = `http://${CRAWLBASE_API_TOKEN}:@${CRAWLBASE_PROXY_HOST}:${CRAWLBASE_HTTPS_PORT}`;
+
 /**
- * Fetches a GSMArena URL via the Crawlbase Smart Proxy (Proxy Mode).
+ * Fetches a GSMArena URL via the Crawlbase Smart Proxy (Proxy Mode) using correct ports.
  * Handles retries for specific errors like timeouts or potential proxy errors.
  */
 async function fetchViaCrawlbase(targetUrl, retries = 3, delayMs = 1000) {
     const fullTargetUrl = targetUrl.startsWith("http") ? targetUrl : `${GSMARENA_BASE_URL}${targetUrl}`;
-    // Construct proxy URL using the API token as username
-    const proxyUrl = `http://${CRAWLBASE_API_TOKEN}:@${CRAWLBASE_PROXY_HOST}:${CRAWLBASE_PROXY_PORT}`;
+    const isHttps = fullTargetUrl.startsWith("https");
 
-    console.log(`[Crawlbase Proxy] Fetching: ${fullTargetUrl} via ${CRAWLBASE_PROXY_HOST} (Attempt ${4 - retries})`);
+    console.log(`[Crawlbase Axios Proxy] Fetching: ${fullTargetUrl} via ${CRAWLBASE_PROXY_HOST}:${isHttps ? CRAWLBASE_HTTPS_PORT : CRAWLBASE_HTTP_PORT} (Attempt ${4 - retries})`);
 
     try {
         const response = await axios.get(fullTargetUrl, {
+            // Configure Axios proxy settings using separate URLs for http and https
+            proxy: false, // Disable default proxy handling if we set agents
+            httpAgent: isHttps ? undefined : require('http').Agent({ proxy: httpProxyUrl }), // Standard http agent might not support proxy auth this way
+            httpsAgent: isHttps ? require('https').Agent({ proxy: httpsProxyUrl }) : undefined, // Standard https agent might not support proxy auth this way
+            // Let's try the Axios native proxy config again, but with correct URLs
             proxy: {
-                // Axios proxy config using protocol-specific URLs
-                http: proxyUrl,
-                https: proxyUrl // Use the same proxy for https targets
+                protocol: isHttps ? 'https' : 'http',
+                host: CRAWLBASE_PROXY_HOST,
+                port: isHttps ? CRAWLBASE_HTTPS_PORT : CRAWLBASE_HTTP_PORT,
+                auth: {
+                    username: CRAWLBASE_API_TOKEN,
+                    password: '' // Password is empty as per documentation
+                }
             },
             timeout: 90000, // 90 seconds timeout
-            // Set a realistic User-Agent
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36'
             }
         });
 
-        console.log(`[Crawlbase Proxy] Fetched ${fullTargetUrl}. Status: ${response.status}`);
+        console.log(`[Crawlbase Axios Proxy] Fetched ${fullTargetUrl}. Status: ${response.status}`);
 
-        // In proxy mode, the status code is the direct response status from the target site *through* the proxy.
-        // A 200 means the proxy successfully fetched the page.
         if (response.status === 200 && response.data) {
-            // We successfully got the content from the target URL via the proxy.
             return response.data; // Return HTML content
         } else {
-            // Handle non-200 status codes received from the target server via the proxy
-            console.warn(`[Crawlbase Proxy] Target server responded with status ${response.status} for ${fullTargetUrl}`);
+            console.warn(`[Crawlbase Axios Proxy] Target server responded with status ${response.status} for ${fullTargetUrl}`);
             throw new Error(`Target server request failed via proxy with status ${response.status}`);
         }
     } catch (error) {
-        console.error(`[Crawlbase Proxy] Error fetching ${fullTargetUrl}:`, error.message);
+        console.error(`[Crawlbase Axios Proxy] Error fetching ${fullTargetUrl}:`, error.message);
+        if (error.code) {
+            console.error(`[Crawlbase Axios Proxy] Error Code: ${error.code}`);
+        }
+        // Log proxy details if it's a proxy error
+        if (error.config && error.config.proxy) {
+             console.error(`[Crawlbase Axios Proxy] Proxy Config Used: ${JSON.stringify(error.config.proxy)}`);
+        }
 
-        // Check for specific errors that might warrant a retry
         let shouldRetry = false;
-        if (error.code === 'ECONNABORTED' || error.message.toLowerCase().includes('timeout')) { // Timeout
-             console.warn(`[Crawlbase Proxy] Timeout fetching ${fullTargetUrl}. Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
+        if (error.code === 'ECONNABORTED' || error.message.toLowerCase().includes('timeout')) {
+             console.warn(`[Crawlbase Axios Proxy] Timeout fetching ${fullTargetUrl}. Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
              shouldRetry = true;
         } else if (error.response) {
-            // Check for proxy-related errors or target server errors passed through
-            console.error(`[Crawlbase Proxy] Received error status: ${error.response.status}`);
+            console.error(`[Crawlbase Axios Proxy] Received error status: ${error.response.status}`);
             if (error.response.status === 407) {
-                 console.error("[Crawlbase Proxy] Proxy Authentication Failed (407). Check your API Token.");
-                 // Don't retry on auth failure
-            } else if (error.response.status === 429) { // Rate limit from target? Or Crawlbase?
-                 console.warn(`[Crawlbase Proxy] Received 429 (Too Many Requests). Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
+                 console.error("[Crawlbase Axios Proxy] Proxy Authentication Failed (407). Check your API Token and proxy config.");
+            } else if (error.response.status === 429) {
+                 console.warn(`[Crawlbase Axios Proxy] Received 429 (Too Many Requests). Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
                  shouldRetry = true;
-            } else if (error.response.status >= 500) { // Server errors (proxy or target)
-                 console.warn(`[Crawlbase Proxy] Received server error ${error.response.status}. Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
+            } else if (error.response.status >= 500) {
+                 console.warn(`[Crawlbase Axios Proxy] Received server error ${error.response.status}. Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
                  shouldRetry = true;
             }
+        } else if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND' || error.code === 'EAI_AGAIN' || error.code === 'ECONNRESET') {
+            console.warn(`[Crawlbase Axios Proxy] Network error (${error.code}). Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
+            shouldRetry = true;
         } else {
-            // Network errors, etc.
-             console.warn(`[Crawlbase Proxy] Network or other error. Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
-             shouldRetry = true; // Retry on generic errors too
+             console.warn(`[Crawlbase Axios Proxy] Other error. Retrying in ${delayMs / 1000}s... (${retries} retries left)`);
+             shouldRetry = true;
         }
 
         if (shouldRetry && retries > 0) {
             await delay(delayMs);
-            return fetchViaCrawlbase(targetUrl, retries - 1, delayMs * 2); // Exponential backoff
+            return fetchViaCrawlbase(targetUrl, retries - 1, delayMs * 2);
         }
 
-        // Re-throw error if retries exhausted or it's a non-retryable error
-        // Add more context to the thrown error
-        const errorMessage = error.response ? `Status ${error.response.status}` : error.message;
+        const errorMessage = error.response ? `Status ${error.response.status}` : (error.code ? `${error.code} - ${error.message}` : error.message);
         throw new Error(`Failed to fetch ${fullTargetUrl} via Crawlbase proxy after multiple retries: ${errorMessage}`);
     }
 }
@@ -94,7 +108,7 @@ async function fetchViaCrawlbase(targetUrl, retries = 3, delayMs = 1000) {
 async function scrapeGsmarena(query) {
     console.log(`[Scraper] Starting custom scrape for query: ${query}`);
     try {
-        // 1. Search for the device via Crawlbase Proxy
+        // 1. Search for the device via Crawlbase Proxy (using correct ports)
         const searchUrl = `results.php3?sQuickSearch=yes&sName=${encodeURIComponent(query)}`;
         const searchHtml = await fetchViaCrawlbase(searchUrl); // Uses the updated function
         const $search = cheerio.load(searchHtml);
@@ -107,7 +121,7 @@ async function scrapeGsmarena(query) {
         }
 
         const devicePageUrl = deviceLink.attr("href");
-        const deviceNameFromSearch = deviceLink.find("strong").text().trim(); // Get name from search result
+        const deviceNameFromSearch = deviceLink.find("strong").text().trim();
         console.log(`[Scraper] Found first device link: ${devicePageUrl} (${deviceNameFromSearch})`);
 
         if (!devicePageUrl) {
@@ -115,8 +129,10 @@ async function scrapeGsmarena(query) {
              return { error: "Failed to parse search results."};
         }
 
-        // 3. Fetch the device detail page via Crawlbase Proxy
-        const detailHtml = await fetchViaCrawlbase(devicePageUrl); // Uses the updated function
+        // 3. Fetch the device detail page via Crawlbase Proxy (using correct ports)
+        // Ensure the URL is absolute before passing to fetchViaCrawlbase
+        const absoluteDevicePageUrl = devicePageUrl.startsWith('http') ? devicePageUrl : `${GSMARENA_BASE_URL}${devicePageUrl}`;
+        const detailHtml = await fetchViaCrawlbase(absoluteDevicePageUrl); // Uses the updated function
         const $detail = cheerio.load(detailHtml);
 
         // 4. Extract details
@@ -134,7 +150,6 @@ async function scrapeGsmarena(query) {
 
                 if (specNameElement.length > 0 && specValueElement.length > 0) {
                     const name = specNameElement.text().trim();
-                    // Preserve line breaks within the value, clean up excessive whitespace
                     const value = specValueElement.html().replace(/<br\s*\/?>/gi, "\n").replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
                     specifications.push({ name, value });
                 }
@@ -154,9 +169,7 @@ async function scrapeGsmarena(query) {
 
     } catch (error) {
         console.error(`[Scraper] Custom scraping failed for query \"${query}\":`, error.message);
-        // Log the stack trace for better debugging during testing phase
-        // console.error(error.stack);
-        // Return a more informative error message
+        // console.error(error.stack); // Uncomment for detailed stack trace if needed
         return { error: `Scraping failed: ${error.message || 'Unknown error during scraping process'}` };
     }
 }
