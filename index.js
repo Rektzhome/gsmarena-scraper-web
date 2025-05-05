@@ -164,11 +164,16 @@ app.get("/api/scrape", async (req, res) => {
                 details.detailSpec = await Promise.all(details.detailSpec.map(async (category) => {
                     if (category.category === "Misc" && Array.isArray(category.specifications)) {
                         category.specifications = await Promise.all(category.specifications.map(async (specString) => {
-                            let wasParsed = false;
                             let spec = null;
+                            let inputIsObject = false;
                             try {
+                                // Check if the input is already an object
+                                if (typeof specString === 'object' && specString !== null) {
+                                    spec = specString;
+                                    wasParsed = true;
+                                    inputIsObject = true;
                                 // Only attempt parse if it looks like JSON (starts with {)
-                                if (typeof specString === 'string' && specString.trim().startsWith('{')) {
+                                } else if (typeof specString === 'string' && specString.trim().startsWith('{')) {
                                     spec = JSON.parse(specString);
                                     wasParsed = true;
                                 }
@@ -177,19 +182,20 @@ app.get("/api/scrape", async (req, res) => {
                                 // Keep specString as is if parsing fails
                             }
 
-                            // If successfully parsed and is the Price spec, convert it
+                            // If successfully parsed/handled and is the Price spec, convert it
                             if (wasParsed && spec && spec.name === "Price" && spec.value) {
-                                console.log(`[Currency] Found price spec: ${spec.value}`);
+                                // console.log(`[Currency] Found price spec: ${spec.value}`);
                                 spec.value = await convertPrice(spec.value);
-                                console.log(`[Currency] Converted price spec: ${spec.value}`);
+                                // console.log(`[Currency] Converted price spec: ${spec.value}`);
                                 // Return the modified spec object as a stringified JSON
                                 return JSON.stringify(spec);
                             }
-                            // If it was parsed but not the Price spec, stringify it back
+                            // If it was parsed/handled but not the Price spec, stringify it back if needed
                             else if (wasParsed && spec) {
-                                return JSON.stringify(spec);
+                                // If the original input was an object, stringify it. If it was a parsed string, it's already stringified.
+                                return inputIsObject ? JSON.stringify(spec) : specString;
                             }
-                            // Otherwise (not JSON or parsing failed), return the original string
+                            // Otherwise (not JSON, not object, or parsing failed), return the original string
                             else {
                                 return specString;
                             }
@@ -199,6 +205,46 @@ app.get("/api/scrape", async (req, res) => {
                 }));
             }
             // --- End Price Conversion Logic ---
+
+            // --- Extract Converted Price for Search Card ---
+            let priceIDR = null;
+            const miscCategory = details.detailSpec?.find(cat => cat.category === "Misc");
+            // console.log("[Debug] Found Misc Category:", !!miscCategory); // Log if Misc category exists
+            if (miscCategory && Array.isArray(miscCategory.specifications)) {
+                // console.log("[Debug] Misc Specifications:", miscCategory.specifications); // Log all specs in Misc
+                for (const specItem of miscCategory.specifications) { // Renamed variable for clarity
+                    // console.log(`[Debug] Processing specItem: ${JSON.stringify(specItem)}`); // Log the current spec item
+                    try {
+                        let spec = null;
+                        // Check if the item is a string that needs parsing, or already an object
+                        if (typeof specItem === 'string' && specItem.trim().startsWith('{')) {
+                             spec = JSON.parse(specItem);
+                             // console.log("[Debug] Parsed spec:", spec);
+                        } else if (typeof specItem === 'object' && specItem !== null) {
+                             spec = specItem; // Use the object directly
+                             // console.log("[Debug] Using spec object directly:", spec);
+                        }
+
+                        // Now check the spec object
+                        if (spec && spec.name === "Price" && spec.value && typeof spec.value === 'string') {
+                            // console.log(`[Debug] Found Price spec with value: ${spec.value}`); // Log the raw price value found
+                            const priceParts = spec.value.split(' / ');
+                            // console.log("[Debug] Price parts after split:", priceParts);
+                            if (priceParts.length === 2 && priceParts[1].startsWith('Rp')) {
+                                priceIDR = priceParts[1];
+                                console.log(`[Currency] Extracted priceIDR for card: ${priceIDR}`);
+                                break; // Found the price
+                            }
+                        }
+                    } catch (e) {
+                        console.warn(`[Currency] Failed to parse or extract price from spec item for card: ${JSON.stringify(specItem)}`, e);
+                    }
+                }
+            }
+            // Add the extracted price to the main details object
+            details.priceIDR = priceIDR;
+            // console.log(`[Debug] Final details.priceIDR: ${details.priceIDR}`); // Log the final extracted price
+            // --- End Extract Converted Price ---
 
             // Store successful result (with converted price) in cache
             console.log(`[Cache] Storing result for query: ${query}`);
