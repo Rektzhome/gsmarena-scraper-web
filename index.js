@@ -12,13 +12,15 @@ const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour for scraped data
 
 // Cache for exchange rates
 const exchangeRateCache = {
-    rates: null,
+    rates: null, // Will store rates relative to base currency, e.g., { USD: 1, IDR: 16400, EUR: 0.9, INR: 83 }
+    baseCurrency: 'USD', // Define the base currency
     timestamp: 0,
 };
 const RATE_CACHE_DURATION_MS = 4 * 60 * 60 * 1000; // 4 hours for exchange rates
 const CURRENCY_API_KEY = "fca_live_S9jkdJiYdOutHpdsHVvUtQyNDzaZ34ck2oBa0uyM";
-const CURRENCY_API_URL = `https://api.freecurrencyapi.com/v1/latest?apikey=${CURRENCY_API_KEY}&currencies=IDR&base_currency=USD`;
-const CURRENCY_API_URL_EUR = `https://api.freecurrencyapi.com/v1/latest?apikey=${CURRENCY_API_KEY}&currencies=IDR&base_currency=EUR`;
+// Define target currencies including IDR and common source currencies
+const TARGET_CURRENCIES = "IDR,EUR,INR,GBP,AUD,CAD"; // Add more as needed
+const CURRENCY_API_URL = `https://api.freecurrencyapi.com/v1/latest?apikey=${CURRENCY_API_KEY}&currencies=${TARGET_CURRENCIES}&base_currency=${exchangeRateCache.baseCurrency}`;
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -28,34 +30,30 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // --- Helper Functions ---
 
-// Function to fetch and cache exchange rates
+// Function to fetch and cache exchange rates relative to a base currency (USD)
 async function getExchangeRates() {
     const now = Date.now();
     if (exchangeRateCache.rates && (now - exchangeRateCache.timestamp < RATE_CACHE_DURATION_MS)) {
-        console.log("[Currency] Using cached exchange rates.");
+        console.log(`[Currency] Using cached exchange rates (Base: ${exchangeRateCache.baseCurrency}).`);
         return exchangeRateCache.rates;
     }
 
-    console.log("[Currency] Fetching fresh exchange rates...");
+    console.log(`[Currency] Fetching fresh exchange rates (Base: ${exchangeRateCache.baseCurrency}, Targets: ${TARGET_CURRENCIES})...`);
     try {
-        // Fetch both USD->IDR and EUR->IDR
-        const [responseUsd, responseEur] = await Promise.all([
-            axios.get(CURRENCY_API_URL),
-            axios.get(CURRENCY_API_URL_EUR)
-        ]);
+        const response = await axios.get(CURRENCY_API_URL);
 
-        if (responseUsd.data && responseUsd.data.data && responseUsd.data.data.IDR &&
-            responseEur.data && responseEur.data.data && responseEur.data.data.IDR) {
+        if (response.data && response.data.data) {
+            // Add the base currency rate (1) to the fetched rates
             const rates = {
-                USD_IDR: responseUsd.data.data.IDR,
-                EUR_IDR: responseEur.data.data.IDR,
-            };
+                 ...response.data.data,
+                 [exchangeRateCache.baseCurrency]: 1 // Add base currency rate manually
+                };
             exchangeRateCache.rates = rates;
             exchangeRateCache.timestamp = now;
             console.log("[Currency] Rates fetched and cached:", rates);
             return rates;
         } else {
-            console.error("[Currency] Invalid API response structure:", responseUsd.data, responseEur.data);
+            console.error("[Currency] Invalid API response structure:", response.data);
             // Return old rates if available, otherwise null
             return exchangeRateCache.rates;
         }
@@ -84,45 +82,78 @@ async function convertPrice(priceString) {
         return priceString; // Return original if invalid
     }
 
-    const rates = await getExchangeRates();
-    if (!rates) {
-        console.warn("[Currency] Conversion skipped: No exchange rates available.");
+    const rates = await getExchangeRates(); // Rates relative to baseCurrency (USD)
+    if (!rates || !rates.IDR) {
+        console.warn("[Currency] Conversion skipped: No exchange rates available or IDR rate missing.");
         return priceString; // Return original if rates not available
     }
 
-    // Regex to find currency symbol (€ or $) and amount
-    // Handles formats like "About 1200 EUR", "€ 1100", "$ 999", "1000 USD"
-    const priceRegex = /(?:About\s*)?([€$])?\s*([\d,.]+)(?:\s*(EUR|USD))?/i;
-    const match = priceString.match(priceRegex);
+    // Map symbols/codes to ISO codes we might have rates for
+    const currencyMap = {
+        '$': 'USD',
+        'USD': 'USD',
+        '€': 'EUR',
+        'EUR': 'EUR',
+        '₹': 'INR',
+        'INR': 'INR',
+        '£': 'GBP',
+        'GBP': 'GBP',
+        'A$': 'AUD', // Assuming A$ for AUD
+        'AUD': 'AUD',
+        'C$': 'CAD', // Assuming C$ for CAD
+        'CAD': 'CAD'
+        // Add more mappings as needed
+    };
 
-    if (match) {
+    // Regex to find all potential price parts (symbol/code and amount)
+    // Looks for optional symbol, amount, optional code, separated by optional " / "
+    const pricePartRegex = /(?:About\s*)?([$€₹£]|A\$|C\$)?\s*([\d,.]+)(?:\s*(USD|EUR|INR|GBP|AUD|CAD))?/gi;
+    let match;
+    let firstConvertedIDR = null;
+
+    while ((match = pricePartRegex.exec(priceString)) !== null) {
         const symbol = match[1];
-        let amountStr = match[2].replace(/,/g, ''); // Remove commas for parsing
-        const currencyCode = match[3];
+        let amountStr = match[2].replace(/,/g, ''); // Remove commas
+        const code = match[3];
         const amount = parseFloat(amountStr);
 
-        if (!isNaN(amount)) {
-            let convertedAmountIDR = null;
-            let originalCurrency = null;
+        if (isNaN(amount)) continue; // Skip if amount is not a number
 
-            // Determine currency and convert
-            if ((symbol === '€' || (currencyCode && currencyCode.toUpperCase() === 'EUR')) && rates.EUR_IDR) {
-                convertedAmountIDR = amount * rates.EUR_IDR;
-                originalCurrency = "EUR";
-            } else if ((symbol === '$' || (currencyCode && currencyCode.toUpperCase() === 'USD')) && rates.USD_IDR) {
-                convertedAmountIDR = amount * rates.USD_IDR;
-                originalCurrency = "USD";
-            }
+        let sourceCurrency = null;
+        if (symbol && currencyMap[symbol]) {
+            sourceCurrency = currencyMap[symbol];
+        } else if (code && currencyMap[code.toUpperCase()]) {
+            sourceCurrency = currencyMap[code.toUpperCase()];
+        }
 
-            if (convertedAmountIDR !== null) {
-                const formattedIDR = formatIDR(convertedAmountIDR);
-                // Return original string + formatted IDR
-                return `${priceString} / ${formattedIDR}`;
+        // Check if we have a rate for this source currency relative to the base (USD)
+        if (sourceCurrency && rates[sourceCurrency]) {
+            try {
+                // Calculate conversion: Amount * (IDR rate / Source Currency rate)
+                // All rates are relative to the base currency (USD)
+                const rateSourceToBase = rates[sourceCurrency];
+                const rateIdrToBase = rates.IDR;
+                const convertedAmountIDR = amount * (rateIdrToBase / rateSourceToBase);
+
+                if (!isNaN(convertedAmountIDR)) {
+                    firstConvertedIDR = formatIDR(convertedAmountIDR);
+                    console.log(`[Currency] Converted ${amount} ${sourceCurrency} to ${firstConvertedIDR}`);
+                    break; // Stop after the first successful conversion
+                }
+            } catch (calcError) {
+                console.error(`[Currency] Error calculating conversion for ${sourceCurrency}:`, calcError);
+                // Continue to the next potential price part
             }
         }
     }
 
-    // If no match or conversion failed, return the original string
+    // If a conversion was successful, append it
+    if (firstConvertedIDR) {
+        return `${priceString} / ${firstConvertedIDR}`;
+    }
+
+    // If no conversion happened, return the original string
+    console.warn(`[Currency] No convertible currency found in: ${priceString}`);
     return priceString;
 }
 
@@ -138,10 +169,10 @@ app.get("/api/scrape", async (req, res) => {
     const cachedData = cache.get(cacheKey);
 
     // Check if valid cached data exists
-    if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION_MS)) {
-        console.log(`[Cache] HIT for query: ${query}`);
-        return res.status(200).json(cachedData.data);
-    }
+    // if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION_MS)) {
+    //     console.log(`[Cache] HIT for query: ${query}`);
+    //     return res.status(200).json(cachedData.data);
+    // }
 
     console.log(`[Cache] MISS for query: ${query}. Proceeding to scrape.`);
 
