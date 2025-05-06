@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<!-- Set lang="id" for Indonesian language -->
+<html lang="id" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hp<span class="text-ios-blue">Gaul</span></title>
+    <meta name="description" content="HpGaul - Temukan spesifikasi ponsel terbaru dan terlengkap. Dapatkan informasi detail, perbandingan, dan berita terkini seputar dunia gadget dan teknologi seluler.">
+    <meta name="keywords" content="hp gaul, spesifikasi hp, ponsel terbaru, info gadget, teknologi seluler, perbandingan hp, berita hp">
+    <link rel="canonical" href="https://www.hpgaul.my.id/">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.hpgaul.my.id/">
+    <meta property="og:title" content="HpGaul - Spesifikasi Ponsel Terlengkap">
+    <meta property="og:description" content="HpGaul - Temukan spesifikasi ponsel terbaru dan terlengkap. Dapatkan informasi detail, perbandingan, dan berita terkini seputar dunia gadget dan teknologi seluler.">
+    <meta property="og:image" content="https://www.hpgaul.my.id/img/header-image.png">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.hpgaul.my.id/">
+    <meta property="twitter:title" content="HpGaul - Spesifikasi Ponsel Terlengkap">
+    <meta property="twitter:description" content="HpGaul - Temukan spesifikasi ponsel terbaru dan terlengkap. Dapatkan informasi detail, perbandingan, dan berita terkini seputar dunia gadget dan teknologi seluler.">
+    <meta property="twitter:image" content="https://www.hpgaul.my.id/img/header-image.png">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Poppins) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Alpine.js for simple interactions (like carousel) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        // Configure Tailwind CSS
+        tailwind.config = {
+            darkMode: 'class', // Enable class-based dark mode
+            theme: {
+                extend: {
+                    fontFamily: {
+                        // Set Poppins as the default sans-serif font
+                        sans: ["Poppins", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+                    },
+                    colors: { // <== Perbaikan Sintaks JS
+                        ios: {
+                            blue: '#0000FF',
+                            gray: {
+                                100: '#F2F2F7',
+                                200: '#E5E5EA',
+                                300: '#D1D1D6',
+                                400: '#C7C7CC',
+                                500: '#AEAEB2',
+                                600: '#8E8E93',
+                            }
+                        },
+                        monsterGreen: '#95d600', // Added Monster Energy Green
+                        customGreen: '#00FF00' // Added custom green for 'Lihat Detail'
+                    } // <== Perbaikan Sintaks JS
+                }, // <== Perbaikan Sintaks JS
+            }, // <== Perbaikan Sintaks JS
+        } // <== Perbaikan Sintaks JS
+    </script>
+
+    <style>
+        /* Welcome Toast Styles */
+        #welcome-toast-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        #welcome-toast-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #welcome-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background-color: #4A00E0; /* Darker Purple */
+            color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* Slightly more rounded */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column; /* Stack logo, title, text */
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            font-family: 'Poppins', sans-serif;
+            max-width: 90%;
+            width: 400px; /* Max width for the toast */
+        }
+        #welcome-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .toast-logo {
+            width: 50px; /* Adjust size as needed */
+            height: 50px;
+            margin-bottom: 0.75rem;
+        }
+        .toast-title {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            margin-bottom: 0.1rem; /* Further reduced margin */
+            line-height: 1.15; /* Further reduced line-height for extreme compactness */
+            color: #ffffff; /* <== OK */
+            /* REMOVE: color: #39FF14; */ /* <== Perbaikan Sintaks CSS */
+        }
+
+        .toast-instructions {
+            font-size: 0.875rem; /* 14px */
+            line-height: 1.2; /* Further reduced line-height */
+            color: #e5e7eb; /* Lighter gray for better contrast on dark purple */
+            margin-top: 0.25rem; /* Added small top margin to control spacing from title */
+            margin-bottom: 0;
+        }
+        .toast-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        /* Basic scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        /* Hide scrollbar visually but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Style for the modal */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal.hidden .modal-content {
+            transform: scale(0.95);
+        }
+
+        /* Simple spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #0000FF; /* iOS blue */
+            animation: spin 1s ease infinite;
+        }
+        .dark .spinner {
+             border: 4px solid rgba(255, 255, 255, 0.1);
+             border-left-color: #0000FF;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modern Spinner */
+        .modern-spinner {
+          display: inline-block;
+          position: relative;
+          width: 60px;
+          height: 60px;
+        }
+        .modern-spinner div {
+          box-sizing: border-box;
+          display: block;
+          position: absolute;
+          width: 48px;
+          height: 48px;
+          margin: 6px;
+          border: 4px solid #0000FF;
+          border-radius: 50%;
+          animation: modern-spinner-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          border-color: #0000FF transparent transparent transparent;
+        }
+        .dark .modern-spinner div {
+          border-color: #0000FF transparent transparent transparent;
+        }
+        .modern-spinner div:nth-child(1) { animation-delay: -0.45s; }
+        .modern-spinner div:nth-child(2) { animation-delay: -0.3s; }
+        .modern-spinner div:nth-child(3) { animation-delay: -0.15s; }
+        @keyframes modern-spinner-anim {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* Carousel card width */
+        .carousel-card {
+            width: 180px; /* Adjust as needed */
+            flex-shrink: 0;
+        }
+
+        /* Ensure sticky elements work correctly */
+        body {
+            padding-top: 4rem; /* Adjust based on navbar height */
+        }
+        /* Animation for blobs */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+
+        /* Animation for header text */
+        @keyframes fade-in-scale {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in-scale {
+            animation: fade-in-scale 0.8s ease-out forwards;
+        }
+
+        /* Animations for Complex Header */
+        @keyframes slide-in-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-in-up {
+            animation: slide-in-up 0.6s ease-out forwards;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .animation-delay-200 {
+            animation-delay: 0.2s;
+        }
+        .animation-delay-1000 {
+            animation-delay: 1s; /* <== Perbaikan Sintaks CSS */
+        } /* <== Perbaikan Sintaks CSS */
+
+    </style> <!-- <== Perbaikan Sintaks CSS -->
+
+    <style>
+        /* Animated Background Styles */
+        body::before, body::after, .overlay-animated-bg::before, .overlay-animated-bg::after {
+            content: "";
+            position: fixed;
+            opacity: 0.08;
+            z-index: -1;
+            animation: float 12s ease-in-out infinite alternate;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        body::before, .overlay-animated-bg::before {
+            left: 5%;
+            top: 15%;
+            width: 150px;
+            height: 150px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Cdefs%3E%3ClinearGradient id=\'g1\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%238B5CF6;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23C084FC;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g1)\' d=\'M40,0 C40,0 100,0 120,0 C140,0 160,20 160,40 C160,60 140,80 120,80 C100,80 80,100 80,120 C80,140 100,160 120,160 C140,160 160,180 160,200 C160,200 100,200 80,200 C60,200 40,180 40,160 C40,140 60,120 80,120 C100,120 120,100 120,80 C120,60 100,40 80,40 C60,40 40,20 40,0 Z\' transform=\'rotate(15 100 100) translate(10 10)\'%3E%3CanimateTransform attributeName=\'transform\' type=\'rotate\' from=\'0 100 100\' to=\'360 100 100\' dur=\'20s\' repeatCount=\'indefinite\'/%3E%3C/path%3E%3C/svg%3E");
+        }
+        body::after, .overlay-animated-bg::after {
+            right: 8%;
+            top: 55%;
+            width: 120px;
+            height: 120px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Cdefs%3E%3ClinearGradient id=\'g2\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23EC4899;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23F472B6;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g2)\' d=\'M178.4,100.5c-0.2,14.6-3.4,29.2-9.4,42.8c-6,13.6-14.6,25.7-25.5,35.7c-10.9,10-23.7,17.6-37.9,22.3c-14.2,4.7-29.4,6.4-44.6,4.9c-15.2-1.5-30-6.3-43.2-14.2c-13.2-7.9-24.4-18.7-33-31.7c-8.6-13-14.2-27.8-16.6-43.2c-2.3-15.5-1.3-31.3,2.9-46.3c4.2-15,11.7-29,21.9-41.2c10.2-12.2,22.8-22.3,37.1-29.6c14.3-7.3,30-11.6,46.1-12.6c16.1-1,32.1,1.4,47.1,7.1c15,5.7,28.6,14.6,40.1,26.2C174.1,38.1,180.3,53.9,179.9,70C179.6,80.2,179.1,90.4,178.4,100.5z\' transform=\'rotate(-10 100 100) translate(-5 -5)\'%3E%3CanimateTransform attributeName=\'transform\' type=\'rotate\' from=\'0 100 100\' to=\'-360 100 100\'%27 dur=\'25s\%27 repeatCount=\'indefinite\'/%3E%3C/path%3E%3C/svg%3E"); /* <== Perbaikan Penempatan Kutip di URL SVG */
+            animation-delay: -6s;
+        }
+        .overlay-animated-bg {
+            background-color: #FFFFFF; /* Solid white */
+        }
+        .overlay-animated-bg::before, .overlay-animated-bg::after {
+            z-index: -1; /* Ensure blobs are behind overlay content but above main page */
+             opacity: 0.15; /* Slightly more visible for overlay */
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-25px) rotate(15deg) scale(1.05); }
+            100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased pt-24" x-data="{ navOpen: false }">
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Tentang Hp<span class="text-ios-blue">Gaul</span></h1>
+        <div class="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
+            <p>Selamat datang di Hp<span class="text-ios-blue">Gaul</span>! Kami adalah sumber informasi terdepan untuk semua kebutuhan Anda terkait spesifikasi ponsel terbaru dan terlengkap. Misi kami adalah membantu Anda membuat keputusan yang cerdas dan tepat saat memilih gadget impian.</p>
+            <p>Di Hp<span class="text-ios-blue">Gaul</span>, kami percaya bahwa teknologi harus dapat diakses dan dipahami oleh semua orang. Oleh karena itu, kami menyajikan data spesifikasi yang akurat, perbandingan mendalam, serta berita terkini dari dunia teknologi seluler dengan cara yang mudah dicerna.</p>
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mt-8 mb-4">Apa yang Kami Tawarkan?</h2>
+            <ul>
+                <li><strong>Database Spesifikasi Lengkap:</strong> Dari chipset hingga ukuran layar, temukan detail setiap ponsel yang Anda cari.</li>
+                <li><strong>Perbandingan Ponsel:</strong> Bandingkan beberapa model secara berdampingan untuk melihat perbedaan utama.</li>
+                <li><strong>Berita Teknologi Terkini:</strong> Tetap update dengan peluncuran terbaru, rumor, dan tren di industri seluler.</li>
+                <li><strong>Antarmuka Ramah Pengguna:</strong> Desain yang bersih dan navigasi yang intuitif untuk pengalaman browsing yang menyenangkan.</li>
+            </ul>
+            <p>Tim kami terdiri dari para antusias teknologi yang berdedikasi untuk menyediakan konten berkualitas tinggi dan relevan. Kami terus berupaya untuk memperbarui database kami dan menyajikan informasi paling mutakhir untuk Anda.</p>
+            <p>Terima kasih telah mengunjungi Hp<span class="text-ios-blue">Gaul</span>. Kami harap Anda menikmati waktu Anda di sini dan menemukan semua informasi yang Anda butuhkan!</p>
+        </div>
+    </div>
+</main>
+
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Title -->
+                <div class="flex-shrink-0 flex items-center">
+                    <!-- Placeholder SVG Logo -->
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+                    </svg>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
+                </div>
+                <!-- Dark Mode Toggle & Navbar Toggle -->
+                <div class="flex items-center space-x-2">
+                    <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue">
+                        <!-- Sun icon -->
+                        <svg id="icon-sun" class="h-6 w-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12h2.25m.386-6.364l1.591 1.591" />
+                        </svg>
+                        <!-- Moon icon -->
+                        <svg id="icon-moon" class="h-6 w-6 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                        </svg>
+                    </button>
+                    <!-- Navbar Toggle Button -->
+                    <button @click="navOpen = !navOpen" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue md:hidden">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Menu Icon (Hamburger) -->
+                        <svg x-show="!navOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                        <!-- Close Icon (X) -->
+                        <svg x-show="navOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" style="display: none;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Full-page Overlay Navbar -->
+    <div x-show="navOpen"
+         x-transition:enter="transition ease-out duration-300 transform"
+         x-transition:enter-start="-translate-y-full"
+         x-transition:enter-end="translate-y-0"
+         x-transition:leave="transition ease-in duration-300 transform"
+         x-transition:leave-start="translate-y-0"
+         x-transition:leave-end="-translate-y-full"
+         class="fixed inset-0 z-30 text-black flex flex-col items-center justify-center space-y-8 p-8 md:hidden font-poppins overlay-animated-bg"
+         style="display: none;" @click.away="navOpen = false">
+
+        <a href="#search-section-container" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
+  <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
+</svg>Pencarian Cepat</a>
+        <a href="#carousel-popular" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.116 3.986 1.257 5.27c.271 1.136-.964 2.033-1.96 1.425L12 18.354l-4.543 2.86c-.996.608-2.231-.29-1.96-1.425l1.257-5.27-4.117-3.986c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>Populer Saat Ini</a>
+        <a href="#" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
+  <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.67-1.34l.04-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+</svg>Tentang HpGaul</a>
+
+            <button @click="navOpen = false" class="absolute top-6 right-6 p-2 rounded-md text-white hover:text-gray-600 focus:outline-none">
+            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Header with Image -->
+        <section id="image-header" class="mb-12 relative overflow-hidden rounded-xl shadow-lg">
+            <img src="/img/header-image.png" alt="HpGaul Header" class="w-full h-auto object-cover">
+        </section>
+
+        <!-- Search Section -->
+        
+            <!-- Error Message Area (Moved inside search section) -->
+            <div id="error-message" class="text-center py-6 hidden">
+                <p class="text-red-600 dark:text-red-400 font-medium"></p>
+            </div>
+        </section>
+
+        <!-- Carousel Sections -->
+        <section class="mb-12">
+            <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg inline-flex items-center">
+                <!-- Modern Star Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
+                    <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+                </svg>
+                Populer Saat Ini
+            </h2>
+            <!-- Changed to grid layout -->
+            <div id="carousel-popular" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <!-- Popular phone cards will be populated here -->
+            </div>
+        </section>
+
+        <!-- Funny/Informative Content Carousel -->
+        
+
+    </main>
+
+    <!-- Professional Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-900 mt-16 py-10 border-t border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Logo and Description -->
+            <div class="flex flex-col items-center md:items-start">
+                <div class="flex items-center mb-3">
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+                    </svg>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 text-center md:text-left">
+                    Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena.
+                </p>
+            </div>
+            <!-- Placeholder Links (Optional) -->
+            <div class="text-center md:text-left">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Tautan Cepat</h3>
+                <ul class="space-y-2">
+                    <li><a href="#search-section-container" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Pencarian</a></li>
+                    <li><a href="tentang.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
+                    <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Kontak</a></li>
+                </ul>
+            </div>
+            <!-- Placeholder Social (Optional) -->
+            <div class="text-center md:text-left">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Ikuti Kami</h3>
+                <div class="flex justify-center md:justify-start space-x-4">
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Facebook</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Instagram</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.023.047 1.351.058 3.807.058h.468c2.456 0 2.784-.011 3.807-.058.975-.045 1.504-.207 1.857-.344.467-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.047-1.023.058-1.351.058-3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Twitter</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">© 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Welcome Toast Overlay -->
+    <div id="welcome-toast-overlay">
+        <!-- Welcome Toast -->
+        <div id="welcome-toast">
+            <button id="toast-close-button" class="toast-close-button">×</button>
+            <svg class="toast-logo text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+            </svg>
+            <h3 class="toast-title">Saya <span style="color: #39FF14;">Muh Amin</span><br>mewakili <span class="font-bold">Hp</span><span class="text-blue-300">Gaul</span> Menyambut Anda!</h3>
+            <p class="toast-instructions">HpGaul adalah web super canggih tempat kamu bisa kepoin spek HP sampai ke akar-akarnya! Masukin aja nama HP-nya, trus liat deh keajaiban teknologi! Siap-siap melongo ya!</p>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+                <h2 id="modal-title" class="text-lg font-semibold">Detail Ponsel</h2>
+                <button id="modal-close-button" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal Body -->
+            <div id="modal-body" class="p-6">
+                <!-- Phone details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Placeholder Data for Carousels ---
+        const popularPhones = [
+            { name: "Samsung Galaxy S24", img: "https://images.samsung.com/is/image/samsung/p6pim/id/2401/gallery/id-galaxy-s24-sm-s921bzkcxid-539294435?imbypass=true", specs: "Snapdragon 8 Gen 3" },
+            { name: "iPhone 15 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro.jpg", specs: "Apple A17 Bionic" },
+            { name: "Google Pixel 8 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8-pro.jpg", specs: "Google Tensor G3" },
+            { name: "Xiaomi 14", img: "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-14.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "OnePlus 12", img: "https://fdn2.gsmarena.com/vv/bigpic/oneplus-12.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "Asus ROG Phone 8", img: "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8-pro.jpg", specs: "Snapdragon 8 Gen 3" }
+        ];
+        const trendingPhones = [
+            { name: "Nothing Phone (2a)", img: "https://fdn2.gsmarena.com/vv/bigpic/nothing-phone-2a.jpg", specs: "Dimensity 7200 Pro" },
+            { name: "Poco X6 Pro", img: "https://i02.appmifile.com/341_item_id/19/01/2024/d07509b0b1fff33979066174116dc4ad!800x800!85.png", specs: "Dimensity 8300 Ultra" },
+            { name: "Realme 12 Pro+", img: "https://fdn2.gsmarena.com/vv/bigpic/realme-12-pro-plus.jpg", specs: "Snapdragon 7s Gen 2" },
+            { name: "Infinix Note 40 Pro", img: "/static/infinix_note_40_pro.jpeg", specs: "Dimensity 7020" },
+            { name: "Motorola Edge 50 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/motorola-edge-50-pro.jpg", specs: "Snapdragon 7 Gen 3" }
+        ];
+        const newPhones = [
+            { name: "Vivo X100 Ultra", img: "https://fdn2.gsmarena.com/vv/bigpic/vivo-x100-ultra.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "Huawei Pura 70 Ultra", img: "https://fdn2.gsmarena.com/vv/bigpic/huawei-pura70-ultra.jpg", specs: "Kirin 9010" },
+            { name: "Sony Xperia 1 VI", img: "https://fdn2.gsmarena.com/vv/bigpic/sony-xperia-1-vi.jpg", specs: "Snapdragon 8 Gen 3" },
+            { name: "ZTE Nubia Flip", img: "/static/zte_nubia_flip.jpeg", specs: "Snapdragon 7 Gen 1" },
+            { name: "Oppo Reno12 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/oppo-reno12-pro-cn.jpg", specs: "Dimensity 9200+" }
+        ];
+
+        // --- DOM Elements ---
+        const searchInput = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-button");
+        const loadingDiv = document.getElementById("loading");
+        const resultsDiv = document.getElementById("results");
+        const resultsSection = document.getElementById("results-section");
+        const errorMessageDiv = document.getElementById("error-message");
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+        const htmlElement = document.documentElement;
+        const modal = document.getElementById("modal");
+        const modalTitle = document.getElementById("modal-title");
+        const modalBody = document.getElementById("modal-body");
+        const modalCloseButton = document.getElementById("modal-close-button");
+        const carouselPopular = document.getElementById("carousel-popular");
+        // Removed references to carouselTrending and carouselNew as sections were removed
+
+        // --- Dark Mode Logic ---
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+        darkModeToggle.addEventListener("click", () => {
+            htmlElement.classList.toggle('dark');
+            localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+        });
+
+        // --- Modal Logic ---
+        function openModal() {
+            modal.classList.remove("hidden");
+        }
+        function closeModal() {
+            modal.classList.add("hidden");
+            modalBody.innerHTML = '';
+            modalTitle.textContent = 'Detail Ponsel';
+        }
+        modalCloseButton.addEventListener("click", closeModal);
+        modal.addEventListener("click", (event) => {
+            if (event.target === modal) closeModal();
+        });
+
+        // --- Carousel Population Logic (Now Grid) ---
+        function createGridCard(phone) {
+            const card = document.createElement("div");
+            card.className = "bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-200 p-4 text-center border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-between";
+            card.innerHTML = `
+                <div class="flex-grow flex flex-col items-center justify-center w-full mb-3">
+                    <img src="${phone.img || 'https://via.placeholder.com/120x150?text=N/A'}" alt="${phone.name}" class="w-auto h-32 mx-auto mb-3 object-contain">
+                    <div class="flex items-center justify-center space-x-1">
+                        <h3 class="text-sm font-semibold truncate">${phone.name}</h3>
+                        ${(typeof newPhones !== 'undefined' && newPhones.some(p => p.name === phone.name)) ? '<span class="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded-full">baru</span>' : ''}
+                    </div>
+                </div>
+                <div class="p-2 bg-white dark:bg-gray-700 text-black dark:text-white text-center text-xs font-semibold w-full mt-2 rounded-b-xl border-t border-gray-200 dark:border-gray-700">
+                    Lihat Detail
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                searchInput.value = phone.name;
+                performSearch();
+                document.getElementById('search-section-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            return card;
+        }
+
+        function populateGrid(container, phones) {
+            container.innerHTML = ''; // Clear existing
+            phones.forEach(phone => {
+                container.appendChild(createGridCard(phone));
+            });
+        }
+
+        // Use populateGrid for the popular section
+        populateGrid(carouselPopular, popularPhones);
+        // Removed population for trending and new sections as they are deleted
+
+        // --- Helper function to get spec value ---
+        function getSpecValue(detailSpec, categoryName, specName) {
+            const category = detailSpec?.find(cat => cat.category === categoryName);
+            if (!category || !Array.isArray(category.specifications)) return "N/A";
+
+            for (const item of category.specifications) { // <== Perbaikan Logika JS (Loop langsung ke item)
+                 // <== Perbaikan Logika JS (Hapus try/catch dan JSON.parse)
+                if (item && typeof item === 'object' && item.name === specName) { // Cek jika item adalah objek dengan nama yang cocok
+                    return item.value || "N/A";
+                }
+            }
+            return "N/A"; // Not found
+        }
+
+        // --- Search & Display Logic ---
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            if (!query) {
+                displayError("Silakan masukkan nama ponsel untuk dicari.");
+                return;
+            }
+
+            resultsDiv.innerHTML = "";
+            resultsSection.classList.add("hidden");
+            errorMessageDiv.classList.add("hidden");
+            loadingDiv.classList.remove("hidden");
+            searchButton.disabled = true;
+            searchInput.disabled = true;
+
+            try {
+                // Pastikan endpoint scraping API Anda sudah benar
+                const response = await fetch(`/api/scrape?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Tangani error HTTP (misal 404, 500)
+                    throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                }
+
+                if (data.error || !data.name) {
+                     // Tangani error dari API atau jika data ponsel tidak ditemukan
+                     displayError(data.error || `Ponsel dengan nama "${query}" tidak ditemukan atau terjadi kesalahan.`);
+                } else {
+                    displayResultsAsCard(data);
+                    resultsSection.classList.remove("hidden");
+                }
+
+            } catch (error) {
+                console.error("Search failed:", error);
+                displayError(`Pencarian gagal: ${error.message}. Pastikan nama ponsel benar atau coba nama lain.`);
+            } finally {
+                loadingDiv.classList.add("hidden");
+                searchButton.disabled = false;
+                searchInput.disabled = false;
+            }
+        }
+
+        function displayResultsAsCard(data) {
+            resultsDiv.innerHTML = "";
+            errorMessageDiv.classList.add("hidden");
+
+            const card = document.createElement("div");
+            card.className = "col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200 flex flex-col";
+            card.addEventListener('click', () => showDetailsInModal(data));
+
+            // Use correct keys based on assumed API response structure
+            let imageUrl = data.img || 'https://via.placeholder.com/150?text=No+Image';
+            let phoneName = data.name || "Nama Tidak Diketahui";
+            let displayInfo = getSpecValue(data.detailSpec, "Display", "Size");
+            let batteryInfo = getSpecValue(data.detailSpec, "Battery", "Type");
+
+            // Improved Camera Info Extraction using getSpecValue
+            let cameraInfo = getSpecValue(data.detailSpec, "Main Camera", "Quad") ||
+                             getSpecValue(data.detailSpec, "Main Camera", "Triple") ||
+                             getSpecValue(data.detailSpec, "Main Camera", "Dual") ||
+                             getSpecValue(data.detailSpec, "Main Camera", "Single") || "N/A";
+
+             // Fallback: if no specific type found, get the value of the first item in the specs array
+            if (cameraInfo === "N/A") {
+                const cameraCategory = data.detailSpec?.find(cat => cat.category === "Main Camera");
+                 if (cameraCategory && Array.isArray(cameraCategory.specifications) && cameraCategory.specifications.length > 0) {
+                     // Assuming the first item, even if not an object or doesn't have 'name', might contain a value
+                     const firstItem = cameraCategory.specifications[0];
+                      if (typeof firstItem === 'object' && firstItem.value) {
+                          cameraInfo = firstItem.value;
+                     } else if (typeof firstItem === 'string') {
+                         cameraInfo = firstItem; // Use raw string if it's not an object
+                     }
+                 }
+            }
+
+
+            card.innerHTML = `
+                <div class="p-4 flex flex-col items-center flex-grow">
+                    <!-- Image container with centering -->
+                    <div class="w-full flex justify-center mb-4">
+                        <img src="${imageUrl}" alt="${phoneName}" class="w-full h-32 object-contain"> <!-- Ensure image displays -->
+                    </div>
+                    <h3 class="text-lg font-semibold text-center mb-2 truncate w-full">${phoneName}</h3>
+                    ${data.priceIDR ? `<p class="text-sm font-medium text-green-600 dark:text-green-400 text-center mb-2">${data.priceIDR}</p>` : ''}
+                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 text-center w-full">
+                        <p><span class="font-medium">Layar:</span> ${displayInfo}</p>
+                        <p><span class="font-medium">Kamera:</span> ${cameraInfo.split('\n')[0]}</p> <!-- Show only first line of camera info -->
+                        <p><span class="font-medium">Baterai:</span> ${batteryInfo}</p>
+                    </div>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 text-ios-blue text-center text-sm font-medium">
+                    Lihat Detail
+                </div>
+            `;
+            resultsDiv.appendChild(card);
+        }
+
+        function showDetailsInModal(data) {
+            modalTitle.textContent = data.name || "Detail Ponsel";
+            modalBody.innerHTML = '';
+
+            let content = '';
+            if (data.img) {
+                content += `<img src="${data.img}" alt="${data.name || "Phone Image"}" class="max-w-[150px] float-right ml-4 mb-4 rounded-lg border border-gray-200 dark:border-gray-700 p-1">`;
+            }
+
+            // Iterate through detailSpec array if it exists
+            if (Array.isArray(data.detailSpec)) {
+                data.detailSpec.forEach(categoryData => {
+                    if (categoryData.category && Array.isArray(categoryData.specifications)) {
+                        content += `<div class="mb-6 clear-both">
+                                        <h3 class="text-base font-semibold mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">${categoryData.category}</h3>
+                                        <ul class="text-sm space-y-1">`;
+                        categoryData.specifications.forEach(item => { // <== Perbaikan Logika JS (Loop langsung ke item)
+                             // <== Perbaikan Logika JS (Hapus try/catch dan JSON.parse)
+                            // Check if the item is an object with name and value properties
+                            if (item && typeof item === 'object' && item.name && item.value) {
+                                // Use flex-col for better alignment when value is complex
+                                content += `<li class="flex flex-col items-start py-1">
+                                                <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">${item.name}:</span>
+                                                <div class="text-left w-full pl-2 text-gray-600 dark:text-gray-400 whitespace-pre-wrap">${item.value}</div>
+                                            </li>`;
+                            } else if (item && typeof item === 'string') {
+                                // Fallback for simple string items
+                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">${item}</li>`;
+                            } else {
+                                // Handle other unexpected formats gracefully
+                                console.warn("Unexpected spec item format in modal:", item);
+                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">Format spesifikasi tidak diketahui.</li>`; // Or JSON.stringify(item) for debugging
+                            }
+                        });
+                        content += `    </ul>
+                                   </div>`;
+                    }
+                });
+            } else {
+                 // Fallback if detailSpec is not an array or missing
+                 content += '<p>Tidak ada detail spesifikasi yang ditemukan dalam format yang diharapkan.</p>';
+            }
+
+            modalBody.innerHTML = content || '<p>Tidak ada detail spesifikasi yang ditemukan.</p>';
+            openModal();
+        }
+
+        function displayError(message) {
+            resultsDiv.innerHTML = "";
+            resultsSection.classList.add("hidden");
+            errorMessageDiv.innerHTML = `<p>${message}</p>`;
+            errorMessageDiv.classList.remove("hidden");
+        }
+
+        // --- Event Listeners ---
+        searchButton.addEventListener("click", performSearch);
+        searchInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                performSearch();
+            }
+        });
+
+        // Show Welcome Toast on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            const toastOverlay = document.getElementById("welcome-toast-overlay");
+            const toast = document.getElementById("welcome-toast");
+            const toastCloseButton = document.getElementById("toast-close-button");
+
+            function showToast() {
+                if (toastOverlay && toast) {
+                    toastOverlay.classList.add("show");
+                    toast.classList.add("show");
+                }
+            }
+
+            function hideToast() {
+                if (toastOverlay && toast) {
+                    toastOverlay.classList.remove("show");
+                    toast.classList.remove("show");
+                }
+            }
+
+            if (toastOverlay && toast && toastCloseButton) {
+                // Show the toast automatically after a short delay
+                setTimeout(showToast, 500);
+
+                // Hide the toast after a few seconds
+                setTimeout(hideToast, 7500); // Toast visible for 7 seconds
+
+                // Add event listener for the close button
+                toastCloseButton.addEventListener("click", hideToast);
+
+                // Optional: Close toast if user clicks on the overlay (outside the toast content)
+                toastOverlay.addEventListener("click", (event) => {
+                    if (event.target === toastOverlay) {
+                        hideToast();
+                    }
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>
