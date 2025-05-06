@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HpGaul</title>
+    <title>Hp<span class="text-ios-blue">Gaul</span></title>
     <meta name="description" content="HpGaul - Temukan spesifikasi ponsel terbaru dan terlengkap. Dapatkan informasi detail, perbandingan, dan berita terkini seputar dunia gadget dan teknologi seluler.">
     <meta name="keywords" content="hp gaul, spesifikasi hp, ponsel terbaru, info gadget, teknologi seluler, perbandingan hp, berita hp">
     <link rel="canonical" href="https://www.hpgaul.my.id/">
@@ -41,7 +41,7 @@
                     },
                     colors: { // <== Perbaikan Sintaks JS
                         ios: {
-                            blue: '#007AFF',
+                            blue: '#0000FF',
                             gray: {
                                 100: '#F2F2F7',
                                 200: '#E5E5EA',
@@ -190,12 +190,12 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border-left-color: #007AFF; /* iOS blue */
+            border-left-color: #0000FF; /* iOS blue */
             animation: spin 1s ease infinite;
         }
         .dark .spinner {
              border: 4px solid rgba(255, 255, 255, 0.1);
-             border-left-color: #007AFF;
+             border-left-color: #0000FF;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -216,13 +216,13 @@
           width: 48px;
           height: 48px;
           margin: 6px;
-          border: 4px solid #007AFF;
+          border: 4px solid #0000FF;
           border-radius: 50%;
           animation: modern-spinner-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-          border-color: #007AFF transparent transparent transparent;
+          border-color: #0000FF transparent transparent transparent;
         }
         .dark .modern-spinner div {
-          border-color: #007AFF transparent transparent transparent;
+          border-color: #0000FF transparent transparent transparent;
         }
         .modern-spinner div:nth-child(1) { animation-delay: -0.45s; }
         .modern-spinner div:nth-child(2) { animation-delay: -0.3s; }
@@ -319,8 +319,7 @@
             animation-delay: -6s;
         }
         .overlay-animated-bg {
-            background-color: rgba(24, 119, 242, 0.85); /* Facebook blue with some transparency */
-            backdrop-filter: blur(5px);
+            background-color: #FFFFFF; /* Solid white */
         }
         .overlay-animated-bg::before, .overlay-animated-bg::after {
             z-index: -1; /* Ensure blobs are behind overlay content but above main page */
@@ -345,7 +344,7 @@
                     <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
                     </svg>
-                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
                 </div>
                 <!-- Dark Mode Toggle & Navbar Toggle -->
                 <div class="flex items-center space-x-2">
@@ -384,20 +383,20 @@
          x-transition:leave="transition ease-in duration-300 transform"
          x-transition:leave-start="translate-y-0"
          x-transition:leave-end="-translate-y-full"
-         class="fixed inset-0 z-30 text-white flex flex-col items-center justify-center space-y-8 p-8 md:hidden font-poppins overlay-animated-bg"
+         class="fixed inset-0 z-30 text-black flex flex-col items-center justify-center space-y-8 p-8 md:hidden font-poppins overlay-animated-bg"
          style="display: none;" @click.away="navOpen = false">
 
-        <a href="#search-section-container" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-blue-400 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-purple-400 filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
+        <a href="#search-section-container" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
   <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
 </svg>Pencarian Cepat</a>
-        <a href="#carousel-popular" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-blue-400 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-purple-400 filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
+        <a href="#carousel-popular" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
   <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.116 3.986 1.257 5.27c.271 1.136-.964 2.033-1.96 1.425L12 18.354l-4.543 2.86c-.996.608-2.231-.29-1.96-1.425l1.257-5.27-4.117-3.986c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
 </svg>Populer Saat Ini</a>
-        <a href="#" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-blue-400 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-purple-400 filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
+        <a href="#" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
   <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.67-1.34l.04-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
 </svg>Tentang HpGaul</a>
 
-            <button @click="navOpen = false" class="absolute top-6 right-6 p-2 rounded-md text-purple-400 hover:text-purple-300 focus:outline-none">
+            <button @click="navOpen = false" class="absolute top-6 right-6 p-2 rounded-md text-black hover:text-gray-700 focus:outline-none">
             <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -464,36 +463,35 @@
         <!-- Funny/Informative Content Carousel -->
         <section id="informative-carousel-section" class="mb-12 bg-black p-6 rounded-lg shadow-lg text-white relative overflow-hidden" x-data="{
             activeSlide: 0,
-            slides: [
+            slslides: [
                 {
                     title:
                         `<span class='text-blue-400'>Salah pilih</span> smartphone bikin <span class='text-green-400'>jengkel?</span>`,
-                    content: `` // Content removed
+                    content: `Jangan biarkan pilihan yang salah merusak harimu. Kami di sini untuk membantu!`
                 },
                 {
                     title:
                         `Baterai <span class='text-red-400'>Boros</span> Kayak Dompet Tanggal Tua?`,
-                    content: `` // Content removed
+                    content: `Cari tahu HP dengan daya tahan baterai super awet bersama kami.`
                 },
                 {
                     title:
                         `Jangan Sampai <span class='text-yellow-400'>Salah Pilih</span> Lagi!`,
-                    content: `` // Content removed
+                    content: `Dengan info lengkap dari Hp<span class='text-ios-blue'>Gaul</span>, pilihanmu pasti tepat sasaran.`
                 },
                 {
                     title:
                         `Temukan <span class='text-purple-400'>HP Idamanmu</span> Sekarang!`,
-                    content: `` // Content removed
+                    content: `Mulai petualanganmu mencari smartphone impian di sini.`
                 },
                 {
-                    title:
-                        `<span class='text-teal-400'>HpGaul</span> Solusi Cerdas Anti Jengkel!`,
-                    content: `` // Content removed
+                    title:                        `<span class='text-ios-blue'>HpGaul</span> Solusi Cerdas Anti Jengkel!`,
+                    content: `Bingung pilih HP? Tenang, kami bantu temukan yang pas buatmu!`
                 }
             ],
             loop() {
                 setInterval(() => {
-                    this.activeSlide = (this.activeSlide + 1) % this.slides.length
+                    this.activeSlide = (this.activeSlide + 1) % this.slslides.length
                 }, 5000); // Change slide every 5 seconds
             }
         }" x-init="loop()">
@@ -502,12 +500,12 @@
 
             <!-- Carousel Container -->
             <div class="relative flex items-center justify-center overflow-hidden" style="min-height: 12rem;"> <!-- Adjusted: dynamic min-height based on content, but still a base for transition visibility -->
-                <template x-for="(slide, index) in slides" :key="index">
+                <template x-for="(slide, index) in slslides" :key="index">
                     <div x-show="activeSlide === index"
-                         x-transition:enter="transition ease-out duration-[1500ms]"
+                         x-transition:enter="transition ease-in-out duration-700ms delay-300ms"
                          x-transition:enter-start="opacity-0 transform translate-x-full"
                          x-transition:enter-end="opacity-100 transform translate-x-0"
-                         x-transition:leave="transition ease-in duration-[1500ms]"
+                         x-transition:leave="transition ease-in-out duration-300ms"
                          x-transition:leave-start="opacity-100 transform translate-x-0"
                          x-transition:leave-end="opacity-0 transform -translate-x-full"
                          class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center">
@@ -518,7 +516,7 @@
             </div>
             <!-- Centered Button Below Carousel -->
             <div class="mt-6 flex justify-center">
-                <a href="#search-section-container" class="inline-flex items-center justify-center text-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                <a href="#search-section-container" class="inline-flex items-center justify-center text-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-ios-blue hover:bg-ios-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2 flex-shrink-0">
                         <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
                     </svg>
@@ -539,7 +537,7 @@
                     <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
                     </svg>
-                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 text-center md:text-left">
                     Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena.
@@ -550,7 +548,7 @@
                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Tautan Cepat</h3>
                 <ul class="space-y-2">
                     <li><a href="#search-section-container" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Pencarian</a></li>
-                    <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
+                    <li><a href="tentang.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
                     <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Kontak</a></li>
                 </ul>
             </div>
@@ -558,15 +556,15 @@
             <div class="text-center md:text-left">
                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Ikuti Kami</h3>
                 <div class="flex justify-center md:justify-start space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <a href="#" class="text-ios-blue hover:opacity-80">
                         <span class="sr-only">Facebook</span>
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <a href="#" class="text-ios-blue hover:opacity-80">
                         <span class="sr-only">Instagram</span>
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.023.047 1.351.058 3.807.058h.468c2.456 0 2.784-.011 3.807-.058.975-.045 1.504-.207 1.857-.344.467-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.047-1.023.058-1.351.058-3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
+                    <a href="#" class="text-ios-blue hover:opacity-80">
                         <span class="sr-only">Twitter</span>
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
                     </a>
@@ -574,7 +572,7 @@
             </div>
         </div>
         <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center">
-            <p class="text-sm text-gray-500 dark:text-gray-400">© 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>. All rights reserved.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">© 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
         </div>
     </footer>
 
@@ -816,11 +814,9 @@
                         <p><span class="font-medium">Kamera:</span> ${cameraInfo.split('\n')[0]}</p> <!-- Show only first line of camera info -->
                         <p><span class="font-medium">Baterai:</span> ${batteryInfo}</p>
                     </div>
-                </div>
-                <div class="p-3 bg-gray-50 dark:bg-gray-700 text-ios-blue dark:text-blue-400 text-center text-sm font-medium">
+                          <div class="p-3 bg-ios-blue text-white text-center text-sm font-medium">
                     Lihat Detail
-                </div>
-            `;
+                </div>       `;
             resultsDiv.appendChild(card);
         }
 
