@@ -39,7 +39,7 @@
                         // Set Poppins as the default sans-serif font
                         sans: ["Poppins", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
                     },
-                    colors: {
+                    colors: { // <== Perbaikan Sintaks JS
                         ios: {
                             blue: '#007AFF',
                             gray: {
@@ -53,7 +53,13 @@
                         },
                         monsterGreen: '#95d600', // Added Monster Energy Green
                         customGreen: '#00FF00' // Added custom green for 'Lihat Detail'
-                      <style>
+                    } // <== Perbaikan Sintaks JS
+                }, // <== Perbaikan Sintaks JS
+            }, // <== Perbaikan Sintaks JS
+        } // <== Perbaikan Sintaks JS
+    </script>
+
+    <style>
         /* Welcome Toast Styles */
         #welcome-toast-overlay {
             position: fixed;
@@ -104,7 +110,8 @@
             font-weight: 600;
             margin-bottom: 0.1rem; /* Further reduced margin */
             line-height: 1.15; /* Further reduced line-height for extreme compactness */
-            color: #ffffff;
+            color: #ffffff; /* <== OK */
+            /* REMOVE: color: #39FF14; */ /* <== Perbaikan Sintaks CSS */
         }
 
         .toast-instructions {
@@ -280,11 +287,17 @@
             animation-delay: 0.2s;
         }
         .animation-delay-1000 {
-            animation-delay: 1    <style>
+            animation-delay: 1s; /* <== Perbaikan Sintaks CSS */
+        } /* <== Perbaikan Sintaks CSS */
+
+    </style> <!-- <== Perbaikan Sintaks CSS -->
+
+    <style>
+        /* Animated Background Styles */
         body::before, body::after, .overlay-animated-bg::before, .overlay-animated-bg::after {
-            content: ""; /* Ensure content is an empty string */
+            content: "";
             position: fixed;
-            opacity: 0.08; /* Slightly more visible */
+            opacity: 0.08;
             z-index: -1;
             animation: float 12s ease-in-out infinite alternate;
             background-repeat: no-repeat;
@@ -293,16 +306,16 @@
         body::before, .overlay-animated-bg::before {
             left: 5%;
             top: 15%;
-            width: 150px; /* Larger */
+            width: 150px;
             height: 150px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\%27 viewBox=\'0 0 200 200\%27%3E%3Cdefs%3E%3ClinearGradient id=\'g1\%27 x1=\'0%25\%27 y1=\'0%25\%27 x2=\'100%25\%27 y2=\'100%25\%27%3E%3Cstop offset=\'0%25\%27 style=\'stop-color:%238B5CF6;stop-opacity:1\%27 /%3E%3Cstop offset=\'100%25\%27 style=\'stop-color:%23C084FC;stop-opacity:1\%27 /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g1)\%27 d=\'M40,0 C40,0 100,0 120,0 C140,0 160,20 160,40 C160,60 140,80 120,80 C100,80 80,100 80,120 C80,140 100,160 120,160 C140,160 160,180 160,200 C160,200 100,200 80,200 C60,200 40,180 40,160 C40,140 60,120 80,120 C100,120 120,100 120,80 C120,60 100,40 80,40 C60,40 40,20 40,0 Z\%27 transform=\'rotate(15 100 100) translate(10 10)\%27%3E%3CanimateTransform attributeName=\'transform\%27 type=\'rotate\%27 from=\'0 100 100\%27 to=\'360 100 100\%27 dur=\'20s\%27 repeatCount=\'indefinite\%27/%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Cdefs%3E%3ClinearGradient id=\'g1\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%238B5CF6;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23C084FC;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g1)\' d=\'M40,0 C40,0 100,0 120,0 C140,0 160,20 160,40 C160,60 140,80 120,80 C100,80 80,100 80,120 C80,140 100,160 120,160 C140,160 160,180 160,200 C160,200 100,200 80,200 C60,200 40,180 40,160 C40,140 60,120 80,120 C100,120 120,100 120,80 C120,60 100,40 80,40 C60,40 40,20 40,0 Z\' transform=\'rotate(15 100 100) translate(10 10)\'%3E%3CanimateTransform attributeName=\'transform\' type=\'rotate\' from=\'0 100 100\' to=\'360 100 100\' dur=\'20s\' repeatCount=\'indefinite\'/%3E%3C/path%3E%3C/svg%3E");
         }
         body::after, .overlay-animated-bg::after {
             right: 8%;
             top: 55%;
-            width: 120px; /* Larger */
+            width: 120px;
             height: 120px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\%27 viewBox=\'0 0 200 200\%27%3E%3Cdefs%3E%3ClinearGradient id=\'g2\%27 x1=\'0%25\%27 y1=\'0%25\%27 x2=\'100%25\%27 y2=\'100%25\%27%3E%3Cstop offset=\'0%25\%27 style=\'stop-color:%23EC4899;stop-opacity:1\%27 /%3E%3Cstop offset=\'100%25\%27 style=\'stop-color:%23F472B6;stop-opacity:1\%27 /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g2)\%27 d=\'M178.4,100.5c-0.2,14.6-3.4,29.2-9.4,42.8c-6,13.6-14.6,25.7-25.5,35.7c-10.9,10-23.7,17.6-37.9,22.3c-14.2,4.7-29.4,6.4-44.6,4.9c-15.2-1.5-30-6.3-43.2-14.2c-13.2-7.9-24.4-18.7-33-31.7c-8.6-13-14.2-27.8-16.6-43.2c-2.3-15.5-1.3-31.3,2.9-46.3c4.2-15,11.7-29,21.9-41.2c10.2-12.2,22.8-22.3,37.1-29.6c14.3-7.3,30-11.6,46.1-12.6c16.1-1,32.1,1.4,47.1,7.1c15,5.7,28.6,14.6,40.1,26.2C174.1,38.1,180.3,53.9,179.9,70C179.6,80.2,179.1,90.4,178.4,100.5z\%27 transform=\'rotate(-10 100 100) translate(-5 -5)\%27%3E%3CanimateTransform attributeName=\'transform\%27 type=\'rotate\%27 from=\'0 100 100\%27 to=\"-360 100 100\%27 dur=\'25s\%27 repeatCount=\'indefinite\%27/%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Cdefs%3E%3ClinearGradient id=\'g2\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23EC4899;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23F472B6;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g2)\' d=\'M178.4,100.5c-0.2,14.6-3.4,29.2-9.4,42.8c-6,13.6-14.6,25.7-25.5,35.7c-10.9,10-23.7,17.6-37.9,22.3c-14.2,4.7-29.4,6.4-44.6,4.9c-15.2-1.5-30-6.3-43.2-14.2c-13.2-7.9-24.4-18.7-33-31.7c-8.6-13-14.2-27.8-16.6-43.2c-2.3-15.5-1.3-31.3,2.9-46.3c4.2-15,11.7-29,21.9-41.2c10.2-12.2,22.8-22.3,37.1-29.6c14.3-7.3,30-11.6,46.1-12.6c16.1-1,32.1,1.4,47.1,7.1c15,5.7,28.6,14.6,40.1,26.2C174.1,38.1,180.3,53.9,179.9,70C179.6,80.2,179.1,90.4,178.4,100.5z\' transform=\'rotate(-10 100 100) translate(-5 -5)\'%3E%3CanimateTransform attributeName=\'transform\' type=\'rotate\' from=\'0 100 100\' to=\'-360 100 100\'%27 dur=\'25s\%27 repeatCount=\'indefinite\'/%3E%3C/path%3E%3C/svg%3E"); /* <== Perbaikan Penempatan Kutip di URL SVG */
             animation-delay: -6s;
         }
         .overlay-animated-bg {
@@ -318,7 +331,9 @@
             50% { transform: translateY(-25px) rotate(15deg) scale(1.05); }
             100% { transform: translateY(0px) rotate(0deg) scale(1); }
         }
-    </style>-100 font-sans antialiased pt-24" x-data="{ navOpen: false }"> <!-- Increased padding-top -->
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased pt-24" x-data="{ navOpen: false }">
 
     <!-- Navbar -->
     <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
@@ -362,16 +377,16 @@
     </nav>
 
     <!-- Full-page Overlay Navbar -->
-    <div x-show="navOpen" 
+    <div x-show="navOpen"
          x-transition:enter="transition ease-out duration-300 transform"
          x-transition:enter-start="-translate-y-full"
          x-transition:enter-end="translate-y-0"
          x-transition:leave="transition ease-in duration-300 transform"
          x-transition:leave-start="translate-y-0"
          x-transition:leave-end="-translate-y-full"
-         class="fixed inset-0 z-30 text-white flex flex-col items-center justify-center space-y-8 p-8 md:hidden font-poppins overlay-animated-bg" 
+         class="fixed inset-0 z-30 text-white flex flex-col items-center justify-center space-y-8 p-8 md:hidden font-poppins overlay-animated-bg"
          style="display: none;" @click.away="navOpen = false">
-        
+
         <a href="#search-section-container" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-blue-400 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-purple-400 filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
   <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
 </svg>Pencarian Cepat</a>
@@ -451,34 +466,34 @@
             activeSlide: 0,
             slides: [
                 {
-                    title: 
+                    title:
                         `<span class='text-blue-400'>Salah pilih</span> smartphone bikin <span class='text-green-400'>jengkel?</span>`,
                     content: `` // Content removed
                 },
                 {
-                    title: 
+                    title:
                         `Baterai <span class='text-red-400'>Boros</span> Kayak Dompet Tanggal Tua?`,
                     content: `` // Content removed
                 },
                 {
-                    title: 
+                    title:
                         `Jangan Sampai <span class='text-yellow-400'>Salah Pilih</span> Lagi!`,
                     content: `` // Content removed
                 },
                 {
-                    title: 
+                    title:
                         `Temukan <span class='text-purple-400'>HP Idamanmu</span> Sekarang!`,
                     content: `` // Content removed
                 },
                 {
-                    title: 
+                    title:
                         `<span class='text-teal-400'>HpGaul</span> Solusi Cerdas Anti Jengkel!`,
                     content: `` // Content removed
                 }
             ],
             loop() {
-                setInterval(() => { 
-                    this.activeSlide = (this.activeSlide + 1) % this.slides.length 
+                setInterval(() => {
+                    this.activeSlide = (this.activeSlide + 1) % this.slides.length
                 }, 5000); // Change slide every 5 seconds
             }
         }" x-init="loop()">
@@ -509,9 +524,7 @@
                     </svg>
                     <span>Cari HP Impianmu<br>Sekarang!</span>
                 </a>
-            </div>
-                     </a>
-                 </div>
+                <!-- REMOVE: </a> --> <!-- <== Perbaikan Sintaks HTML -->
             </div>
         </section>
 
@@ -561,7 +574,7 @@
             </div>
         </div>
         <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center">
-            <p class="text-sm text-gray-500 dark:text-gray-400">&copy; 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>. All rights reserved.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">© 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>. All rights reserved.</p>
         </div>
     </footer>
 
@@ -569,7 +582,7 @@
     <div id="welcome-toast-overlay">
         <!-- Welcome Toast -->
         <div id="welcome-toast">
-            <button id="toast-close-button" class="toast-close-button">&times;</button>
+            <button id="toast-close-button" class="toast-close-button">×</button>
             <svg class="toast-logo text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
             </svg>
@@ -636,8 +649,7 @@
         const modalBody = document.getElementById("modal-body");
         const modalCloseButton = document.getElementById("modal-close-button");
         const carouselPopular = document.getElementById("carousel-popular");
-        const carouselTrending = document.getElementById("carousel-trending");
-        const carouselNew = document.getElementById("carousel-new");
+        // Removed references to carouselTrending and carouselNew as sections were removed
 
         // --- Dark Mode Logic ---
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -667,24 +679,19 @@
         // --- Carousel Population Logic (Now Grid) ---
         function createGridCard(phone) {
             const card = document.createElement("div");
-            // Updated class to match reference image: light gray bg, rounded, subtle border, shadow
-            card.className = "bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-200 p-4 text-center border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-between"; // Removed carousel-card, added new styles
+            card.className = "bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-200 p-4 text-center border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-between";
             card.innerHTML = `
                 <div class="flex-grow flex flex-col items-center justify-center w-full mb-3">
-                    <img src="${phone.img || 'https://via.placeholder.com/120x150?text=N/A'}" alt="${phone.name}" class="w-auto h-32 mx-auto mb-3 object-contain"> <!-- Adjusted image size/margin -->
+                    <img src="${phone.img || 'https://via.placeholder.com/120x150?text=N/A'}" alt="${phone.name}" class="w-auto h-32 mx-auto mb-3 object-contain">
                     <div class="flex items-center justify-center space-x-1">
                         <h3 class="text-sm font-semibold truncate">${phone.name}</h3>
-                        <!-- Add 'baru' label based on a hypothetical 'isNew' flag or if it's in the original newPhones list -->
                         ${(typeof newPhones !== 'undefined' && newPhones.some(p => p.name === phone.name)) ? '<span class="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded-full">baru</span>' : ''}
                     </div>
-                    <!-- Removed price and specs -->
                 </div>
-                <!-- Updated detail button: white bg, black bold text, rounded bottom corners -->
-                <div class="p-2 bg-white text-black text-center text-xs font-semibold w-full mt-2 rounded-b-xl border-t border-gray-200 dark:border-gray-700">
+                <div class="p-2 bg-white dark:bg-gray-700 text-black dark:text-white text-center text-xs font-semibold w-full mt-2 rounded-b-xl border-t border-gray-200 dark:border-gray-700">
                     Lihat Detail
                 </div>
             `;
-            // Keep the click functionality to search for the phone
             card.addEventListener('click', () => {
                 searchInput.value = phone.name;
                 performSearch();
@@ -703,24 +710,16 @@
         // Use populateGrid for the popular section
         populateGrid(carouselPopular, popularPhones);
         // Removed population for trending and new sections as they are deleted
-        // populateCarousel(carouselTrending, trendingPhones);
-        // populateCarousel(carouselNew, newPhones);
 
         // --- Helper function to get spec value ---
         function getSpecValue(detailSpec, categoryName, specName) {
             const category = detailSpec?.find(cat => cat.category === categoryName);
             if (!category || !Array.isArray(category.specifications)) return "N/A";
 
-            for (const specString of category.specifications) {
-                try {
-                    // Check if specString is already an object (just in case API changes)
-                    let spec = (typeof specString === 'string') ? JSON.parse(specString) : specString;
-                    if (spec && spec.name === specName) { // Check 'name' field
-                        return spec.value || "N/A";
-                    }
-                } catch (e) {
-                    // Ignore if parsing fails for this specific string
-                    console.warn(`Failed to parse spec string in getSpecValue: ${specString}`, e);
+            for (const item of category.specifications) { // <== Perbaikan Logika JS (Loop langsung ke item)
+                 // <== Perbaikan Logika JS (Hapus try/catch dan JSON.parse)
+                if (item && typeof item === 'object' && item.name === specName) { // Cek jika item adalah objek dengan nama yang cocok
+                    return item.value || "N/A";
                 }
             }
             return "N/A"; // Not found
@@ -742,15 +741,18 @@
             searchInput.disabled = true;
 
             try {
+                // Pastikan endpoint scraping API Anda sudah benar
                 const response = await fetch(`/api/scrape?query=${encodeURIComponent(query)}`);
                 const data = await response.json();
 
                 if (!response.ok) {
+                    // Tangani error HTTP (misal 404, 500)
                     throw new Error(data.error || `HTTP error! status: ${response.status}`);
                 }
 
-                if (data.error) {
-                     displayError(data.error);
+                if (data.error || !data.name) {
+                     // Tangani error dari API atau jika data ponsel tidak ditemukan
+                     displayError(data.error || `Ponsel dengan nama "${query}" tidak ditemukan atau terjadi kesalahan.`);
                 } else {
                     displayResultsAsCard(data);
                     resultsSection.classList.remove("hidden");
@@ -758,7 +760,7 @@
 
             } catch (error) {
                 console.error("Search failed:", error);
-                displayError(`Pencarian gagal: ${error.message}`);
+                displayError(`Pencarian gagal: ${error.message}. Pastikan nama ponsel benar atau coba nama lain.`);
             } finally {
                 loadingDiv.classList.add("hidden");
                 searchButton.disabled = false;
@@ -780,44 +782,42 @@
             let displayInfo = getSpecValue(data.detailSpec, "Display", "Size");
             let batteryInfo = getSpecValue(data.detailSpec, "Battery", "Type");
 
-            // Improved Camera Info Extraction
-            let cameraInfo = "N/A";
-            const cameraCategory = data.detailSpec?.find(cat => cat.category === "Main Camera");
-            if (cameraCategory && Array.isArray(cameraCategory.specifications)) {
-                for (const specString of cameraCategory.specifications) {
-                    try {
-                        let spec = (typeof specString === 'string') ? JSON.parse(specString) : specString;
-                        // Check for common camera type keys
-                        if (spec && ["Quad", "Triple", "Dual", "Single"].includes(spec.name)) {
-                            cameraInfo = spec.value;
-                            break; // Found the main camera spec
-                        }
-                    } catch (e) { console.warn(`Failed to parse camera spec string: ${specString}`, e); }
-                }
-                // Fallback if no specific type found, take the first spec's value
-                if (cameraInfo === "N/A" && cameraCategory.specifications.length > 0) {
-                     try {
-                         let firstSpec = (typeof cameraCategory.specifications[0] === 'string') ? JSON.parse(cameraCategory.specifications[0]) : cameraCategory.specifications[0];
-                         cameraInfo = firstSpec?.value || "N/A";
-                     } catch(e) { console.warn(`Failed to parse first camera spec string: ${cameraCategory.specifications[0]}`, e); }
-                }
+            // Improved Camera Info Extraction using getSpecValue
+            let cameraInfo = getSpecValue(data.detailSpec, "Main Camera", "Quad") ||
+                             getSpecValue(data.detailSpec, "Main Camera", "Triple") ||
+                             getSpecValue(data.detailSpec, "Main Camera", "Dual") ||
+                             getSpecValue(data.detailSpec, "Main Camera", "Single") || "N/A";
+
+             // Fallback: if no specific type found, get the value of the first item in the specs array
+            if (cameraInfo === "N/A") {
+                const cameraCategory = data.detailSpec?.find(cat => cat.category === "Main Camera");
+                 if (cameraCategory && Array.isArray(cameraCategory.specifications) && cameraCategory.specifications.length > 0) {
+                     // Assuming the first item, even if not an object or doesn't have 'name', might contain a value
+                     const firstItem = cameraCategory.specifications[0];
+                      if (typeof firstItem === 'object' && firstItem.value) {
+                          cameraInfo = firstItem.value;
+                     } else if (typeof firstItem === 'string') {
+                         cameraInfo = firstItem; // Use raw string if it's not an object
+                     }
+                 }
             }
 
+
             card.innerHTML = `
-                <div class="p-4 flex flex-col items-center flex-grow"> 
+                <div class="p-4 flex flex-col items-center flex-grow">
                     <!-- Image container with centering -->
                     <div class="w-full flex justify-center mb-4">
-                        <img src="${imageUrl || 'https://via.placeholder.com/150x180?text=N/A'}" alt="${phoneName}" class="w-full h-32 object-contain"> <!-- Ensure image displays -->
+                        <img src="${imageUrl}" alt="${phoneName}" class="w-full h-32 object-contain"> <!-- Ensure image displays -->
                     </div>
                     <h3 class="text-lg font-semibold text-center mb-2 truncate w-full">${phoneName}</h3>
                     ${data.priceIDR ? `<p class="text-sm font-medium text-green-600 dark:text-green-400 text-center mb-2">${data.priceIDR}</p>` : ''}
-                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 text-center">
+                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 text-center w-full">
                         <p><span class="font-medium">Layar:</span> ${displayInfo}</p>
                         <p><span class="font-medium">Kamera:</span> ${cameraInfo.split('\n')[0]}</p> <!-- Show only first line of camera info -->
                         <p><span class="font-medium">Baterai:</span> ${batteryInfo}</p>
                     </div>
                 </div>
-                <div class="p-3 bg-gray-50 dark:bg-gray-700 text-center text-sm text-ios-blue font-medium">
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 text-ios-blue dark:text-blue-400 text-center text-sm font-medium">
                     Lihat Detail
                 </div>
             `;
@@ -825,11 +825,11 @@
         }
 
         function showDetailsInModal(data) {
-            modalTitle.textContent = data.name || "Detail Ponsel"; // Use data.name
+            modalTitle.textContent = data.name || "Detail Ponsel";
             modalBody.innerHTML = '';
 
             let content = '';
-            if (data.img) { // Use data.img
+            if (data.img) {
                 content += `<img src="${data.img}" alt="${data.name || "Phone Image"}" class="max-w-[150px] float-right ml-4 mb-4 rounded-lg border border-gray-200 dark:border-gray-700 p-1">`;
             }
 
@@ -840,24 +840,22 @@
                         content += `<div class="mb-6 clear-both">
                                         <h3 class="text-base font-semibold mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">${categoryData.category}</h3>
                                         <ul class="text-sm space-y-1">`;
-                        categoryData.specifications.forEach(specString => {
-                            try {
-                                // Check if specString is already an object (just in case API changes)
-                                let spec = (typeof specString === 'string') ? JSON.parse(specString) : specString;
-                                if (spec && spec.name && spec.value) { // Use 'name' and 'value' based on screenshot
-                                    // Use flex-col for better alignment when value is complex
-                                    content += `<li class="flex flex-col items-start py-1">
-                                                    <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">${spec.name}:</span>
-                                                    <div class="text-left w-full pl-2 text-gray-600 dark:text-gray-400 whitespace-pre-wrap">${spec.value}</div>
-                                                </li>`;
-                                } else {
-                                    // Fallback for unexpected spec format within array
-                                    content += `<li class="py-1 text-gray-600 dark:text-gray-400">${(typeof specString === 'string') ? specString : JSON.stringify(specString)}</li>`;
-                                }
-                            } catch (e) {
-                                // Handle cases where specString is not valid JSON
-                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">${specString}</li>`; // Display raw string if parsing fails
-                                console.error("Failed to parse spec string:", specString, e);
+                        categoryData.specifications.forEach(item => { // <== Perbaikan Logika JS (Loop langsung ke item)
+                             // <== Perbaikan Logika JS (Hapus try/catch dan JSON.parse)
+                            // Check if the item is an object with name and value properties
+                            if (item && typeof item === 'object' && item.name && item.value) {
+                                // Use flex-col for better alignment when value is complex
+                                content += `<li class="flex flex-col items-start py-1">
+                                                <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">${item.name}:</span>
+                                                <div class="text-left w-full pl-2 text-gray-600 dark:text-gray-400 whitespace-pre-wrap">${item.value}</div>
+                                            </li>`;
+                            } else if (item && typeof item === 'string') {
+                                // Fallback for simple string items
+                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">${item}</li>`;
+                            } else {
+                                // Handle other unexpected formats gracefully
+                                console.warn("Unexpected spec item format in modal:", item);
+                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">Format spesifikasi tidak diketahui.</li>`; // Or JSON.stringify(item) for debugging
                             }
                         });
                         content += `    </ul>
@@ -866,9 +864,7 @@
                 });
             } else {
                  // Fallback if detailSpec is not an array or missing
-                 content += '<p>Struktur detail spesifikasi tidak sesuai format yang diharapkan.</p>';
-                 // Optionally display raw data for debugging
-                 // content += '<pre class="text-xs whitespace-pre-wrap break-all">'+JSON.stringify(data, null, 2)+'</pre>';
+                 content += '<p>Tidak ada detail spesifikasi yang ditemukan dalam format yang diharapkan.</p>';
             }
 
             modalBody.innerHTML = content || '<p>Tidak ada detail spesifikasi yang ditemukan.</p>';
@@ -919,7 +915,7 @@
 
                 // Add event listener for the close button
                 toastCloseButton.addEventListener("click", hideToast);
-                
+
                 // Optional: Close toast if user clicks on the overlay (outside the toast content)
                 toastOverlay.addEventListener("click", (event) => {
                     if (event.target === toastOverlay) {
