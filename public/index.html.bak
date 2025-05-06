@@ -22,7 +22,7 @@
                 extend: {
                     fontFamily: {
                         // Set Poppins as the default sans-serif font
-                        sans: ["Poppins", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+                        sans: ["Poppins", "sans-serif"],
                     },
                     colors: {
                         ios: {
@@ -35,88 +35,13 @@
                                 500: '#AEAEB2',
                                 600: '#8E8E93',
                             }
-                        },
-                        monsterGreen: '#95d600', // Added Monster Energy Green
-                        customGreen: '#00FF00' // Added custom green for 'Lihat Detail'
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Welcome Toast Styles */
-        #welcome-toast-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            pointer-events: none;
-        }
-        #welcome-toast-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        #welcome-toast {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-            background-color: #4A00E0; /* Darker Purple */
-            color: white;
-            padding: 2rem;
-            border-radius: 0.75rem; /* Slightly more rounded */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column; /* Stack logo, title, text */
-            align-items: center;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-            font-family: 'Poppins', sans-serif;
-            max-width: 90%;
-            width: 400px; /* Max width for the toast */
-        }
-        #welcome-toast.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .toast-logo {
-            width: 50px; /* Adjust size as needed */
-            height: 50px;
-            margin-bottom: 0.75rem;
-        }
-        .toast-title {
-            font-size: 1.25rem; /* 20px */
-            font-weight: 600;
-            margin-bottom: 0.1rem; /* Further reduced margin */
-            line-height: 1.15; /* Further reduced line-height for extreme compactness */
-            color: #ffffff;
-        }
-
-        .toast-instructions {
-            font-size: 0.875rem; /* 14px */
-            line-height: 1.2; /* Further reduced line-height */
-            color: #e5e7eb; /* Lighter gray for better contrast on dark purple */
-            margin-top: 0.25rem; /* Added small top margin to control spacing from title */
-            margin-bottom: 0;
-        }
-        .toast-close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            line-height: 1;
-        }
-
         /* Basic scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
@@ -274,7 +199,7 @@
         }
     </style>
 </head>
-<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 font-sans antialiased pt-24" x-data="{ navOpen: false }"> <!-- Increased padding-top -->
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased pt-24"> <!-- Increased padding-top -->
 
     <!-- Navbar -->
     <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
@@ -288,8 +213,8 @@
                     </svg>
                     <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>
                 </div>
-                <!-- Dark Mode Toggle & Navbar Toggle -->
-                <div class="flex items-center space-x-2">
+                <!-- Dark Mode Toggle -->
+                <div class="flex items-center">
                     <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue">
                         <!-- Sun icon -->
                         <svg id="icon-sun" class="h-6 w-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -300,56 +225,40 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                         </svg>
                     </button>
-                    <!-- Navbar Toggle Button -->
-                    <button @click="navOpen = !navOpen" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue md:hidden">
-                        <span class="sr-only">Open main menu</span>
-                        <!-- Menu Icon (Hamburger) -->
-                        <svg x-show="!navOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                        </svg>
-                        <!-- Close Icon (X) -->
-                        <svg x-show="navOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" style="display: none;">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Full-page Overlay Navbar -->
-    <div x-show="navOpen" 
-         x-transition:enter="transition ease-out duration-300 transform"
-         x-transition:enter-start="-translate-y-full"
-         x-transition:enter-end="translate-y-0"
-         x-transition:leave="transition ease-in duration-300 transform"
-         x-transition:leave-start="translate-y-0"
-         x-transition:leave-end="-translate-y-full"
-         class="fixed inset-0 z-30 bg-black dark:bg-black text-white flex flex-col items-center justify-center space-y-8 p-8 md:hidden" 
-         style="display: none;" @click.away="navOpen = false">
-        
-        <a href="#search-section-container" @click="navOpen = false" class="text-2xl font-poppins hover:text-blue-400 transition-colors">Pencarian Cepat</a>
-        <a href="#carousel-popular" @click="navOpen = false" class="text-2xl font-poppins hover:text-blue-400 transition-colors">Populer Saat Ini</a>
-        <a href="#" @click="navOpen = false" class="text-2xl font-poppins hover:text-blue-400 transition-colors">Tentang HpGaul</a>
-
-        <button @click="navOpen = false" class="absolute top-6 right-6 p-2 rounded-md text-gray-400 hover:text-white focus:outline-none">
-            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-    </div>
-
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <!-- Header with Image -->
-        <section id="image-header" class="mb-12 relative overflow-hidden rounded-xl shadow-lg">
-            <img src="/img/header-image.png" alt="HpGaul Header" class="w-full h-auto object-cover">
+        <!-- New Complex Header -->
+        <section id="complex-header" class="mb-12 relative overflow-hidden rounded-xl" x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)">
+            <div class="h-64 md:h-80 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center relative">
+                <!-- Subtle background pattern -->
+                <div class="absolute inset-0 opacity-5 dark:opacity-10" style="background-image: radial-gradient(#444cf7 0.5px, transparent 0.5px), radial-gradient(#444cf7 0.5px, transparent 0.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px;"></div>
+
+                <div class="text-center z-10 px-4">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight leading-tight animate-slide-in-up">
+                        <span class="text-blue-600">Hp</span>Gaul Explorer
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-xl mx-auto animate-slide-in-up animation-delay-200">
+                        Temukan, Bandingkan, Kuasai. Spesifikasi ponsel terlengkap di ujung jarimu.
+                    </p>
+                </div>
+
+                <!-- Floating elements example (optional, requires more JS/CSS for complex animation) -->
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-200 dark:bg-blue-900 rounded-full filter blur-2xl opacity-50 animate-pulse-slow"></div>
+                <div class="absolute -top-10 -right-10 w-52 h-52 bg-purple-200 dark:bg-purple-900 rounded-full filter blur-2xl opacity-50 animate-pulse-slow animation-delay-1000"></div>
+            </div>
+            <!-- Add a subtle shadow/border that appears on scroll -->
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-t from-gray-200 dark:from-gray-700 transition-opacity duration-300" :class="{ 'opacity-100': scrolled, 'opacity-0': !scrolled }"></div>
         </section>
 
         <!-- Search Section -->
         <section id="search-section-container" class="mb-12 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h2 class="text-4xl font-extrabold tracking-tight mb-6 text-center text-gray-900 dark:text-white">Cari Spesifikasi Ponsel</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">Cari Spesifikasi Ponsel</h2>
             <div class="mb-4">
                 <label for="search-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Masukkan Nama Ponsel</label>
                 <div class="flex rounded-md shadow-sm">
@@ -383,150 +292,34 @@
 
         <!-- Carousel Sections -->
         <section class="mb-12">
-            <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 px-3 py-1.5 rounded-lg inline-flex items-center">
-                <!-- Modern Star Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2">
-                    <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                </svg>
-                Populer Saat Ini
-            </h2>
-            <!-- Changed to grid layout -->
-            <div id="carousel-popular" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <h2 class="text-lg font-semibold mb-4 text-white bg-blue-600 dark:bg-blue-700 px-3 py-1.5 rounded-lg inline-flex items-center"><span class="mr-2">📱</span>Populer Saat Ini</h2>
+            <div id="carousel-popular" class="flex overflow-x-auto space-x-4 p-1 no-scrollbar">
                 <!-- Popular phone cards will be populated here -->
             </div>
         </section>
 
-        <!-- Funny/Informative Content Carousel -->
-        <section id="informative-carousel-section" class="mb-12 bg-black p-6 rounded-lg shadow-lg text-white relative overflow-hidden" x-data="{
-            activeSlide: 0,
-            slides: [
-                {
-                    title: 
-                        `<span class='text-blue-400'>Salah pilih</span> smartphone bikin <span class='text-green-400'>jengkel?</span>`,
-                    content: `` // Content removed
-                },
-                {
-                    title: 
-                        `Baterai <span class='text-red-400'>Boros</span> Kayak Dompet Tanggal Tua?`,
-                    content: `` // Content removed
-                },
-                {
-                    title: 
-                        `Jangan Sampai <span class='text-yellow-400'>Salah Pilih</span> Lagi!`,
-                    content: `` // Content removed
-                },
-                {
-                    title: 
-                        `Temukan <span class='text-purple-400'>HP Idamanmu</span> Sekarang!`,
-                    content: `` // Content removed
-                },
-                {
-                    title: 
-                        `<span class='text-teal-400'>HpGaul</span> Solusi Cerdas Anti Jengkel!`,
-                    content: `` // Content removed
-                }
-            ],
-            loop() {
-                setInterval(() => { 
-                    this.activeSlide = (this.activeSlide + 1) % this.slides.length 
-                }, 5000); // Change slide every 5 seconds
-            }
-        }" x-init="loop()">
-            <!-- Static Image Banner Above Carousel -->
-            <img src="/img/informative_banner.jpg" alt="Informative Banner" class="w-full h-auto object-contain mb-6 rounded-lg shadow-md">
+        <section class="mb-12">
+            <h2 class="text-lg font-semibold mb-4 text-white bg-blue-600 dark:bg-blue-700 px-3 py-1.5 rounded-lg inline-flex items-center"><span class="mr-2">🔥</span>Sedang Trending</h2>
+            <div id="carousel-trending" class="flex overflow-x-auto space-x-4 p-1 no-scrollbar">
+                <!-- Trending phone cards will be populated here -->
+            </div>
+        </section>
 
-            <!-- Carousel Container -->
-            <div class="relative flex items-center justify-center overflow-hidden" style="min-height: 12rem;"> <!-- Adjusted: dynamic min-height based on content, but still a base for transition visibility -->
-                <template x-for="(slide, index) in slides" :key="index">
-                    <div x-show="activeSlide === index"
-                         x-transition:enter="transition ease-out duration-[1500ms]"
-                         x-transition:enter-start="opacity-0 transform translate-x-full"
-                         x-transition:enter-end="opacity-100 transform translate-x-0"
-                         x-transition:leave="transition ease-in duration-[1500ms]"
-                         x-transition:leave-start="opacity-100 transform translate-x-0"
-                         x-transition:leave-end="opacity-0 transform -translate-x-full"
-                         class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center">
-                        <h3 class="text-3xl lg:text-4xl font-extrabold mb-3 leading-tight" x-html="slide.title"></h3>
-                        <p class="text-base lg:text-lg text-gray-300 leading-relaxed" x-html="slide.content"></p>
-                    </div>
-                </template>
-            </div>
-            <!-- Centered Button Below Carousel -->
-            <div class="mt-6 flex justify-center">
-                <a href="#search-section-container" class="inline-flex items-center justify-center text-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mr-2 flex-shrink-0">
-                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clip-rule="evenodd" />
-                    </svg>
-                    <span>Cari HP Impianmu<br>Sekarang!</span>
-                </a>
-            </div>
-                     </a>
-                 </div>
+        <section class="mb-12">
+            <h2 class="text-lg font-semibold mb-4 text-white bg-blue-600 dark:bg-blue-700 px-3 py-1.5 rounded-lg inline-flex items-center"><span class="mr-2">✨</span>Baru Diluncurkan</h2>
+            <div id="carousel-new" class="flex overflow-x-auto space-x-4 p-1 no-scrollbar">
+                <!-- New phone cards will be populated here -->
             </div>
         </section>
 
     </main>
 
-    <!-- Professional Footer -->
-    <footer class="bg-gray-100 dark:bg-gray-900 mt-16 py-10 border-t border-gray-200 dark:border-gray-700">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Logo and Description -->
-            <div class="flex flex-col items-center md:items-start">
-                <div class="flex items-center mb-3">
-                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
-                    </svg>
-                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>
-                </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 text-center md:text-left">
-                    Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena.
-                </p>
-            </div>
-            <!-- Placeholder Links (Optional) -->
-            <div class="text-center md:text-left">
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Tautan Cepat</h3>
-                <ul class="space-y-2">
-                    <li><a href="#search-section-container" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Pencarian</a></li>
-                    <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
-                    <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Kontak</a></li>
-                </ul>
-            </div>
-            <!-- Placeholder Social (Optional) -->
-            <div class="text-center md:text-left">
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Ikuti Kami</h3>
-                <div class="flex justify-center md:justify-start space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <span class="sr-only">Facebook</span>
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <span class="sr-only">Instagram</span>
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.023.047 1.351.058 3.807.058h.468c2.456 0 2.784-.011 3.807-.058.975-.045 1.504-.207 1.857-.344.467-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.047-1.023.058-1.351.058-3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <span class="sr-only">Twitter</span>
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center">
-            <p class="text-sm text-gray-500 dark:text-gray-400">&copy; 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            &copy; 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-blue-600">Gaul</span></span>. Ditenagai oleh data dari GSMArena.
         </div>
     </footer>
-
-    <!-- Welcome Toast Overlay -->
-    <div id="welcome-toast-overlay">
-        <!-- Welcome Toast -->
-        <div id="welcome-toast">
-            <button id="toast-close-button" class="toast-close-button">&times;</button>
-            <svg class="toast-logo text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
-            </svg>
-            <h3 class="toast-title">Saya Muh Amin<br>mewakili <span class="font-bold">Hp</span><span class="text-blue-300">Gaul</span> Menyambut Anda!</h3>
-            <p class="toast-instructions">Ketik nama HP di kolom pencarian,<br>lalu tekan Enter atau klik tombol "Cari".<br>Detail spesifikasi akan muncul di bawah atau dalam modal.<br>Selamat mencoba!</p>
-        </div>
-    </div>
 
     <!-- Modal Structure -->
     <div id="modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
@@ -614,27 +407,20 @@
             if (event.target === modal) closeModal();
         });
 
-        // --- Carousel Population Logic (Now Grid) ---
-        function createGridCard(phone) {
+        // --- Carousel Population Logic ---
+        function createCarouselCard(phone) {
             const card = document.createElement("div");
-            // Updated class to match reference image: light gray bg, rounded, subtle border, shadow
-            card.className = "bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-200 p-4 text-center border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-between"; // Removed carousel-card, added new styles
+            card.className = "carousel-card bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200 p-3 text-center";
             card.innerHTML = `
-                <div class="flex-grow flex flex-col items-center justify-center w-full mb-3">
-                    <img src="${phone.img || 'https://via.placeholder.com/120x150?text=N/A'}" alt="${phone.name}" class="w-auto h-32 mx-auto mb-3 object-contain"> <!-- Adjusted image size/margin -->
-                    <div class="flex items-center justify-center space-x-1">
-                        <h3 class="text-sm font-semibold truncate">${phone.name}</h3>
-                        <!-- Add 'baru' label based on a hypothetical 'isNew' flag or if it's in the original newPhones list -->
-                        ${(typeof newPhones !== 'undefined' && newPhones.some(p => p.name === phone.name)) ? '<span class="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded-full">baru</span>' : ''}
-                    </div>
-                    <!-- Removed price and specs -->
+                <div class="p-3 flex flex-col items-center flex-grow">
+                    <img src="${phone.img || 'https://via.placeholder.com/100x120?text=N/A'}" alt="${phone.name}" class="w-full h-24 mx-auto mb-2 object-contain"> <!-- Ensure image displays -->
+                    <h3 class="text-sm font-semibold truncate w-full mt-1">${phone.name}</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate w-full">${phone.specs || ''}</p>
                 </div>
-                <!-- Updated detail button: white bg, black bold text, rounded bottom corners -->
-                <div class="p-2 bg-white text-black text-center text-xs font-semibold w-full mt-2 rounded-b-xl border-t border-gray-200 dark:border-gray-700">
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 text-center text-xs text-ios-blue font-medium">
                     Lihat Detail
                 </div>
             `;
-            // Keep the click functionality to search for the phone
             card.addEventListener('click', () => {
                 searchInput.value = phone.name;
                 performSearch();
@@ -643,18 +429,16 @@
             return card;
         }
 
-        function populateGrid(container, phones) {
+        function populateCarousel(container, phones) {
             container.innerHTML = ''; // Clear existing
             phones.forEach(phone => {
-                container.appendChild(createGridCard(phone));
+                container.appendChild(createCarouselCard(phone));
             });
         }
 
-        // Use populateGrid for the popular section
-        populateGrid(carouselPopular, popularPhones);
-        // Removed population for trending and new sections as they are deleted
-        // populateCarousel(carouselTrending, trendingPhones);
-        // populateCarousel(carouselNew, newPhones);
+        populateCarousel(carouselPopular, popularPhones);
+        populateCarousel(carouselTrending, trendingPhones);
+        populateCarousel(carouselNew, newPhones);
 
         // --- Helper function to get spec value ---
         function getSpecValue(detailSpec, categoryName, specName) {
@@ -837,45 +621,6 @@
         searchInput.addEventListener("keypress", (event) => {
             if (event.key === "Enter") {
                 performSearch();
-            }
-        });
-
-        // Show Welcome Toast on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            const toastOverlay = document.getElementById("welcome-toast-overlay");
-            const toast = document.getElementById("welcome-toast");
-            const toastCloseButton = document.getElementById("toast-close-button");
-
-            function showToast() {
-                if (toastOverlay && toast) {
-                    toastOverlay.classList.add("show");
-                    toast.classList.add("show");
-                }
-            }
-
-            function hideToast() {
-                if (toastOverlay && toast) {
-                    toastOverlay.classList.remove("show");
-                    toast.classList.remove("show");
-                }
-            }
-
-            if (toastOverlay && toast && toastCloseButton) {
-                // Show the toast automatically after a short delay
-                setTimeout(showToast, 500);
-
-                // Hide the toast after a few seconds
-                setTimeout(hideToast, 7500); // Toast visible for 7 seconds
-
-                // Add event listener for the close button
-                toastCloseButton.addEventListener("click", hideToast);
-                
-                // Optional: Close toast if user clicks on the overlay (outside the toast content)
-                toastOverlay.addEventListener("click", (event) => {
-                    if (event.target === toastOverlay) {
-                        hideToast();
-                    }
-                });
             }
         });
 
