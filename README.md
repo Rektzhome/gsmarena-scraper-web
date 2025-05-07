@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 # <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
                     </svg> HpGaul - GSM Arena Scraper Web
+=======
+# <img src="https://raw.githubusercontent.com/Rektzhome/gsmarena-scraper-web/master/public/img/hpgaul_logo_readme.svg" width="50"/> HpGaul - GSM Arena Scraper Web
+>>>>>>> e96f025 (feat: Update README with new website logo)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Rektzhome/gsmarena-scraper-web/master/public/img/hpgaul_banner_readme.png" alt="HpGaul Banner" width="700"/>
