@@ -52,7 +52,8 @@
                             }
                         },
                         monsterGreen: '#95d600', // Added Monster Energy Green
-                        customGreen: '#00FF00' // Added custom green for 'Lihat Detail'
+                        customGreen: '#00FF00', // Added custom green for 'Lihat Detail'
+                        highlighterGreen: '#AFFF36', // Added for sparepart section highlight
                     }
                 },
             },
@@ -435,6 +436,8 @@
             </div>
         </div>
 
+
+
         <!-- Search Results Section (Replaced) -->
         <div id="searchResults" class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 mb-8 hidden">
             <h2 class="text-xl font-semibold mb-3 text-gray-700 dark:text-gray-200">Hasil Pencarian:</h2>
@@ -459,6 +462,20 @@
             </div>
             <p id="detailsError" class="text-red-500 hidden"></p>
         </div>
+
+        <!-- Kentang Section -->
+        <section class="my-12 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
+                Smartphone kamu <span class="bg-highlighterGreen text-black px-2 py-1 rounded-md inline-block my-1">kentang</span> banget?
+            </h2>
+            <p class="text-md sm:text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                Sering ngelag pas buka kamera? Salah beli HP gara-gara liat iklan doang?<br>
+                Tenang, jangan panik!<br>
+                Langsung aja mampir ke <a href="https://HpGaul.my.id" class="text-ios-blue dark:text-ios-blue font-semibold hover:underline">HpGaul.my.id</a> — tempat nongkrongnya para pencari spek dewa!<br>
+                Di sini kamu bisa cari, bandingin, dan ngestalk semua spesifikasi smartphone biar gak salah pilih lagi.<br>
+                Gak perlu ribet, cukup buka websitenya, dan biarkan HpGaul bantu kamu jadi pembeli yang cerdas — bukan korban iklan!
+            </p>
+        </section>
 
 
         <!-- Carousel Sections -->
@@ -539,7 +556,26 @@
                     <span>Cari HP Impianmu<br>Sekarang!</span>
                 </a>
             </div>
+
         </section>
+
+            <!-- Sparepart Section (Moved Below Carousel) -->
+            <section class="my-8 text-center">
+                <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white leading-tight">
+                    butuh sparepart<br>
+                    <span class="bg-highlighterGreen text-black px-2 py-1 rounded-md inline-block my-1">original?</span><br>
+                    cek aja di website<br>
+                    <span class="text-ios-blue dark:text-ios-blue">HpGaul.my.id</span>
+                </h2>
+                <p class="mt-6 text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+                    Jangan biarkan kerusakan kecil mengganggu aktivitasmu! Dapatkan suku cadang asli dan berkualitas untuk ponsel kesayanganmu hanya di HpGaul.my.id. Perbaikan jadi mudah, performa kembali maksimal!
+                </p>
+                <div class="mt-8 flex justify-center">
+                    <a href="HpGaul-Sparepart.html" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-ios-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue transition-colors">
+                        Kunjungi Toko Sparepart
+                    </a>
+                </div>
+            </section>
 
     </main>
 
