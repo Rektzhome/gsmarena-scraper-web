@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const axios = require("axios"); // Import axios
-const { scrapeGsmarena } = require("./scraper");
+const { searchDevices, getDeviceDetails } = require("./scraper"); // Ensure this line is correct
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,14 +12,13 @@ const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour for scraped data
 
 // Cache for exchange rates
 const exchangeRateCache = {
-    rates: null, // Will store rates relative to base currency, e.g., { USD: 1, IDR: 16400, EUR: 0.9, INR: 83 }
-    baseCurrency: 'USD', // Define the base currency
+    rates: null,
+    baseCurrency: 'USD',
     timestamp: 0,
 };
 const RATE_CACHE_DURATION_MS = 4 * 60 * 60 * 1000; // 4 hours for exchange rates
 const CURRENCY_API_KEY = "fca_live_S9jkdJiYdOutHpdsHVvUtQyNDzaZ34ck2oBa0uyM";
-// Define target currencies including IDR and common source currencies
-const TARGET_CURRENCIES = "IDR,EUR,INR,GBP,AUD,CAD"; // Add more as needed
+const TARGET_CURRENCIES = "IDR,EUR,INR,GBP,AUD,CAD";
 const CURRENCY_API_URL = `https://api.freecurrencyapi.com/v1/latest?apikey=${CURRENCY_API_KEY}&currencies=${TARGET_CURRENCIES}&base_currency=${exchangeRateCache.baseCurrency}`;
 
 // Middleware to parse JSON requests
@@ -30,23 +29,19 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // --- Helper Functions ---
 
-// Function to fetch and cache exchange rates relative to a base currency (USD)
 async function getExchangeRates() {
     const now = Date.now();
     if (exchangeRateCache.rates && (now - exchangeRateCache.timestamp < RATE_CACHE_DURATION_MS)) {
         console.log(`[Currency] Using cached exchange rates (Base: ${exchangeRateCache.baseCurrency}).`);
         return exchangeRateCache.rates;
     }
-
     console.log(`[Currency] Fetching fresh exchange rates (Base: ${exchangeRateCache.baseCurrency}, Targets: ${TARGET_CURRENCIES})...`);
     try {
         const response = await axios.get(CURRENCY_API_URL);
-
         if (response.data && response.data.data) {
-            // Add the base currency rate (1) to the fetched rates
             const rates = {
                  ...response.data.data,
-                 [exchangeRateCache.baseCurrency]: 1 // Add base currency rate manually
+                 [exchangeRateCache.baseCurrency]: 1
                 };
             exchangeRateCache.rates = rates;
             exchangeRateCache.timestamp = now;
@@ -54,248 +49,198 @@ async function getExchangeRates() {
             return rates;
         } else {
             console.error("[Currency] Invalid API response structure:", response.data);
-            // Return old rates if available, otherwise null
-            return exchangeRateCache.rates;
+            return exchangeRateCache.rates; // Return old rates if new fetch fails but old ones exist
         }
     } catch (error) {
         console.error("[Currency] Error fetching exchange rates:", error.message);
-        // Return old rates if available, otherwise null
-        return exchangeRateCache.rates;
+        return exchangeRateCache.rates; // Return old rates if new fetch fails
     }
 }
 
-// Function to format number as IDR currency
 function formatIDR(amount) {
     if (typeof amount !== 'number' || isNaN(amount)) {
         return "";
     }
-    // Round to nearest integer
     const roundedAmount = Math.round(amount);
-    // Format with dots as thousands separators
     const formattedAmount = roundedAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     return `Rp ${formattedAmount}`;
 }
 
-// Function to parse price string and convert
 async function convertPrice(priceString) {
     if (!priceString || typeof priceString !== 'string') {
-        return priceString; // Return original if invalid
+        return priceString;
     }
-
-    const rates = await getExchangeRates(); // Rates relative to baseCurrency (USD)
+    const rates = await getExchangeRates();
     if (!rates || !rates.IDR) {
         console.warn("[Currency] Conversion skipped: No exchange rates available or IDR rate missing.");
-        return priceString; // Return original if rates not available
+        return priceString;
     }
-
-    // Map symbols/codes to ISO codes we might have rates for
     const currencyMap = {
-        '$': 'USD',
-        'USD': 'USD',
-        '€': 'EUR',
-        'EUR': 'EUR',
-        '₹': 'INR',
-        'INR': 'INR',
-        '£': 'GBP',
-        'GBP': 'GBP',
-        'A$': 'AUD', // Assuming A$ for AUD
-        'AUD': 'AUD',
-        'C$': 'CAD', // Assuming C$ for CAD
-        'CAD': 'CAD'
-        // Add more mappings as needed
+        '$': 'USD', 'USD': 'USD', '€': 'EUR', 'EUR': 'EUR',
+        '₹': 'INR', 'INR': 'INR', '£': 'GBP', 'GBP': 'GBP',
+        'A$': 'AUD', 'AUD': 'AUD', 'C$': 'CAD', 'CAD': 'CAD'
     };
-
-    // Regex to find all potential price parts (symbol/code and amount)
-    // Looks for optional symbol, amount, optional code, separated by optional " / "
     const pricePartRegex = /(?:About\s*)?([$€₹£]|A\$|C\$)?\s*([\d,.]+)(?:\s*(USD|EUR|INR|GBP|AUD|CAD))?/gi;
     let match;
     let firstConvertedIDR = null;
-
     while ((match = pricePartRegex.exec(priceString)) !== null) {
         const symbol = match[1];
-        let amountStr = match[2].replace(/,/g, ''); // Remove commas
+        let amountStr = match[2].replace(/,/g, '');
         const code = match[3];
         const amount = parseFloat(amountStr);
-
-        if (isNaN(amount)) continue; // Skip if amount is not a number
-
+        if (isNaN(amount)) continue;
         let sourceCurrency = null;
         if (symbol && currencyMap[symbol]) {
             sourceCurrency = currencyMap[symbol];
         } else if (code && currencyMap[code.toUpperCase()]) {
             sourceCurrency = currencyMap[code.toUpperCase()];
         }
-
-        // Check if we have a rate for this source currency relative to the base (USD)
         if (sourceCurrency && rates[sourceCurrency]) {
             try {
-                // Calculate conversion: Amount * (IDR rate / Source Currency rate)
-                // All rates are relative to the base currency (USD)
-                const rateSourceToBase = rates[sourceCurrency];
+                const rateSourceToBase = rates[sourceCurrency]; 
                 const rateIdrToBase = rates.IDR;
                 const convertedAmountIDR = amount * (rateIdrToBase / rateSourceToBase);
-
                 if (!isNaN(convertedAmountIDR)) {
                     firstConvertedIDR = formatIDR(convertedAmountIDR);
                     console.log(`[Currency] Converted ${amount} ${sourceCurrency} to ${firstConvertedIDR}`);
-                    break; // Stop after the first successful conversion
+                    break; 
                 }
             } catch (calcError) {
                 console.error(`[Currency] Error calculating conversion for ${sourceCurrency}:`, calcError);
-                // Continue to the next potential price part
             }
         }
     }
-
-    // If a conversion was successful, append it
     if (firstConvertedIDR) {
         return `${priceString} / ${firstConvertedIDR}`;
     }
-
-    // If no conversion happened, return the original string
     console.warn(`[Currency] No convertible currency found in: ${priceString}`);
     return priceString;
 }
 
-// --- API Endpoint ---
-app.get("/api/scrape", async (req, res) => {
+// --- API Endpoint for Device Search ---
+app.get("/api/search", async (req, res) => {
     const query = req.query.query;
-
     if (!query) {
         return res.status(400).json({ error: "Query parameter is required" });
     }
-
-    const cacheKey = query.toLowerCase().trim();
+    const cacheKey = `search_${query.toLowerCase().trim()}`;
     const cachedData = cache.get(cacheKey);
-
-    // Check if valid cached data exists
-    // if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION_MS)) {
-    //     console.log(`[Cache] HIT for query: ${query}`);
-    //     return res.status(200).json(cachedData.data);
-    // }
-
-    console.log(`[Cache] MISS for query: ${query}. Proceeding to scrape.`);
-
+    if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION_MS)) {
+        console.log(`[Cache] HIT for search query: ${query}`);
+        return res.status(200).json(cachedData.data);
+    }
+    console.log(`[Cache] MISS for search query: ${query}. Proceeding to search.`);
     try {
-        let details = await scrapeGsmarena(query);
+        const searchResult = await searchDevices(query);
+        if (searchResult.error) {
+            console.error(`Search error for query '${query}':`, searchResult.error);
+            if (searchResult.error.includes("No devices found")) {
+                 res.status(404).json(searchResult);
+            } else {
+                 res.status(500).json({ error: searchResult.error });
+            }
+        } else {
+            console.log(`[Cache] Storing result for search query: ${query}`);
+            cache.set(cacheKey, { data: searchResult, timestamp: Date.now() });
+            res.status(200).json(searchResult);
+        }
+    } catch (error) {
+        console.error(`Server error processing search query '${query}':`, error);
+        res.status(500).json({ error: "Internal server error during search process." });
+    }
+});
 
+// --- API Endpoint for Device Details ---
+app.get("/api/details", async (req, res) => {
+    const deviceUrl = req.query.url;
+    if (!deviceUrl) {
+        return res.status(400).json({ error: "URL parameter is required" });
+    }
+    const cacheKey = `details_${deviceUrl.toLowerCase().trim()}`;
+    const cachedData = cache.get(cacheKey);
+    if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION_MS)) {
+        console.log(`[Cache] HIT for details URL: ${deviceUrl}`);
+        return res.status(200).json(cachedData.data);
+    }
+    console.log(`[Cache] MISS for details URL: ${deviceUrl}. Proceeding to fetch details.`);
+    try {
+        let details = await getDeviceDetails(deviceUrl);
         if (details.error) {
-            console.error(`Scraping error for query '${query}':`, details.error);
-            if (details.error.includes("No phone found")) {
+            console.error(`Detail fetching error for URL '${deviceUrl}':`, details.error);
+            if (details.error.includes("Failed to extract details")) {
                  res.status(404).json(details);
-            } else if (details.error.includes("API request failed")) {
-                 res.status(500).json({ error: "Scraping failed internally. Please try again later." });
+            } else if (details.error.includes("Detail scraping failed")) {
+                 res.status(500).json({ error: "Detail scraping failed internally. Please try again later." });
             } else {
                  res.status(500).json({ error: details.error });
             }
         } else {
-            // --- Price Conversion Logic ---
             if (details.detailSpec && Array.isArray(details.detailSpec)) {
                 console.log(`[Currency] Attempting price conversion for: ${details.name}`);
                 details.detailSpec = await Promise.all(details.detailSpec.map(async (category) => {
                     if (category.category === "Misc" && Array.isArray(category.specifications)) {
-                        category.specifications = await Promise.all(category.specifications.map(async (specString) => {
-                            let spec = null;
-                            let inputIsObject = false;
+                        category.specifications = await Promise.all(category.specifications.map(async (specItem) => {
+                            let specObject = null;
+                            let successfullyProcessed = false;
                             try {
-                                // Check if the input is already an object
-                                if (typeof specString === 'object' && specString !== null) {
-                                    spec = specString;
-                                    wasParsed = true;
-                                    inputIsObject = true;
-                                // Only attempt parse if it looks like JSON (starts with {)
-                                } else if (typeof specString === 'string' && specString.trim().startsWith('{')) {
-                                    spec = JSON.parse(specString);
-                                    wasParsed = true;
+                                if (typeof specItem === 'object' && specItem !== null) {
+                                    specObject = specItem; 
+                                    successfullyProcessed = true;
+                                } else if (typeof specItem === 'string' && specItem.trim().startsWith('{')) {
+                                    specObject = JSON.parse(specItem); 
+                                    successfullyProcessed = true;
                                 }
                             } catch (e) {
-                                console.warn(`[Currency] Failed to parse spec string in Misc: ${specString}`, e);
-                                // Keep specString as is if parsing fails
+                                console.warn(`[Misc Processing] Failed to parse spec item in Misc: '${specItem}'. Error:`, e.message);
+                                return specItem; 
                             }
 
-                            // If successfully parsed/handled and is the Price spec, convert it
-                            if (wasParsed && spec && spec.name === "Price" && spec.value) {
-                                // console.log(`[Currency] Found price spec: ${spec.value}`);
-                                spec.value = await convertPrice(spec.value);
-                                // console.log(`[Currency] Converted price spec: ${spec.value}`);
-                                // Return the modified spec object as a stringified JSON
-                                return JSON.stringify(spec);
-                            }
-                            // If it was parsed/handled but not the Price spec, stringify it back if needed
-                            else if (wasParsed && spec) {
-                                // If the original input was an object, stringify it. If it was a parsed string, it's already stringified.
-                                return inputIsObject ? JSON.stringify(spec) : specString;
-                            }
-                            // Otherwise (not JSON, not object, or parsing failed), return the original string
-                            else {
-                                return specString;
+                            if (successfullyProcessed && specObject) {
+                                if (specObject.name === "Price" && specObject.value) {
+                                    specObject.value = await convertPrice(specObject.value);
+                                }
+                                return specObject; // Return the processed object
+                            } else {
+                                console.warn(`[Misc Processing] Item was not an object and could not be parsed, or specObject is null: '${specItem}'`);
+                                return specItem; 
                             }
                         }));
                     }
-                    return category; // Return category unchanged if not Misc or no specs
+                    return category;
                 }));
             }
-            // --- End Price Conversion Logic ---
-
-            // --- Extract Converted Price for Search Card ---
             let priceIDR = null;
             const miscCategory = details.detailSpec?.find(cat => cat.category === "Misc");
-            // console.log("[Debug] Found Misc Category:", !!miscCategory); // Log if Misc category exists
             if (miscCategory && Array.isArray(miscCategory.specifications)) {
-                // console.log("[Debug] Misc Specifications:", miscCategory.specifications); // Log all specs in Misc
-                for (const specItem of miscCategory.specifications) { // Renamed variable for clarity
-                    // console.log(`[Debug] Processing specItem: ${JSON.stringify(specItem)}`); // Log the current spec item
-                    try {
-                        let spec = null;
-                        // Check if the item is a string that needs parsing, or already an object
-                        if (typeof specItem === 'string' && specItem.trim().startsWith('{')) {
-                             spec = JSON.parse(specItem);
-                             // console.log("[Debug] Parsed spec:", spec);
-                        } else if (typeof specItem === 'object' && specItem !== null) {
-                             spec = specItem; // Use the object directly
-                             // console.log("[Debug] Using spec object directly:", spec);
+                for (const specItem of miscCategory.specifications) {
+                    // Ensure specItem is an object before accessing its properties
+                    if (typeof specItem === 'object' && specItem !== null && specItem.name === "Price" && specItem.value && typeof specItem.value === 'string') {
+                        const priceParts = specItem.value.split(' / ');
+                        if (priceParts.length === 2 && priceParts[1].startsWith('Rp')) {
+                            priceIDR = priceParts[1];
+                            console.log(`[Currency] Extracted priceIDR for card: ${priceIDR}`);
+                            break;
                         }
-
-                        // Now check the spec object
-                        if (spec && spec.name === "Price" && spec.value && typeof spec.value === 'string') {
-                            // console.log(`[Debug] Found Price spec with value: ${spec.value}`); // Log the raw price value found
-                            const priceParts = spec.value.split(' / ');
-                            // console.log("[Debug] Price parts after split:", priceParts);
-                            if (priceParts.length === 2 && priceParts[1].startsWith('Rp')) {
-                                priceIDR = priceParts[1];
-                                console.log(`[Currency] Extracted priceIDR for card: ${priceIDR}`);
-                                break; // Found the price
-                            }
-                        }
-                    } catch (e) {
-                        console.warn(`[Currency] Failed to parse or extract price from spec item for card: ${JSON.stringify(specItem)}`, e);
                     }
                 }
             }
-            // Add the extracted price to the main details object
             details.priceIDR = priceIDR;
-            // console.log(`[Debug] Final details.priceIDR: ${details.priceIDR}`); // Log the final extracted price
-            // --- End Extract Converted Price ---
-
-            // Store successful result (with converted price) in cache
-            console.log(`[Cache] Storing result for query: ${query}`);
+            console.log(`[Cache] Storing result for details URL: ${deviceUrl}`);
             cache.set(cacheKey, { data: details, timestamp: Date.now() });
             res.status(200).json(details);
         }
     } catch (error) {
-        // Log the detailed error on the server
-        console.error(`Server error processing query '${query}':`, error);
-        // Send a generic error response to the client
-        res.status(500).json({ error: "Internal server error during scraping process." });
+        console.error(`Server error processing details URL '${deviceUrl}':`, error);
+        res.status(500).json({ error: "Internal server error during detail fetching process." });
     }
 });
 
 // Start the server - Listen on 0.0.0.0 for external accessibility
 app.listen(port, "0.0.0.0", () => {
     console.log(`Server listening on port ${port}`);
-    // Pre-fetch rates on startup (optional)
-    getExchangeRates();
+    getExchangeRates(); 
 });
 
 // Export the app for Vercel (or other platforms)
 module.exports = app;
+

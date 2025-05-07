@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info HpGaul - Tentang Kami</title>
+    <meta name="description" content="Informasi tentang HpGaul, misi kami, dan bagaimana kami membantu Anda menemukan spesifikasi ponsel terbaik.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Poppins", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+                    },
+                    colors: {
+                        ios: {
+                            blue: '#0000FF',
+                            gray: {
+                                100: '#F2F2F7',
+                                200: '#E5E5EA',
+                                300: '#D1D1D6',
+                                400: '#C7C7CC',
+                                500: '#AEAEB2',
+                                600: '#8E8E93',
+                            }
+                        },
+                        monsterGreen: '#95d600',
+                        customGreen: '#00FF00'
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body::before, body::after, .overlay-animated-bg::before, .overlay-animated-bg::after {
+            content: "";
+            position: fixed;
+            opacity: 0.08;
+            z-index: -1;
+            animation: float 12s ease-in-out infinite alternate;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        body::before, .overlay-animated-bg::before {
+            left: 5%;
+            top: 15%;
+            width: 150px;
+            height: 150px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%238B5CF6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23C084FC;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g1)' d='M40,0 C40,0 100,0 120,0 C140,0 160,20 160,40 C160,60 140,80 120,80 C100,80 80,100 80,120 C80,140 100,160 120,160 C140,160 160,180 160,200 C160,200 100,200 80,200 C60,200 40,180 40,160 C40,140 60,120 80,120 C100,120 120,100 120,80 C120,60 100,40 80,40 C60,40 40,20 40,0 Z' transform='rotate(15 100 100) translate(10 10)'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 100 100' to='360 100 100' dur='20s' repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E");
+        }
+        body::after, .overlay-animated-bg::after {
+            right: 8%;
+            top: 55%;
+            width: 120px;
+            height: 120px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23EC4899;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23F472B6;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g2)' d='M178.4,100.5c-0.2,14.6-3.4,29.2-9.4,42.8c-6,13.6-14.6,25.7-25.5,35.7c-10.9,10-23.7,17.6-37.9,22.3c-14.2,4.7-29.4,6.4-44.6,4.9c-15.2-1.5-30-6.3-43.2-14.2c-13.2-7.9-24.4-18.7-33-31.7c-8.6-13-14.2-27.8-16.6-43.2c-2.3-15.5-1.3-31.3,2.9-46.3c4.2-15,11.7-29,21.9-41.2c10.2-12.2,22.8-22.3,37.1-29.6c14.3-7.3,30-11.6,46.1-12.6c16.1-1,32.1,1.4,47.1,7.1c15,5.7,28.6,14.6,40.1,26.2C174.1,38.1,180.3,53.9,179.9,70C179.6,80.2,179.1,90.4,178.4,100.5z' transform='rotate(-10 100 100) translate(-5 -5)'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 100 100' to='-360 100 100'%27 dur='25s'%27 repeatCount='indefinite'/%3E%3C/path%3E%3C/svg%3E");
+            animation-delay: -6s;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-25px) rotate(15deg) scale(1.05); }
+            100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        }
+        /* Basic scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px; /* For horizontal scrollbars */
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased pt-24">
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex-shrink-0 flex items-center">
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+                    </svg>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
+                </a>
+                <div class="flex items-center space-x-2">
+                    <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue transition-transform duration-150 ease-in-out hover:scale-110">
+                        <svg id="icon-sun" class="h-6 w-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12h2.25m.386-6.364l1.591 1.591" /></svg>
+                        <svg id="icon-moon" class="h-6 w-6 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8">
+            <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white leading-tight mb-6">
+                Tentang <span class="text-ios-blue">HpGaul</span>
+            </h1>
+            
+            <div class="prose prose-lg dark:prose-invert max-w-none mx-auto text-gray-700 dark:text-gray-300 space-y-6">
+                <p>
+                    Selamat datang di HpGaul! Kami adalah platform informasi spesifikasi ponsel terdepan yang didedikasikan untuk membantu Anda membuat keputusan cerdas saat memilih gadget berikutnya. Di era digital yang serba cepat ini, memiliki informasi yang akurat dan mudah diakses adalah kunci, dan itulah yang kami tawarkan.
+                </p>
+                <p>
+                    Misi kami sederhana: menyediakan data spesifikasi ponsel yang komprehensif, terkini, dan mudah dipahami bagi siapa saja, mulai dari penggemar teknologi hingga pengguna kasual. Kami percaya bahwa setiap orang berhak mendapatkan informasi terbaik sebelum menginvestasikan uang mereka pada sebuah perangkat seluler.
+                </p>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mt-8 mb-3">Apa yang Kami Lakukan?</h2>
+                <p>
+                    HpGaul bekerja tanpa lelah untuk mengumpulkan, memverifikasi, dan menyajikan detail spesifikasi dari berbagai merek dan model ponsel. Mulai dari detail prosesor, kualitas kamera, kapasitas baterai, hingga fitur-fitur unik lainnya, kami berusaha mencakup semuanya. Data kami terus diperbarui untuk memastikan Anda mendapatkan informasi terbaru langsung dari sumber terpercaya.
+                </p>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mt-8 mb-3">Mengapa Memilih HpGaul?</h2>
+                <ul class="list-disc list-inside space-y-2 pl-4">
+                    <li><strong>Informasi Lengkap dan Akurat:</strong> Kami berkomitmen pada kualitas data.</li>
+                    <li><strong>Mudah Digunakan:</strong> Antarmuka yang intuitif memudahkan pencarian informasi.</li>
+                    <li><strong>Selalu Update:</strong> Kami mengikuti perkembangan terbaru di dunia ponsel.</li>
+                    <li><strong>Untuk Semua Orang:</strong> Baik Anda tech-savvy atau pemula, kami ada untuk Anda.</li>
+                </ul>
+                <p>
+                    Terima kasih telah mengunjungi HpGaul. Kami harap Anda menemukan apa yang Anda cari dan platform kami bermanfaat bagi Anda. Jangan ragu untuk menjelajahi dan menemukan ponsel impian Anda bersama kami!
+                </p>
+            </div>
+
+            <div class="mt-10 text-center">
+                <a href="index.html" class="bg-ios-blue hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-md transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue">
+                    Kembali ke Halaman Utama
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-900 mt-16 py-10 border-t border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600 dark:text-gray-400 text-sm">&copy; <script>document.write(new Date().getFullYear())</script> HpGaul. Semua Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const iconSun = document.getElementById('icon-sun');
+        const iconMoon = document.getElementById('icon-moon');
+
+        // Check local storage for theme preference
+        if (localStorage.getItem('color-theme') === 'dark' || 
+            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            if (iconSun) iconSun.classList.remove('block');
+            if (iconSun) iconSun.classList.add('hidden');
+            if (iconMoon) iconMoon.classList.remove('hidden');
+            if (iconMoon) iconMoon.classList.add('block');
+        } else {
+            document.documentElement.classList.remove('dark');
+            if (iconSun) iconSun.classList.remove('hidden');
+            if (iconSun) iconSun.classList.add('block');
+            if (iconMoon) iconMoon.classList.remove('block');
+            if (iconMoon) iconMoon.classList.add('hidden');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            // toggle icons inside button
+            iconSun.classList.toggle('hidden');
+            iconMoon.classList.toggle('hidden');
+
+            // if set via local storage previously
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+            // if NOT set via local storage previously
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

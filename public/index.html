@@ -39,7 +39,7 @@
                         // Set Poppins as the default sans-serif font
                         sans: ["Poppins", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
                     },
-                    colors: { // <== Perbaikan Sintaks JS
+                    colors: {
                         ios: {
                             blue: '#0000FF',
                             gray: {
@@ -53,10 +53,10 @@
                         },
                         monsterGreen: '#95d600', // Added Monster Energy Green
                         customGreen: '#00FF00' // Added custom green for 'Lihat Detail'
-                    } // <== Perbaikan Sintaks JS
-                }, // <== Perbaikan Sintaks JS
-            }, // <== Perbaikan Sintaks JS
-        } // <== Perbaikan Sintaks JS
+                    }
+                },
+            },
+        }
     </script>
 
     <style>
@@ -100,6 +100,31 @@
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
         }
+
+        /* Success Toast Styles */
+        #success-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #0000FF; /* Blue background */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 1050;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.875rem; /* 14px */
+            pointer-events: none; /* Initially not interactive */
+            text-align: center; /* Center the text */
+        }
+        #success-toast.show {
+            opacity: 1;
+            /* transform: translateX(-50%) translateY(0); */ /* Removed as transform is now in the base style */
+            pointer-events: auto; /* Interactive when shown */
+        }
         .toast-logo {
             width: 50px; /* Adjust size as needed */
             height: 50px;
@@ -110,8 +135,7 @@
             font-weight: 600;
             margin-bottom: 0.1rem; /* Further reduced margin */
             line-height: 1.15; /* Further reduced line-height for extreme compactness */
-            color: #ffffff; /* <== OK */
-            /* REMOVE: color: #39FF14; */ /* <== Perbaikan Sintaks CSS */
+            color: #ffffff;
         }
 
         .toast-instructions {
@@ -167,21 +191,6 @@
         .no-scrollbar {
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
-        }
-
-        /* Style for the modal */
-        .modal {
-            transition: opacity 0.25s ease;
-        }
-        .modal-content {
-            transition: transform 0.25s ease;
-        }
-        .modal.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .modal.hidden .modal-content {
-            transform: scale(0.95);
         }
 
         /* Simple spinner */
@@ -287,12 +296,9 @@
             animation-delay: 0.2s;
         }
         .animation-delay-1000 {
-            animation-delay: 1s; /* <== Perbaikan Sintaks CSS */
-        } /* <== Perbaikan Sintaks CSS */
+            animation-delay: 1s;
+        }
 
-    </style> <!-- <== Perbaikan Sintaks CSS -->
-
-    <style>
         /* Animated Background Styles */
         body::before, body::after, .overlay-animated-bg::before, .overlay-animated-bg::after {
             content: "";
@@ -315,7 +321,7 @@
             top: 55%;
             width: 120px;
             height: 120px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Cdefs%3E%3ClinearGradient id=\'g2\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23EC4899;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23F472B6;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g2)\' d=\'M178.4,100.5c-0.2,14.6-3.4,29.2-9.4,42.8c-6,13.6-14.6,25.7-25.5,35.7c-10.9,10-23.7,17.6-37.9,22.3c-14.2,4.7-29.4,6.4-44.6,4.9c-15.2-1.5-30-6.3-43.2-14.2c-13.2-7.9-24.4-18.7-33-31.7c-8.6-13-14.2-27.8-16.6-43.2c-2.3-15.5-1.3-31.3,2.9-46.3c4.2-15,11.7-29,21.9-41.2c10.2-12.2,22.8-22.3,37.1-29.6c14.3-7.3,30-11.6,46.1-12.6c16.1-1,32.1,1.4,47.1,7.1c15,5.7,28.6,14.6,40.1,26.2C174.1,38.1,180.3,53.9,179.9,70C179.6,80.2,179.1,90.4,178.4,100.5z\' transform=\'rotate(-10 100 100) translate(-5 -5)\'%3E%3CanimateTransform attributeName=\'transform\' type=\'rotate\' from=\'0 100 100\' to=\'-360 100 100\'%27 dur=\'25s\%27 repeatCount=\'indefinite\'/%3E%3C/path%3E%3C/svg%3E"); /* <== Perbaikan Penempatan Kutip di URL SVG */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Cdefs%3E%3ClinearGradient id=\'g2\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23EC4899;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23F472B6;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill=\'url(%23g2)\' d=\'M178.4,100.5c-0.2,14.6-3.4,29.2-9.4,42.8c-6,13.6-14.6,25.7-25.5,35.7c-10.9,10-23.7,17.6-37.9,22.3c-14.2,4.7-29.4,6.4-44.6,4.9c-15.2-1.5-30-6.3-43.2-14.2c-13.2-7.9-24.4-18.7-33-31.7c-8.6-13-14.2-27.8-16.6-43.2c-2.3-15.5-1.3-31.3,2.9-46.3c4.2-15,11.7-29,21.9-41.2c10.2-12.2,22.8-22.3,37.1-29.6c14.3-7.3,30-11.6,46.1-12.6c16.1-1,32.1,1.4,47.1,7.1c15,5.7,28.6,14.6,40.1,26.2C174.1,38.1,180.3,53.9,179.9,70C179.6,80.2,179.1,90.4,178.4,100.5z\' transform=\'rotate(-10 100 100) translate(-5 -5)\'%3E%3CanimateTransform attributeName=\'transform\' type=\'rotate\' from=\'0 100 100\' to=\'-360 100 100\'%27 dur=\'25s\%27 repeatCount=\'indefinite\'/%3E%3C/path%3E%3C/svg%3E");
             animation-delay: -6s;
         }
         .overlay-animated-bg {
@@ -334,6 +340,11 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased pt-24" x-data="{ navOpen: false }">
 
+    <!-- Success Toast -->
+    <div id="success-toast" class="">
+        Data berhasil di ambil
+    </div>
+
     <!-- Navbar -->
     <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -348,7 +359,7 @@
                 </div>
                 <!-- Dark Mode Toggle & Navbar Toggle -->
                 <div class="flex items-center space-x-2">
-                    <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue">
+                    <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue transition-transform duration-150 ease-in-out hover:scale-110">
                         <!-- Sun icon -->
                         <svg id="icon-sun" class="h-6 w-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12h2.25m.386-6.364l1.591 1.591" />
@@ -392,7 +403,7 @@
         <a href="#carousel-popular" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
   <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.116 3.986 1.257 5.27c.271 1.136-.964 2.033-1.96 1.425L12 18.354l-4.543 2.86c-.996.608-2.231-.29-1.96-1.425l1.257-5.27-4.117-3.986c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
 </svg>Populer Saat Ini</a>
-        <a href="#" @click="navOpen = false" class="text-2xl font-poppins font-semibold hover:text-gray-600 transition-colors flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
+        <a href="info.html" @click="navOpen = false" class="text-2xl font-poppins font-semibold text-black dark:text-white hover:text-ios-blue dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 p-3 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="mr-3 h-8 w-8 text-black filter drop-shadow(0 1px 1px rgba(0,0,0,0.2))">
   <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.67-1.34l.04-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
 </svg>Tentang HpGaul</a>
 
@@ -404,46 +415,51 @@
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <!-- Header with Image -->
         <section id="image-header" class="mb-12 relative overflow-hidden rounded-xl shadow-lg">
             <img src="/img/header-image.png" alt="HpGaul Header" class="w-full h-auto object-cover">
         </section>
 
-        <!-- Search Section -->
-        <section id="search-section-container" class="mb-12 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h2 class="text-4xl font-extrabold tracking-tight mb-6 text-center text-gray-900 dark:text-white">Cari Spesifikasi Ponsel</h2>
-            <div class="mb-4">
-                <label for="search-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Masukkan Nama Ponsel</label>
-                <div class="flex rounded-md shadow-sm">
-                    <input type="text" id="search-input" class="flex-1 block w-full rounded-none rounded-l-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:border-ios-blue focus:ring-ios-blue sm:text-sm px-4 py-2" placeholder="Contoh: Samsung Galaxy S24 Ultra">
-                    <button id="search-button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-ios-blue hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue disabled:opacity-50 disabled:cursor-not-allowed">
-                        <!-- Search Icon -->
-                        <svg class="h-5 w-5 mr-2 hidden sm:inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                        </svg>
-                        Cari
-                    </button>
-                </div>
+        <!-- Search and Results Section (Replaced) -->
+        <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 mb-8">
+            <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white leading-tight mb-1">
+                Cari Spesifikasi Ponsel<br>
+                <span class="text-2xl text-ios-blue dark:text-ios-blue font-semibold">Bersama HpGaul</span>
+            </h1>
+            <p class="text-base text-gray-600 dark:text-gray-400 mt-2 mb-4 text-center">Masukan tipe smartphone</p>
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
+                <input type="text" id="searchInput" placeholder="Masukkan nama ponsel (mis. iPhone 13)" class="w-full flex-grow p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-ios-blue focus:border-ios-blue dark:bg-gray-700 dark:text-white">
+                <button id="searchButton" class="w-full sm:w-auto bg-ios-blue hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md transition duration-150 ease-in-out">Cari</button>
             </div>
-            <!-- Loading Spinner (Modernized) -->
-            <div id="loading" class="text-center py-6 hidden">
-                <div class="modern-spinner mx-auto"><div></div><div></div><div></div><div></div></div>
-                <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Mencari data... Proses ini mungkin memerlukan waktu.</p>
+        </div>
+
+        <!-- Search Results Section (Replaced) -->
+        <div id="searchResults" class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 mb-8 hidden">
+            <h2 class="text-xl font-semibold mb-3 text-gray-700 dark:text-gray-200">Hasil Pencarian:</h2>
+            <div id="searchResultsList" class="space-y-2"></div>
+            <div id="searchSpinner" class="hidden flex flex-col justify-center items-center py-4">
+                <div class="spinner"></div>
+                <p id="searchSpinnerText" class="text-sm text-gray-600 dark:text-gray-400 mt-2"></p>
             </div>
-            <!-- Results Area (Moved inside search section) -->
-            <section id="results-section" class="hidden mt-6">
-                 <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Hasil Pencarian</h2>
-                 <div id="results" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <!-- Search results will be populated here -->
-                 </div>
-            </section>
-            <!-- Error Message Area (Moved inside search section) -->
-            <div id="error-message" class="text-center py-6 hidden">
-                <p class="text-red-600 dark:text-red-400 font-medium"></p>
+            <p id="searchError" class="text-red-500 hidden"></p>
+        </div>
+
+        <!-- Device Details Section (Replaced Modal Structure) -->
+        <div id="deviceDetails" class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 hidden">
+            <h2 id="deviceName" class="text-2xl font-bold mb-2 text-gray-800 dark:text-white text-center"></h2>
+            <img id="deviceImage" src="" alt="Gambar Perangkat" class="mx-auto mb-4 rounded-lg shadow-md max-h-80 object-contain">
+            <p id="devicePriceIDR" class="text-xl font-semibold text-center mb-1 text-ios-blue dark:text-ios-blue hidden"></p>
+            <p class="text-xs text-red-500 dark:text-red-400 text-center mb-4">peringatan! Harga yang tertera bukan harga resmi di Indonesia, harga resmi di Indonesia bisa saja berubah.</p>
+            <div id="deviceSpecs" class="space-y-4"></div>
+            <div id="detailsSpinner" class="hidden flex flex-col justify-center items-center py-4">
+                <div class="spinner"></div>
+                <p id="detailsSpinnerText" class="text-sm text-gray-600 dark:text-gray-400 mt-2"></p>
             </div>
-        </section>
+            <p id="detailsError" class="text-red-500 hidden"></p>
+        </div>
+
 
         <!-- Carousel Sections -->
         <section class="mb-12">
@@ -522,7 +538,6 @@
                     </svg>
                     <span>Cari HP Impianmu<br>Sekarang!</span>
                 </a>
-                <!-- REMOVE: </a> --> <!-- <== Perbaikan Sintaks HTML -->
             </div>
         </section>
 
@@ -548,7 +563,7 @@
                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Tautan Cepat</h3>
                 <ul class="space-y-2">
                     <li><a href="#search-section-container" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Pencarian</a></li>
-                    <li><a href="tentang.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
+                    <li><a href="info.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
                     <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Kontak</a></li>
                 </ul>
             </div>
@@ -589,67 +604,42 @@
         </div>
     </div>
 
-    <!-- Modal Structure -->
-    <div id="modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
-        <div class="modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
-                <h2 id="modal-title" class="text-lg font-semibold">Detail Ponsel</h2>
-                <button id="modal-close-button" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <!-- Modal Body -->
-            <div id="modal-body" class="p-6">
-                <!-- Phone details will be populated here -->
-            </div>
-        </div>
-    </div>
-
     <script>
         // --- Placeholder Data for Carousels ---
         const popularPhones = [
-            { name: "Samsung Galaxy S24", img: "https://images.samsung.com/is/image/samsung/p6pim/id/2401/gallery/id-galaxy-s24-sm-s921bzkcxid-539294435?imbypass=true", specs: "Snapdragon 8 Gen 3" },
-            { name: "iPhone 15 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro.jpg", specs: "Apple A17 Bionic" },
-            { name: "Google Pixel 8 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8-pro.jpg", specs: "Google Tensor G3" },
-            { name: "Xiaomi 14", img: "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-14.jpg", specs: "Snapdragon 8 Gen 3" },
-            { name: "OnePlus 12", img: "https://fdn2.gsmarena.com/vv/bigpic/oneplus-12.jpg", specs: "Snapdragon 8 Gen 3" },
-            { name: "Asus ROG Phone 8", img: "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8-pro.jpg", specs: "Snapdragon 8 Gen 3" }
+            { name: "Samsung Galaxy S24", img: "https://images.samsung.com/is/image/samsung/p6pim/id/2401/gallery/id-galaxy-s24-sm-s921bzkcxid-539294435?imbypass=true", specs: "Snapdragon 8 Gen 3", priceIDR: "Rp 13.000.000" },
+            { name: "iPhone 15 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro.jpg", specs: "Apple A17 Bionic", priceIDR: "Rp 20.000.000" },
+            { name: "Google Pixel 8 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8-pro.jpg", specs: "Google Tensor G3", priceIDR: "Rp 16.000.000" },
+            { name: "Xiaomi 14", img: "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-14.jpg", specs: "Snapdragon 8 Gen 3", priceIDR: "Rp 10.000.000" },
+            { name: "OnePlus 12", img: "https://fdn2.gsmarena.com/vv/bigpic/oneplus-12.jpg", specs: "Snapdragon 8 Gen 3", priceIDR: "Rp 12.000.000" },
+            { name: "Asus ROG Phone 8", img: "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8-pro.jpg", specs: "Snapdragon 8 Gen 3", priceIDR: "Rp 19.750.000" } // Assuming Pro model and price
         ];
-        const trendingPhones = [
-            { name: "Nothing Phone (2a)", img: "https://fdn2.gsmarena.com/vv/bigpic/nothing-phone-2a.jpg", specs: "Dimensity 7200 Pro" },
-            { name: "Poco X6 Pro", img: "https://i02.appmifile.com/341_item_id/19/01/2024/d07509b0b1fff33979066174116dc4ad!800x800!85.png", specs: "Dimensity 8300 Ultra" },
-            { name: "Realme 12 Pro+", img: "https://fdn2.gsmarena.com/vv/bigpic/realme-12-pro-plus.jpg", specs: "Snapdragon 7s Gen 2" },
-            { name: "Infinix Note 40 Pro", img: "/static/infinix_note_40_pro.jpeg", specs: "Dimensity 7020" },
-            { name: "Motorola Edge 50 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/motorola-edge-50-pro.jpg", specs: "Snapdragon 7 Gen 3" }
-        ];
-        const newPhones = [
-            { name: "Vivo X100 Ultra", img: "https://fdn2.gsmarena.com/vv/bigpic/vivo-x100-ultra.jpg", specs: "Snapdragon 8 Gen 3" },
-            { name: "Huawei Pura 70 Ultra", img: "https://fdn2.gsmarena.com/vv/bigpic/huawei-pura70-ultra.jpg", specs: "Kirin 9010" },
-            { name: "Sony Xperia 1 VI", img: "https://fdn2.gsmarena.com/vv/bigpic/sony-xperia-1-vi.jpg", specs: "Snapdragon 8 Gen 3" },
-            { name: "ZTE Nubia Flip", img: "/static/zte_nubia_flip.jpeg", specs: "Snapdragon 7 Gen 1" },
-            { name: "Oppo Reno12 Pro", img: "https://fdn2.gsmarena.com/vv/bigpic/oppo-reno12-pro-cn.jpg", specs: "Dimensity 9200+" }
-        ];
+        // Removed trendingPhones and newPhones as sections were removed
 
-        // --- DOM Elements ---
-        const searchInput = document.getElementById("search-input");
-        const searchButton = document.getElementById("search-button");
-        const loadingDiv = document.getElementById("loading");
-        const resultsDiv = document.getElementById("results");
-        const resultsSection = document.getElementById("results-section");
-        const errorMessageDiv = document.getElementById("error-message");
+
+        // --- DOM Elements (Updated) ---
+        const searchInput = document.getElementById('searchInput'); // Updated ID
+        const searchButton = document.getElementById('searchButton'); // Updated ID
+        const searchResultsSection = document.getElementById('searchResults'); // New section
+        const searchResultsList = document.getElementById('searchResultsList'); // New list div
+        const searchSpinner = document.getElementById('searchSpinner'); // New spinner div
+        const searchError = document.getElementById('searchError'); // New error div
+
+        const deviceDetailsSection = document.getElementById('deviceDetails'); // New section (replaces modal)
+        const deviceNameElement = document.getElementById('deviceName'); // New
+        const deviceImageElement = document.getElementById('deviceImage'); // New
+        const devicePriceIDRElement = document.getElementById('devicePriceIDR'); // New
+        const deviceSpecsElement = document.getElementById('deviceSpecs'); // New
+        const detailsSpinner = document.getElementById('detailsSpinner'); // New spinner div
+        const detailsError = document.getElementById('detailsError'); // New error div
+
+        // Keep existing DOM elements for dark mode, htmlElement, carouselPopular, welcome toast
         const darkModeToggle = document.getElementById("dark-mode-toggle");
         const htmlElement = document.documentElement;
-        const modal = document.getElementById("modal");
-        const modalTitle = document.getElementById("modal-title");
-        const modalBody = document.getElementById("modal-body");
-        const modalCloseButton = document.getElementById("modal-close-button");
         const carouselPopular = document.getElementById("carousel-popular");
-        // Removed references to carouselTrending and carouselNew as sections were removed
 
-        // --- Dark Mode Logic ---
+
+        // --- Dark Mode Logic (Keep) ---
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             htmlElement.classList.add('dark');
         } else {
@@ -660,41 +650,36 @@
             localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
         });
 
-        // --- Modal Logic ---
-        function openModal() {
-            modal.classList.remove("hidden");
-        }
-        function closeModal() {
-            modal.classList.add("hidden");
-            modalBody.innerHTML = '';
-            modalTitle.textContent = 'Detail Ponsel';
-        }
-        modalCloseButton.addEventListener("click", closeModal);
-        modal.addEventListener("click", (event) => {
-            if (event.target === modal) closeModal();
-        });
+        // --- Modal Logic (Removed) ---
+        // showDetailsInModal logic is now integrated into fetchDeviceDetails and populates deviceDetailsSection
+
 
         // --- Carousel Population Logic (Now Grid) ---
-        function createGridCard(phone) {
+        function createGridCard(phone) { // phone object now needs name, img, priceIDR
             const card = document.createElement("div");
             card.className = "bg-gray-100 dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-200 p-4 text-center border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-between";
+            
+            card.addEventListener('click', () => {
+                searchInput.value = phone.name;
+                searchButton.click(); 
+                document.getElementById('search-section-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            const displayPrice = phone.priceIDR ? phone.priceIDR : 'Harga tidak tersedia';
+
             card.innerHTML = `
-                <div class="flex-grow flex flex-col items-center justify-center w-full mb-3">
-                    <img src="${phone.img || 'https://via.placeholder.com/120x150?text=N/A'}" alt="${phone.name}" class="w-auto h-32 mx-auto mb-3 object-contain">
-                    <div class="flex items-center justify-center space-x-1">
+                <div class="flex-grow flex flex-col items-center justify-center w-full">
+                    <img src="${phone.img || 'https://via.placeholder.com/120x150?text=N/A'}" alt="${phone.name}" class="w-auto h-32 mx-auto mb-2 object-contain">
+                    <p class="text-sm font-bold text-ios-blue dark:text-ios-blue my-1">${displayPrice}</p>
+                    <div class="flex items-center justify-center space-x-1 mt-1">
                         <h3 class="text-sm font-semibold truncate">${phone.name}</h3>
                         ${(typeof newPhones !== 'undefined' && newPhones.some(p => p.name === phone.name)) ? '<span class="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded-full">baru</span>' : ''}
                     </div>
                 </div>
                 <div class="p-2 bg-white dark:bg-gray-700 text-black dark:text-white text-center text-xs font-semibold w-full mt-2 rounded-b-xl border-t border-gray-200 dark:border-gray-700">
-                    Lihat Detail
+                    Cari Detail
                 </div>
             `;
-            card.addEventListener('click', () => {
-                searchInput.value = phone.name;
-                performSearch();
-                document.getElementById('search-section-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
             return card;
         }
 
@@ -707,182 +692,200 @@
 
         // Use populateGrid for the popular section
         populateGrid(carouselPopular, popularPhones);
-        // Removed population for trending and new sections as they are deleted
 
-        // --- Helper function to get spec value ---
-        function getSpecValue(detailSpec, categoryName, specName) {
-            const category = detailSpec?.find(cat => cat.category === categoryName);
-            if (!category || !Array.isArray(category.specifications)) return "N/A";
 
-            for (const item of category.specifications) { // <== Perbaikan Logika JS (Loop langsung ke item)
-                 // <== Perbaikan Logika JS (Hapus try/catch dan JSON.parse)
-                if (item && typeof item === 'object' && item.name === specName) { // Cek jika item adalah objek dengan nama yang cocok
-                    return item.value || "N/A";
-                }
+        // --- Search & Details Logic (New from index.html) ---
+
+        const searchSpinnerTextElement = document.getElementById('searchSpinnerText');
+        const detailsSpinnerTextElement = document.getElementById('detailsSpinnerText');
+        const loadingMessages = [
+            "Sedang mencari, proses ini memerlukan sedikit waktu...",
+            "Duduk santai dan nikmati waktu Anda..."
+        ];
+        let currentMessageIndex = 0;
+        let textIntervalSearch;
+        let textIntervalDetails;
+
+        function updateSpinnerText(element) {
+            if (element) {
+                element.textContent = loadingMessages[currentMessageIndex];
+                currentMessageIndex = (currentMessageIndex + 1) % loadingMessages.length;
             }
-            return "N/A"; // Not found
         }
 
-        // --- Search & Display Logic ---
-        async function performSearch() {
+        // Modify searchButton event listener
+        searchButton.addEventListener('click', async () => {
             const query = searchInput.value.trim();
             if (!query) {
-                displayError("Silakan masukkan nama ponsel untuk dicari.");
+                searchError.textContent = 'Masukkan nama ponsel untuk dicari.';
+                searchError.classList.remove('hidden');
+                searchResultsSection.classList.add('hidden');
+                deviceDetailsSection.classList.add('hidden');
+                if (textIntervalSearch) clearInterval(textIntervalSearch);
                 return;
             }
 
-            resultsDiv.innerHTML = "";
-            resultsSection.classList.add("hidden");
-            errorMessageDiv.classList.add("hidden");
-            loadingDiv.classList.remove("hidden");
-            searchButton.disabled = true;
-            searchInput.disabled = true;
+            searchResultsList.innerHTML = '';
+            searchError.classList.add('hidden');
+            deviceDetailsSection.classList.add('hidden');
+            searchResultsSection.classList.remove('hidden');
+            searchSpinner.classList.remove('hidden');
+            currentMessageIndex = 0; // Reset message index
+            updateSpinnerText(searchSpinnerTextElement); // Initial text
+            if (textIntervalSearch) clearInterval(textIntervalSearch);
+            textIntervalSearch = setInterval(() => updateSpinnerText(searchSpinnerTextElement), 3000); // Change text every 3 seconds
 
             try {
-                // Pastikan endpoint scraping API Anda sudah benar
-                const response = await fetch(`/api/scrape?query=${encodeURIComponent(query)}`);
+                const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
                 const data = await response.json();
+                const successToast = document.getElementById("success-toast");
+                searchSpinner.classList.add("hidden");
+                if (textIntervalSearch) clearInterval(textIntervalSearch);
+                searchSpinnerTextElement.textContent = ''; // Clear text when done
 
-                if (!response.ok) {
-                    // Tangani error HTTP (misal 404, 500)
-                    throw new Error(data.error || `HTTP error! status: ${response.status}`);
-                }
-
-                if (data.error || !data.name) {
-                     // Tangani error dari API atau jika data ponsel tidak ditemukan
-                     displayError(data.error || `Ponsel dengan nama "${query}" tidak ditemukan atau terjadi kesalahan.`);
-                } else {
-                    displayResultsAsCard(data);
-                    resultsSection.classList.remove("hidden");
-                }
-
-            } catch (error) {
-                console.error("Search failed:", error);
-                displayError(`Pencarian gagal: ${error.message}. Pastikan nama ponsel benar atau coba nama lain.`);
-            } finally {
-                loadingDiv.classList.add("hidden");
-                searchButton.disabled = false;
-                searchInput.disabled = false;
-            }
-        }
-
-        function displayResultsAsCard(data) {
-            resultsDiv.innerHTML = "";
-            errorMessageDiv.classList.add("hidden");
-
-            const card = document.createElement("div");
-            card.className = "col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200 flex flex-col";
-            card.addEventListener('click', () => showDetailsInModal(data));
-
-            // Use correct keys based on assumed API response structure
-            let imageUrl = data.img || 'https://via.placeholder.com/150?text=No+Image';
-            let phoneName = data.name || "Nama Tidak Diketahui";
-            let displayInfo = getSpecValue(data.detailSpec, "Display", "Size");
-            let batteryInfo = getSpecValue(data.detailSpec, "Battery", "Type");
-
-            // Improved Camera Info Extraction using getSpecValue
-            let cameraInfo = getSpecValue(data.detailSpec, "Main Camera", "Quad") ||
-                             getSpecValue(data.detailSpec, "Main Camera", "Triple") ||
-                             getSpecValue(data.detailSpec, "Main Camera", "Dual") ||
-                             getSpecValue(data.detailSpec, "Main Camera", "Single") || "N/A";
-
-             // Fallback: if no specific type found, get the value of the first item in the specs array
-            if (cameraInfo === "N/A") {
-                const cameraCategory = data.detailSpec?.find(cat => cat.category === "Main Camera");
-                 if (cameraCategory && Array.isArray(cameraCategory.specifications) && cameraCategory.specifications.length > 0) {
-                     // Assuming the first item, even if not an object or doesn't have 'name', might contain a value
-                     const firstItem = cameraCategory.specifications[0];
-                      if (typeof firstItem === 'object' && firstItem.value) {
-                          cameraInfo = firstItem.value;
-                     } else if (typeof firstItem === 'string') {
-                         cameraInfo = firstItem; // Use raw string if it's not an object
-                     }
-                 }
-            }
-
-
-            card.innerHTML = `
-                <div class="p-4 flex flex-col items-center flex-grow">
-                    <!-- Image container with centering -->
-                    <div class="w-full flex justify-center mb-4">
-                        <img src="${imageUrl}" alt="${phoneName}" class="w-full h-32 object-contain"> <!-- Ensure image displays -->
-                    </div>
-                    <h3 class="text-lg font-semibold text-center mb-2 truncate w-full">${phoneName}</h3>
-                    ${data.priceIDR ? `<p class="text-sm font-medium text-green-600 dark:text-green-400 text-center mb-2">${data.priceIDR}</p>` : ''}
-                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 text-center w-full">
-                        <p><span class="font-medium">Layar:</span> ${displayInfo}</p>
-                        <p><span class="font-medium">Kamera:</span> ${cameraInfo.split('\n')[0]}</p> <!-- Show only first line of camera info -->
-                        <p><span class="font-medium">Baterai:</span> ${batteryInfo}</p>
-                    </div>
-                          <div class="p-3 bg-ios-blue text-white text-center text-sm font-medium">
-                    Lihat Detail
-                </div>       `;
-            resultsDiv.appendChild(card);
-        }
-
-        function showDetailsInModal(data) {
-            modalTitle.textContent = data.name || "Detail Ponsel";
-            modalBody.innerHTML = '';
-
-            let content = '';
-            if (data.img) {
-                content += `<img src="${data.img}" alt="${data.name || "Phone Image"}" class="max-w-[150px] float-right ml-4 mb-4 rounded-lg border border-gray-200 dark:border-gray-700 p-1">`;
-            }
-
-            // Iterate through detailSpec array if it exists
-            if (Array.isArray(data.detailSpec)) {
-                data.detailSpec.forEach(categoryData => {
-                    if (categoryData.category && Array.isArray(categoryData.specifications)) {
-                        content += `<div class="mb-6 clear-both">
-                                        <h3 class="text-base font-semibold mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">${categoryData.category}</h3>
-                                        <ul class="text-sm space-y-1">`;
-                        categoryData.specifications.forEach(item => { // <== Perbaikan Logika JS (Loop langsung ke item)
-                             // <== Perbaikan Logika JS (Hapus try/catch dan JSON.parse)
-                            // Check if the item is an object with name and value properties
-                            if (item && typeof item === 'object' && item.name && item.value) {
-                                // Use flex-col for better alignment when value is complex
-                                content += `<li class="flex flex-col items-start py-1">
-                                                <span class="font-medium text-gray-700 dark:text-gray-300 mr-2">${item.name}:</span>
-                                                <div class="text-left w-full pl-2 text-gray-600 dark:text-gray-400 whitespace-pre-wrap">${item.value}</div>
-                                            </li>`;
-                            } else if (item && typeof item === 'string') {
-                                // Fallback for simple string items
-                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">${item}</li>`;
-                            } else {
-                                // Handle other unexpected formats gracefully
-                                console.warn("Unexpected spec item format in modal:", item);
-                                content += `<li class="py-1 text-gray-600 dark:text-gray-400">Format spesifikasi tidak diketahui.</li>`; // Or JSON.stringify(item) for debugging
+                if (response.ok && data.devices && data.devices.length > 0) {
+                    if(successToast) {
+                        successToast.classList.add("show");
+                        setTimeout(() => {
+                            successToast.classList.remove("show");
+                        }, 3000); // Hide after 3 seconds
+                    }
+                    data.devices.forEach(device => {
+                        const listItem = document.createElement("div");
+                        listItem.className = "py-2 px-3 mb-1 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-700";
+                        listItem.addEventListener('click', () => {
+                            fetchDeviceDetails(device.url, device.name);
+                            const deviceDetailsSection = document.getElementById('deviceDetails');
+                            if (deviceDetailsSection) {
+                                deviceDetailsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                             }
                         });
-                        content += `    </ul>
-                                   </div>`;
-                    }
-                });
-            } else {
-                 // Fallback if detailSpec is not an array or missing
-                 content += '<p>Tidak ada detail spesifikasi yang ditemukan dalam format yang diharapkan.</p>';
-            }
-
-            modalBody.innerHTML = content || '<p>Tidak ada detail spesifikasi yang ditemukan.</p>';
-            openModal();
-        }
-
-        function displayError(message) {
-            resultsDiv.innerHTML = "";
-            resultsSection.classList.add("hidden");
-            errorMessageDiv.innerHTML = `<p>${message}</p>`;
-            errorMessageDiv.classList.remove("hidden");
-        }
-
-        // --- Event Listeners ---
-        searchButton.addEventListener("click", performSearch);
-        searchInput.addEventListener("keypress", (event) => {
-            if (event.key === "Enter") {
-                performSearch();
+                        listItem.innerHTML = `<h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">${device.name}</h3>`;
+                        searchResultsList.appendChild(listItem);
+                    });
+                } else if (data.error) {
+                    searchError.textContent = data.error;
+                    searchError.classList.remove('hidden');
+                } else {
+                    searchError.textContent = 'Tidak ada perangkat ditemukan atau terjadi kesalahan.';
+                    searchError.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Search API error:', error);
+                searchSpinner.classList.add('hidden');
+                if (textIntervalSearch) clearInterval(textIntervalSearch);
+                searchSpinnerTextElement.textContent = ''; // Clear text on error
+                searchError.textContent = 'Gagal menghubungi server. Silakan coba lagi.';
+                searchError.classList.remove('hidden');
             }
         });
 
-        // Show Welcome Toast on page load
+        // Modify fetchDeviceDetails function
+        async function fetchDeviceDetails(deviceUrl, originalName) {
+            deviceSpecsElement.innerHTML = '';
+            detailsError.classList.add('hidden');
+            searchResultsSection.classList.add('hidden');
+            deviceDetailsSection.classList.remove('hidden');
+            detailsSpinner.classList.remove('hidden');
+            currentMessageIndex = 0; // Reset message index
+            updateSpinnerText(detailsSpinnerTextElement); // Initial text
+            if (textIntervalDetails) clearInterval(textIntervalDetails);
+            textIntervalDetails = setInterval(() => updateSpinnerText(detailsSpinnerTextElement), 3000); // Change text every 3 seconds
+
+            deviceNameElement.textContent = '';
+            deviceImageElement.src = '';
+            deviceImageElement.classList.add('hidden');
+            devicePriceIDRElement.classList.add('hidden');
+            devicePriceIDRElement.textContent = '';
+
+            try {
+                const response = await fetch(`/api/details?url=${encodeURIComponent(deviceUrl)}`);
+                const data = await response.json();
+                detailsSpinner.classList.add('hidden');
+                if (textIntervalDetails) clearInterval(textIntervalDetails);
+                detailsSpinnerTextElement.textContent = ''; // Clear text when done
+
+                if (response.ok && data.name) {
+                    deviceNameElement.textContent = data.name;
+                    if (data.img) {
+                        deviceImageElement.src = data.img;
+                        deviceImageElement.classList.remove('hidden');
+                    } else {
+                        deviceImageElement.classList.add('hidden');
+                    }
+                    if (data.priceIDR) {
+                        devicePriceIDRElement.textContent = data.priceIDR;
+                        devicePriceIDRElement.classList.remove('hidden');
+                    } else {
+                        devicePriceIDRElement.classList.add('hidden');
+                    }
+                    if (data.detailSpec && data.detailSpec.length > 0) {
+                        data.detailSpec.forEach(category => {
+                            const categoryDiv = document.createElement('div');
+                            categoryDiv.classList.add('mb-3', 'p-3', 'bg-gray-50', 'dark:bg-gray-700', 'rounded-md');
+                            const categoryTitle = document.createElement('h3');
+                            categoryTitle.textContent = category.category;
+                            categoryTitle.classList.add('text-lg', 'font-semibold', 'mb-1', 'text-ios-blue', 'dark:text-monsterGreen');
+                            categoryDiv.appendChild(categoryTitle);
+                            const specsList = document.createElement('ul');
+                            specsList.classList.add('list-disc', 'list-inside', 'space-y-1', 'text-sm');
+                            category.specifications.forEach(spec => {
+                                const specItem = document.createElement('li');
+                                const specNameSpan = document.createElement('span');
+                                specNameSpan.classList.add('font-medium');
+                                specNameSpan.textContent = `${spec.name}: `;
+                                const specValueSpan = document.createElement('span');
+                                const tempDiv = document.createElement('div');
+                                tempDiv.innerHTML = spec.value;
+                                specValueSpan.textContent = tempDiv.textContent || tempDiv.innerText || "";
+                                if (category.category === "Misc" && spec.name === "Price") {
+                                    specNameSpan.style.fontWeight = 'bold';
+                                    specNameSpan.style.color = '#0000FF';
+                                    specValueSpan.style.fontWeight = 'bold';
+                                    specValueSpan.style.color = '#0000FF';
+                                }
+                                specItem.appendChild(specNameSpan);
+                                specItem.appendChild(specValueSpan);
+                                specsList.appendChild(specItem);
+                            });
+                            categoryDiv.appendChild(specsList);
+                            deviceSpecsElement.appendChild(categoryDiv);
+                        });
+                    } else {
+                        const noSpecs = document.createElement('p');
+                        noSpecs.textContent = 'Tidak ada spesifikasi detail yang ditemukan.';
+                        deviceSpecsElement.appendChild(noSpecs);
+                    }
+                } else if (data.error) {
+                    detailsError.textContent = data.error;
+                    detailsError.classList.remove('hidden');
+                } else {
+                    detailsError.textContent = 'Gagal memuat detail perangkat atau terjadi kesalahan.';
+                    detailsError.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Details API error:', error);
+                detailsSpinner.classList.add('hidden');
+                if (textIntervalDetails) clearInterval(textIntervalDetails);
+                detailsSpinnerTextElement.textContent = ''; // Clear text on error
+                detailsError.textContent = 'Gagal menghubungi server untuk detail. Silakan coba lagi.';
+                detailsError.classList.remove('hidden');
+            }
+        }
+
+        // --- Event Listeners (Updated/Added) ---
+
+        // searchButton listener is already added above
+
+        // Added keypress listener from index.html
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default form submission if it were a form
+                searchButton.click(); // Trigger the search button click
+            }
+        });
+
+        // Keep Show Welcome Toast on page load
         document.addEventListener("DOMContentLoaded", () => {
             const toastOverlay = document.getElementById("welcome-toast-overlay");
             const toast = document.getElementById("welcome-toast");
