@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSMArena Scraper - HpGaul</title>
+    <title>HpGaul - Info Spesifikasi Ponsel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,12 +11,14 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+                        sans: ['Poppins', 'sans-serif'],
                     },
                     colors: {
-                        ios: {
-                            blue: '#0000FF',
-                        }
+                        'ios-blue': '#007AFF',
+                        'custom-gray': '#f0f0f0',
+                        'dark-bg': '#1a1a1a',
+                        'dark-text': '#e5e7eb',
+                        'dark-card': '#2d3748',
                     }
                 }
             }
@@ -25,16 +27,41 @@
     <style>
         body {
             padding-top: 4rem; /* Account for fixed navbar */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .btn-primary {
-            background-color: #0000FF; /* ios.blue */
+        .dark body {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
         }
-        .btn-primary:hover {
-            background-color: #0000CC; /* darker blue */
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+        }
+        .dark .card {
+            background-color: var(--dark-card);
+        }
+        .specs-table th, .specs-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .dark .specs-table th, .dark .specs-table td {
+            border-bottom-color: #4a5568;
+        }
+        .specs-table th {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        .dark .specs-table th {
+            color: #cbd5e0;
         }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
+
     <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -44,56 +71,94 @@
                     </svg>
                     <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span> Scraper</span>
                 </a>
+                <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue">
+                    <svg id="icon-sun" class="h-6 w-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l.707.707M12 20.25a8.25 8.25 0 100-16.5 8.25 8.25 0 000 16.5z" />
+                    </svg>
+                    <svg id="icon-moon" class="h-6 w-6 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-8">
-        <div class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-xl">
-            <h1 class="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">GSMArena Phone Scraper</h1>
-
-            <form action="/scrape" method="GET" class="mb-6">
-                <div class="mb-4">
-                    <label for="url" class="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-2">
-                        Masukkan URL Halaman Ponsel GSMArena:
-                    </label>
-                    <input type="text" id="url" name="url" placeholder="Contoh: https://www.gsmarena.com/samsung_galaxy_s23_ultra-12024.php"
-                           class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 dark:text-gray-200 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                           required>
-                </div>
-                <div class="flex items-center justify-center">
-                    <button type="submit"
-                            class="btn-primary hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                        Scrape Harga
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-8">
+        <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8">
+            <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">Pencarian Spesifikasi Ponsel</h1>
+            
+            <form action="/scrape" method="GET" class="mb-8">
+                <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Masukkan URL GSMArena:</label>
+                <div class="flex items-center">
+                    <input type="text" id="url" name="url" placeholder="Contoh: https://www.gsmarena.com/samsung_galaxy_s23_ultra-12024.php" 
+                           class="flex-grow shadow-sm focus:ring-ios-blue focus:border-ios-blue block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-l-md p-3" 
+                           value="<%= typeof gsmarenaUrl !== 'undefined' ? gsmarenaUrl : '' %>">
+                    <button type="submit" 
+                            class="bg-ios-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-r-md transition duration-150 ease-in-out">
+                        Cari
                     </button>
                 </div>
             </form>
 
             <% if (error) { %>
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 mt-6" role="alert">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
                     <strong class="font-bold">Error:</strong>
                     <span class="block sm:inline"><%= error %></span>
                 </div>
             <% } %>
 
             <% if (phoneData) { %>
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 mt-6">
-                    <h2 class="text-xl font-semibold mb-3 text-center">Hasil Scraping:</h2>
-                    <div class="text-center mb-4">
-                        <% if (phoneData.img) { %>
-                            <img src="<%= phoneData.img %>" alt="<%= phoneData.name %>" class="mx-auto mb-2 rounded-lg shadow-md max-h-60">
-                        <% } %>
-                        <p class="text-lg font-medium"><%= phoneData.name %></p>
-                        <p class="text-md mt-1"><strong>Harga (dari Misc):</strong> <%= phoneData.price %></p>
+                <div class="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
+                    <div class="md:flex">
+                        <div class="md:flex-shrink-0">
+                            <img class="h-48 w-full object-cover md:w-48" src="<%= phoneData.img %>" alt="Gambar <%= phoneData.name %>">
+                        </div>
+                        <div class="p-8">
+                            <div class="uppercase tracking-wide text-sm text-ios-blue font-semibold"><%= phoneData.name %></div>
+                            <p class="block mt-1 text-lg leading-tight font-medium text-black dark:text-white"><%= phoneData.price %></p>
+                            <div class="mt-4">
+                                <% phoneData.specifications.forEach(category => { %>
+                                    <h3 class="text-md font-semibold text-gray-900 dark:text-white mt-3 mb-1"><%= category.category %></h3>
+                                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 specs-table">
+                                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                            <% category.specifications.forEach(spec => { %>
+                                                <tr>
+                                                    <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-500 dark:text-gray-400 w-1/3"><%= spec.name %></td>
+                                                    <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300"><%- spec.value %></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                <% }); %>
+                            </div>
+                        </div>
                     </div>
                 </div>
             <% } %>
         </div>
     </main>
 
-    <footer class="text-center py-8 text-sm text-gray-500 dark:text-gray-400">
-        <p>&copy; <%= new Date().getFullYear() %> HpGaul Scraper. Dibuat dengan ❤️.</p>
-    </footer>
+    <script>
+        // Dark mode toggle script
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const htmlElement = document.documentElement;
 
+        // Set initial theme based on localStorage or system preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
+
