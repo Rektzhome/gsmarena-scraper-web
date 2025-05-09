@@ -1,10 +1,15 @@
 const express = require("express");
 const path = require("path");
-const axios = require("axios"); // Import axios
-const { searchDevices, getDeviceDetails } = require("./scraper"); // Ensure this line is correct
+const axios = require("axios");
+const { searchDevices, getDeviceDetails } = require("./scraper");
+const uiRoutes = require("./routes/index"); // Mengimpor rute UI baru
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Konfigurasi EJS sebagai view engine
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 // Simple in-memory cache for scraped data
 const cache = new Map();
@@ -17,18 +22,18 @@ const exchangeRateCache = {
     timestamp: 0,
 };
 const RATE_CACHE_DURATION_MS = 4 * 60 * 60 * 1000; // 4 hours for exchange rates
-const CURRENCY_API_KEY = "fca_live_S9jkdJiYdOutHpdsHVvUtQyNDzaZ34ck2oBa0uyM";
+const CURRENCY_API_KEY = "fca_live_S9jkdJiYdOutHpdsHVvUtQyNDzaZ34ck2oBa0uyM"; // Harap ganti dengan API key Anda jika diperlukan
 const TARGET_CURRENCIES = "IDR,EUR,INR,GBP,AUD,CAD";
 const CURRENCY_API_URL = `https://api.freecurrencyapi.com/v1/latest?apikey=${CURRENCY_API_KEY}&currencies=${TARGET_CURRENCIES}&base_currency=${exchangeRateCache.baseCurrency}`;
 
 // Middleware to parse JSON requests
 app.use(express.json());
 
-// Serve static files from the 'public' directory
+// Serve static files from the 'public' directory (jika masih diperlukan untuk aset CSS/JS lama)
+// Jika EJS sudah menangani semua, ini mungkin tidak terlalu krusial untuk halaman baru
 app.use(express.static(path.join(__dirname, "public")));
 
-// --- Helper Functions ---
-
+// --- Helper Functions (as they were, no changes here for now) ---
 async function getExchangeRates() {
     const now = Date.now();
     if (exchangeRateCache.rates && (now - exchangeRateCache.timestamp < RATE_CACHE_DURATION_MS)) {
@@ -49,11 +54,11 @@ async function getExchangeRates() {
             return rates;
         } else {
             console.error("[Currency] Invalid API response structure:", response.data);
-            return exchangeRateCache.rates; // Return old rates if new fetch fails but old ones exist
+            return exchangeRateCache.rates; 
         }
     } catch (error) {
         console.error("[Currency] Error fetching exchange rates:", error.message);
-        return exchangeRateCache.rates; // Return old rates if new fetch fails
+        return exchangeRateCache.rates; 
     }
 }
 
@@ -117,7 +122,10 @@ async function convertPrice(priceString) {
     return priceString;
 }
 
-// --- API Endpoint for Device Search ---
+// Menggunakan rute UI baru untuk halaman utama dan scraping
+app.use("/", uiRoutes);
+
+// --- API Endpoints (tetap ada jika masih digunakan oleh bagian lain atau untuk masa depan) ---
 app.get("/api/search", async (req, res) => {
     const query = req.query.query;
     if (!query) {
@@ -150,7 +158,6 @@ app.get("/api/search", async (req, res) => {
     }
 });
 
-// --- API Endpoint for Device Details ---
 app.get("/api/details", async (req, res) => {
     const deviceUrl = req.query.url;
     if (!deviceUrl) {
@@ -199,7 +206,7 @@ app.get("/api/details", async (req, res) => {
                                 if (specObject.name === "Price" && specObject.value) {
                                     specObject.value = await convertPrice(specObject.value);
                                 }
-                                return specObject; // Return the processed object
+                                return specObject;
                             } else {
                                 console.warn(`[Misc Processing] Item was not an object and could not be parsed, or specObject is null: '${specItem}'`);
                                 return specItem; 
@@ -213,18 +220,18 @@ app.get("/api/details", async (req, res) => {
             const miscCategory = details.detailSpec?.find(cat => cat.category === "Misc");
             if (miscCategory && Array.isArray(miscCategory.specifications)) {
                 for (const specItem of miscCategory.specifications) {
-                    // Ensure specItem is an object before accessing its properties
                     if (typeof specItem === 'object' && specItem !== null && specItem.name === "Price" && specItem.value && typeof specItem.value === 'string') {
                         const priceParts = specItem.value.split(' / ');
-                        if (priceParts.length === 2 && priceParts[1].startsWith('Rp')) {
-                            priceIDR = priceParts[1];
+                        const rupiahPart = priceParts.find(part => part.startsWith('Rp'));
+                        if (rupiahPart) {
+                            priceIDR = rupiahPart;
                             console.log(`[Currency] Extracted priceIDR for card: ${priceIDR}`);
                             break;
                         }
                     }
                 }
             }
-            details.priceIDR = priceIDR;
+            details.priceIDR = priceIDR; // Ini penting untuk API, mungkin tidak langsung dipakai EJS baru
             console.log(`[Cache] Storing result for details URL: ${deviceUrl}`);
             cache.set(cacheKey, { data: details, timestamp: Date.now() });
             res.status(200).json(details);
@@ -241,6 +248,5 @@ app.listen(port, "0.0.0.0", () => {
     getExchangeRates(); 
 });
 
-// Export the app for Vercel (or other platforms)
 module.exports = app;
 

@@ -17,6 +17,9 @@
   "license": "ISC",
   "dependencies": {
     "@sparticuz/chromium": "^133.0.0",
+    "axios": "^1.9.0",
+    "cheerio": "^1.0.0",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
     "gsmarena-api": "^2.0.5",
     "playwright": "^1.44.0",
