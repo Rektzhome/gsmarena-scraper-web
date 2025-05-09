@@ -2,15 +2,25 @@
 
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>HpGaul - Sparepart</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<script defer="" src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-<script>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>HpGaul - Sparepart</title>
+
+    <!-- Optimal: Link ke file CSS Tailwind yang sudah di-build untuk produksi -->
+    <!-- <link href="/path/to/your/optimized.css" rel="stylesheet"> -->
+
+    <!-- Menggunakan CDN Tailwind untuk kemudahan dalam satu file (kurang optimal untuk produksi) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <!-- Alpine.js CDN dengan defer untuk performa -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        // Konfigurasi Tailwind (idealnya dipindahkan ke proses build CSS)
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -27,143 +37,231 @@
             }
         }
     </script>
-<style>
+    <style>
         /* Add this to hide Alpine elements before initialization */
         [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased pt-24">
 <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex justify-between items-center h-16">
-<div class="flex-shrink-0 flex items-center">
-<a class="flex items-center" href="index.html">
-<svg class="h-8 w-auto mr-2 text-ios-blue" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" fill-rule="evenodd"></path>
-</svg>
-<span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
-</a>
-</div>
-<div class="flex items-center">
-<a class="text-gray-600 dark:text-gray-400 hover:text-ios-blue dark:hover:text-ios-blue p-2 rounded-md" href="index.html">
-<svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span class="sr-only">Kembali ke Halaman Utama</span>
-</a>
-</div>
-</div>
-</div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex-shrink-0 flex items-center">
+                <a class="flex items-center" href="index.html">
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" fill-rule="evenodd"></path>
+                    </svg>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
+                </a>
+            </div>
+            <div class="flex items-center">
+                <a class="text-gray-600 dark:text-gray-400 hover:text-ios-blue dark:hover:text-ios-blue p-2 rounded-md" href="index.html">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span class="sr-only">Kembali ke Halaman Utama</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </nav>
 <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<div class="grid grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-4 mb-4 place-items-center"><img alt="Vivo Logo" class="h-10 sm:h-12 md:h-12 w-auto object-contain max-h-12" src="https://upload.wikimedia.org/wikipedia/commons/1/13/Vivo_logo_2019.svg"/><img alt="Xiaomi Logo" class="h-10 sm:h-12 md:h-12 w-auto object-contain max-h-12" src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Xiaomi_logo_(2021-).svg"/><img alt="Realme Logo" class="h-10 sm:h-12 md:h-12 w-auto object-contain max-h-12" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Realme_logo.svg/1200px-Realme_logo.svg.png"/><img alt="Samsung Logo" class="h-10 sm:h-12 md:h-12 w-auto object-contain max-h-12" src="https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg"/><img alt="Oppo Logo" class="col-span-2 h-10 sm:h-12 md:h-12 w-auto object-contain max-h-12" src="https://upload.wikimedia.org/wikipedia/commons/b/b8/OPPO_Logo.svg"/></div>
-<p class="text-center text-xl font-semibold mb-8">pilih model produk anda</p>
-<!-- Alpine.js component for search -->
-<div class="relative max-w-lg mx-auto mb-8" x-data="deviceSearchData()">
-<input @keydown.enter="performSearch()" class="w-full p-4 text-sm border-gray-300 rounded-full shadow-sm focus:border-ios-blue focus:ring-ios-blue dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-ios-blue" id="searchInput" placeholder="Masukkan model atau seri produk Vivo Anda..." type="text" x-model="searchQuery"/>
-<button @click="performSearch()" class="mt-4 w-full bg-ios-blue text-white py-3 px-4 rounded-full hover:bg-opacity-90 focus:outline-none text-base font-medium" type="button">
-                Cari Model
-            </button>
-<!-- Modal -->
-<div @click.away="modalOpen = false" class="fixed inset-x-0 bottom-0 h-1/2 bg-white dark:bg-gray-800 shadow-lg rounded-t-2xl p-6 z-50 overflow-y-auto" x-cloak="" x-show="modalOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:enter-start="opacity-0 transform translate-y-full" x-transition:leave="transition ease-in duration-200" x-transition:leave-end="opacity-0 transform translate-y-full" x-transition:leave-start="opacity-100 transform translate-y-0">
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-xl font-semibold">Hasil Pencarian</h2>
-<button @click="modalOpen = false" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</button>
-</div>
-<!-- Modal Content managed by Alpine -->
-<div class="space-y-4" id="modal-content-container">
-<!-- Show message if search query is empty when modal opens -->
-<template x-if="rawQuery.trim() === ''">
-<p class="text-gray-500 dark:text-gray-400 text-center py-4">Silakan masukkan kata kunci pencarian.</p>
-</template>
-<!-- Show message if no results found after search -->
-<template x-if="rawQuery.trim() !== '' &amp;&amp; searchResults.length === 0">
-<p class="text-gray-500 dark:text-gray-400 text-center py-4">Tidak ada hasil yang ditemukan untuk "<span x-text="rawQuery"></span>".</p>
-</template>
-<!-- Show results list -->
-<template x-if="searchResults.length &gt; 0">
-<ul class="space-y-2">
-<template :key="device.dataid" x-for="device in searchResults">
-<li :data-id="device.dataid" @click="selectDevice(device)" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-ios-blue dark:hover:text-ios-blue p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" x-text="'Vivo ' + device.name + ' (' + device.originalSeries + ')'">
-</li>
-</template>
-</ul>
-</template>
-</div>
-</div>
-<!-- Modal Overlay -->
-<div @click="modalOpen = false" class="fixed inset-0 bg-black opacity-50 z-40" x-cloak="" x-show="modalOpen" x-transition:opacity=""></div>
-<!-- Area to display spare parts (Optional: You can add a separate modal or section here) -->
-<div class="text-center mt-4 text-gray-600 dark:text-gray-400" x-show="isLoadingParts">Memuat spare part...</div>
-<div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow" x-show="!isLoadingParts &amp;&amp; selectedDevice &amp;&amp; sparePartsList.length &gt; 0">
-<h3 class="text-lg font-semibold mb-0 px-4 py-3 border-b border-gray-200 dark:border-gray-700">Spare Part untuk <span x-text="getDisplayName(selectedDevice)"></span></h3>
-<div class="flex justify-between items-center px-4 py-2 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-<span class="font-medium text-sm text-gray-600 dark:text-gray-300">Komponen &amp; Aksesori</span>
-<span class="font-medium text-sm text-gray-600 dark:text-gray-300">Harga</span>
-</div>
-<ul class="divide-y divide-gray-200 dark:divide-gray-700" style="max-height: 300px; overflow-y: auto;">
-<template :key="selectedDevice.dataid + '-' + part.part_name + '-' + index" x-for="(part, index) in sparePartsList">
-<li class="flex justify-between items-center px-4 py-3">
-<span class="text-sm text-gray-700 dark:text-gray-200 flex-1 pr-2" x-text="part.part_name"></span>
-<span class="text-sm text-gray-700 dark:text-gray-200" x-text="part.part_price"></span>
-</li>
-</template>
-</ul>
-</div>
-<div class="text-center mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow text-gray-600 dark:text-gray-400" x-show="!isLoadingParts &amp;&amp; selectedDevice &amp;&amp; sparePartsList.length === 0">Tidak ada spare part yang ditemukan untuk model ini.</div>
-</div>
+
+    <!-- Single Image with Lazy Loading and adjusted size/position -->
+    <img
+        src="https://i.ibb.co.com/XZG0SL12/Hp-Gaul-spareparts.png"
+        alt="HpGaul-spareparts"
+        class="block mx-auto max-w-xs h-auto rounded-lg mb-8"
+        loading="lazy"
+    >
+    <!-- End Single Image -->
+
+    <p class="text-center text-xl font-semibold mb-8">pilih model produk anda</p>
+
+    <!-- Alpine.js component for search -->
+    <div class="relative max-w-lg mx-auto mb-8" x-data="deviceSearchData()">
+        <input @keydown.enter="performSearch()" class="w-full p-4 text-sm border-gray-300 rounded-full shadow-sm focus:border-ios-blue focus:ring-ios-blue dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-ios-blue" id="searchInput" placeholder="Masukkan model atau seri produk Anda..." type="text" x-model="searchQuery"/>
+        <button @click="performSearch()" class="mt-4 w-full bg-ios-blue text-white py-3 px-4 rounded-full hover:bg-opacity-90 focus:outline-none text-base font-medium" type="button">
+            Cari Model
+        </button>
+
+        <!-- Modal -->
+        <div
+            @click.away="modalOpen = false"
+            class="fixed inset-x-0 bottom-0 h-1/2 bg-white dark:bg-gray-800 shadow-lg rounded-t-2xl p-6 z-50 overflow-y-auto"
+            x-cloak
+            x-show="modalOpen"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:enter-start="opacity-0 transform translate-y-full"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-end="opacity-0 transform translate-y-full"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+        >
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">Hasil Pencarian</h2>
+                <button @click="modalOpen = false" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                </button>
+            </div>
+            <!-- Modal Content managed by Alpine -->
+            <div class="space-y-4" id="modal-content-container">
+                <!-- Show message if search query is empty when modal opens -->
+                <template x-if="rawQuery.trim() === ''">
+                    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Silakan masukkan kata kunci pencarian.</p>
+                </template>
+                <!-- Show message if no results found after search -->
+                <template x-if="rawQuery.trim() !== '' && searchResults.length === 0">
+                    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Tidak ada hasil yang ditemukan untuk "<span x-text="rawQuery"></span>".</p>
+                </template>
+                <!-- Show results list -->
+                <template x-if="searchResults.length > 0">
+                    <ul class="space-y-2">
+                        <template :key="device.dataid" x-for="device in searchResults">
+                            <li
+                                :data-id="device.dataid"
+                                @click="selectDevice(device)"
+                                class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-ios-blue dark:hover:text-ios-blue p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                                x-text="'Vivo ' + device.name + ' (' + device.originalSeries + ')'"
+                            >
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </div>
+        </div>
+        <!-- Modal Overlay -->
+        <div @click="modalOpen = false" class="fixed inset-0 bg-black opacity-50 z-40" x-cloak x-show="modalOpen" x-transition:opacity></div>
+
+        <!-- Area to display spare parts -->
+        <!-- !!! ADDED x-cloak here !!! -->
+        <div class="text-center mt-4 text-gray-600 dark:text-gray-400" x-show="isLoadingParts" x-cloak>Memuat spare part...</div>
+
+        <!-- !!! ADDED x-cloak here !!! -->
+        <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow" x-show="!isLoadingParts && selectedDevice && sparePartsList.length > 0" x-cloak>
+            <h3 class="text-lg font-semibold mb-0 px-4 py-3 border-b border-gray-200 dark:border-gray-700">Spare Part <span x-text="getDisplayName(selectedDevice)"></span></h3>
+            <div class="flex justify-between items-center px-4 py-2 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                <span class="font-medium text-sm text-gray-600 dark:text-gray-300">Komponen & Aksesori</span>
+                <span class="font-medium text-sm text-gray-600 dark:text-gray-300">Harga</span>
+            </div>
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700" style="max-height: 300px; overflow-y: auto;">
+                <template :key="selectedDevice.dataid + '-' + part.part_name + '-' + index" x-for="(part, index) in sparePartsList">
+                    <li class="flex justify-between items-center px-4 py-3">
+                        <span class="text-sm text-gray-700 dark:text-gray-200 flex-1 pr-2" x-text="part.part_name"></span>
+                        <span class="text-sm text-gray-700 dark:text-gray-200" x-text="part.part_price"></span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <!-- !!! ADDED x-cloak here !!! -->
+        <div class="text-center mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow text-gray-600 dark:text-gray-400" x-show="!isLoadingParts && selectedDevice && sparePartsList.length === 0" x-cloak>Tidak ada spare part yang ditemukan untuk model ini.</div>
+
+    </div>
 </main>
-<footer class="bg-gray-100 dark:bg-gray-900 mt-16 py-10 border-t border-gray-200 dark:border-gray-700">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-<!-- Logo and Description -->
-<div class="flex flex-col items-center md:items-start">
-<div class="flex items-center mb-3">
-<svg class="h-8 w-auto mr-2 text-ios-blue" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" fill-rule="evenodd"></path>
-</svg>
-<span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
-</div>
-<p class="text-sm text-gray-500 dark:text-gray-400 text-center md:text-left">
+
+
+
+        <section class="my-12 text-center">
+<h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
+    HP kamu ngambek? <span class="bg-violet-700 text-white px-2 py-1 rounded-md inline-block my-1">Layarnya pecah</span><br>kayak hati<br> habis di ghosting?
+</h2>
+            <p class="text-md sm:text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-teight">
+                Tenang, jangan langsung buang<br>ke HpGaul.my.id aja!<br>
+Sparepart original brand lengkap:<br>
+layar, baterai, kamera… semua ori,<br> bukan KW rasa yakin!<br>
+<br>
+<p class="text-sm mt-2">
+    <span class="text-black-500 italic font-semi-bold">
+        Disclaimer: Harga ngikut harga resmi brand,<br>
+        tapi kadang suka berubah kayak mood gebetan.
+        Selalu cek ke brand HP kamu dulu ya.
+    </span>
+</p>
+            </p>
+        </section>
+
+    <footer class="bg-gray-100 dark:bg-gray-900 mt-16 py-10 border-t border-gray-200 dark:border-gray-700 relative overflow-hidden font-sans"> <!-- Added relative, overflow-hidden, font-sans -->
+
+        <!-- Visual Icons (Smartphone theme) - More Icons -->
+        <div class="absolute top-8 left-10 w-8 h-8 text-gray-300 opacity-60 rotate-12 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3m0 0v3H9m3-3h3m-3 0V3m0 0v3H9m3-3h3" /></svg>
+        </div>
+         <div class="absolute bottom-6 right-12 w-10 h-10 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h16.5m-16.5 0a2.25 2.25 0 0 0 2.25 2.25h12c1.03 0 1.9-.693 2.077-1.676a7.483 7.483 0 0 1 0-1.117 2.25 2.25 0 0 0-2.25-2.25h-12a2.25 2.25 0 0 0-2.25 2.25Zm1.5-4.5H21a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H3.75A2.25 2.25 0 0 0 1.5 6.75v4.5m18 0v-4.5" /></svg>
+         </div>
+         <div class="absolute top-1/4 right-10 w-6 h-6 text-gray-300 opacity-60 rotate-45 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.39l-.56.56a1.5 1.5 0 0 1-2.122 0l-.56-.56a1.5 1.5 0 0 1 0-2.122l.56-.56a1.5 1.5 0 0 1 2.122 0l.56.56a1.5 1.5 0 0 1 0 2.122Z" /></svg>
+         </div>
+         <div class="absolute bottom-1/4 left-8 w-7 h-7 text-gray-300 opacity-60 -rotate-30 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5m0 9V12m0-7.5V9m9-3.75V9m0 3.75V12m0 7.5V21M12 3v1.5m0 15V21m0-7.5V12m0 2.25V12M12 12H3v.75c0 1.724 1.039 3.274 2.625 3.974V21m-1.5-10.5h15v.75c0 1.724-1.039 3.274-2.625 3.974V21" /></svg>
+         </div>
+         <div class="absolute top-1/3 left-1/4 w-9 h-9 text-gray-300 opacity-60 rotate-3 pointer-events-none">
+              <!-- Camera Icon SVG -->
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15.5a2.25 2.25 0 0 0 2.25-2.25V9.574c0-1.067-.75-1.994-1.816-2.19l-.3-.046a2.253 2.253 0 0 0-1.96-2.64L8.167 4.992A2.31 2.31 0 0 1 6.827 6.175Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM12 9v.008h.008V9H12Z" /></svg>
+         </div>
+         <div class="absolute bottom-1/3 right-1/4 w-8 h-8 text-gray-300 opacity-60 -rotate-12 pointer-events-none">
+             <!-- Bluetooth Icon SVG -->
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 7.5.75-3 3 7.5M21 3l-3 7.5L17.25 9l-3 7.5" /></svg>
+         </div>
+         <div class="absolute top-1/2 left-16 w-5 h-5 text-gray-300 opacity-60 rotate-45 pointer-events-none transform -translate-y-1/2">
+             <!-- Grid/Apps Icon SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
+         </div>
+          <div class="absolute bottom-8 left-1/3 w-6 h-6 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
+             <!-- Location Icon SVG -->
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.75 1.5H10.5a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h5.25A3 3 0 0 1 18 5.25v10.375m-1.5 1.5H15M12 18v.008H12.012V18H12Z" /></svg>
+         </div>
+
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10"> <!-- Added relative z-10 -->
+            <div class="flex flex-col items-center md:items-start">
+                <div class="flex items-center mb-3">
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+                    </svg>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 text-center md:text-left">
                     Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena.
                 </p>
-</div>
-<!-- Placeholder Links (Optional) -->
-<div class="text-center md:text-left">
-<h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Tautan Cepat</h3>
-<ul class="space-y-2">
-<li><a class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" href="#search-section-container">Pencarian</a></li>
-<li><a class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" href="info.html">Tentang Kami</a></li>
-<li><a class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" href="#">Kontak</a></li>
-</ul>
-</div>
-<!-- Placeholder Social (Optional) -->
-<div class="text-center md:text-left">
-<h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Ikuti Kami</h3>
-<div class="flex justify-center md:justify-start space-x-4">
-<a class="text-ios-blue hover:opacity-80" href="#">
-<span class="sr-only">Facebook</span>
-<svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg>
-</a>
-<a class="text-ios-blue hover:opacity-80" href="#">
-<span class="sr-only">Instagram</span>
-<svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.023.047 1.351.058 3.807.058h.468c2.456 0 2.784-.011 3.807-.058.975-.045 1.504-.207 1.857-.344.467-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.047-1.023.058-1.351.058-3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" fill-rule="evenodd"></path></svg>
-</a>
-<a class="text-ios-blue hover:opacity-80" href="#">
-<span class="sr-only">Twitter</span>
-<svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
-</a>
-</div>
-</div>
-</div>
-<div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center">
-<p class="text-sm text-gray-500 dark:text-gray-400">© 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
-</div>
-</footer>
+            </div>
+            <div class="text-center md:text-left">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Tautan Cepat</h3>
+                <ul class="space-y-2">
+                    <li><a href="#search-section-container" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Pencarian</a></li>
+                    <li><a href="info.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
+                <li><a href="HpGaul-Sparepart.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Toko Sparepart</a></li>
+                    <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Kontak</a></li>
+                </ul>
+            </div>
+            <div class="text-center md:text-left">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Ikuti Kami</h3>
+                <div class="flex justify-center md:justify-start space-x-4">
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Facebook</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Instagram</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.137.353.3.882.344 1.857.047 1.023.058 1.351.058 3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Twitter</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center relative z-10"> <!-- Added relative z-10 -->
+            <p class="text-sm text-gray-500 dark:text-gray-400">© 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
+        </div>
+    </footer>
+
 <!-- Alpine.js Component Definition and Data -->
 <script>
-document.addEventListener('alpine:init', () => { 
+document.addEventListener('alpine:init', () => {
+    // Embedded device data (pertimbangkan untuk dipindahkan ke file terpisah atau API jika sangat besar)
     const embeddedDeviceData = {
     "Seri X": [
         {
@@ -713,17 +811,19 @@ document.addEventListener('alpine:init', () => {
     ]
 };
 
+
     Alpine.data('deviceSearchData', () => ({
         searchQuery: '',
-        rawQuery: '', 
+        rawQuery: '',
         searchResults: [],
         modalOpen: false,
-        allDevices: [], 
+        allDevices: [],
         selectedDevice: null,
         sparePartsList: [],
         isLoadingParts: false,
 
         init() {
+            // Menggabungkan data perangkat dari semua seri ke dalam satu array
             for (const series_key in embeddedDeviceData) {
                 if (embeddedDeviceData.hasOwnProperty(series_key)) {
                     embeddedDeviceData[series_key].forEach(device => {
@@ -731,32 +831,40 @@ document.addEventListener('alpine:init', () => {
                     });
                 }
             }
+            // Mengurutkan perangkat berdasarkan nama
             this.allDevices.sort((a, b) => a.name.localeCompare(b.name));
         },
 
         performSearch() {
-            this.rawQuery = this.searchQuery;
+            this.rawQuery = this.searchQuery; // Simpan query asli
             const query = this.searchQuery.trim().toLowerCase();
             let results = [];
 
             if (query === '') {
                 this.searchResults = [];
             } else {
-                const queryWords = query.split(/\s+/).filter(w => w.length > 0);
+                const queryWords = query.split(/\s+/).filter(w => w.length > 0); // Pisahkan query menjadi kata-kata
+
+                // Cari perangkat yang namanya mengandung semua kata dari query
                 results = this.allDevices.filter(device => {
                     const deviceNameLower = device.name.toLowerCase();
+                    // Periksa apakah nama perangkat mengandung seluruh query
                     if (deviceNameLower.includes(query)) return true;
+                    // Periksa apakah query mengandung nama perangkat (misal: "v20 vivo")
                     if (query.includes(deviceNameLower)) return true;
+                     // Periksa apakah nama perangkat mengandung SEMUA kata dari query (misal: "v20 se")
                     return queryWords.every(qw => deviceNameLower.includes(qw));
                 });
 
-                if (results.length === 0) {
+                // Jika tidak ditemukan hasil, coba cari berdasarkan nama seri
+                 if (results.length === 0) {
                     let targetSeriesKey = null;
                     const seriesPatterns = [
+                         // Pola untuk menangkap format seperti "vivo X", "seri Y", "V series", "T"
                         { 'pattern': /^vivo\s+([xyvts])$/i, 'seriesPrefix': 'Seri ' },
                         { 'pattern': /^seri\s+([xyvts])$/i, 'seriesPrefix': 'Seri ' },
                         { 'pattern': /^([xyvts])\s+series$/i, 'seriesPrefix': 'Seri ' },
-                        { 'pattern': /^([xyvts])$/i, 'seriesPrefix': 'Seri ' }
+                        { 'pattern': /^([xyvts])$/i, 'seriesPrefix': 'Seri ' } // Hanya huruf seri (misal: "y")
                     ];
                     for (const item of seriesPatterns) {
                         const match = query.match(item.pattern);
@@ -766,41 +874,46 @@ document.addEventListener('alpine:init', () => {
                         }
                     }
                     if (targetSeriesKey) {
+                         // Filter perangkat yang termasuk dalam seri yang dicari
                         results = this.allDevices.filter(device =>
                             device.originalSeries.toLowerCase() === targetSeriesKey.toLowerCase()
                         );
                     }
                 }
 
+                 // Jika masih belum ada hasil, coba cari berdasarkan nama perangkat atau nama seri secara longgar
                 if (results.length === 0 && query.length > 0) {
-                    results = this.allDevices.filter(device =>
+                     results = this.allDevices.filter(device =>
                         device.name.toLowerCase().includes(query) ||
-                        device.originalSeries.toLowerCase().includes(query)
-                    );
+                        device.originalSeries.toLowerCase().includes(query) // Termasuk jika query adalah bagian dari nama seri (misal: "seri y")
+                     );
                 }
+
                 this.searchResults = results;
             }
-            this.modalOpen = true;
-            this.selectedDevice = null; 
-            this.sparePartsList = [];   
+            this.modalOpen = true; // Buka modal
+            this.selectedDevice = null; // Reset perangkat terpilih
+            this.sparePartsList = [];   // Kosongkan daftar sparepart sebelumnya
         },
 
         getDisplayName(device) {
+            // Pastikan nama dimulai dengan "Vivo " jika belum
             let name = device.name;
             if (!name.toLowerCase().startsWith('vivo ')) {
                 name = 'Vivo ' + name;
             }
-            return `${name} (${device.originalSeries})`; 
+            return `${name} (${device.originalSeries})`; // Tambahkan nama seri asli
         },
 
         async selectDevice(device) {
             this.selectedDevice = device;
-            this.modalOpen = false;
-            this.isLoadingParts = true;
-            this.sparePartsList = []; 
+            this.modalOpen = false; // Tutup modal pencarian
+            this.isLoadingParts = true; // Tampilkan indikator loading
+            this.sparePartsList = []; // Kosongkan daftar sebelumnya
 
             console.log(`Fetching spare parts for ${this.getDisplayName(device)} (ID: ${device.dataid})`);
             try {
+                // Mengambil data sparepart dari file JSON lokal
                 const response = await fetch('./vivo_spareparts_data_full.json');
                 if (!response.ok) {
                     let errorText = await response.text();
@@ -808,14 +921,18 @@ document.addEventListener('alpine:init', () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const allPartsData = await response.json();
+
+                // Filter sparepart yang sesuai dengan device_id perangkat yang dipilih
                 this.sparePartsList = allPartsData.filter(part => part.device_id == parseInt(device.dataid));
+
                 if (this.sparePartsList.length === 0) {
                     console.log(`No spare parts found for device ID: ${device.dataid}`);
                 }
             } catch (error) {
                 console.error("Error fetching or processing spare parts:", error);
+                 // Mungkin tampilkan pesan error ke user
             } finally {
-                this.isLoadingParts = false;
+                this.isLoadingParts = false; // Sembunyikan indikator loading
             }
         }
     }));

@@ -98,19 +98,23 @@
     <!-- Navbar -->
     <nav class="bg-white dark:bg-gray-800 shadow-sm fixed top-0 left-0 right-0 z-20">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Flex container for logo (left) and home button (right) -->
             <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand (Left Side) -->
                 <a href="index.html" class="flex-shrink-0 flex items-center">
                     <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
                     </svg>
                     <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
                 </a>
-                <div class="flex items-center space-x-2">
-                    <button id="dark-mode-toggle" class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ios-blue transition-transform duration-150 ease-in-out hover:scale-110">
-                        <svg id="icon-sun" class="h-6 w-6 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12h2.25m.386-6.364l1.591 1.591" /></svg>
-                        <svg id="icon-moon" class="h-6 w-6 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>
-                    </button>
-                </div>
+
+                <!-- Home Button/Icon (Right Side) -->
+                <a class="text-gray-600 dark:text-gray-400 hover:text-ios-blue dark:hover:text-ios-blue p-2 rounded-md" href="index.html" aria-label="Kembali ke Halaman Utama">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span class="sr-only">Kembali ke Halaman Utama</span>
+                </a>
             </div>
         </div>
     </nav>
@@ -154,22 +158,95 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-100 dark:bg-gray-900 mt-16 py-10 border-t border-gray-200 dark:border-gray-700">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-gray-600 dark:text-gray-400 text-sm">&copy; <script>document.write(new Date().getFullYear())</script> HpGaul. Semua Hak Cipta Dilindungi.</p>
+    <footer class="bg-gray-100 dark:bg-gray-900 mt-16 py-10 border-t border-gray-200 dark:border-gray-700 relative overflow-hidden font-sans"> <!-- Added relative, overflow-hidden, font-sans -->
+
+        <!-- Visual Icons (Smartphone theme) - More Icons -->
+        <div class="absolute top-8 left-10 w-8 h-8 text-gray-300 opacity-60 rotate-12 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3m0 0v3H9m3-3h3m-3 0V3m0 0v3H9m3-3h3" /></svg>
+        </div>
+         <div class="absolute bottom-6 right-12 w-10 h-10 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h16.5m-16.5 0a2.25 2.25 0 0 0 2.25 2.25h12c1.03 0 1.9-.693 2.077-1.676a7.483 7.483 0 0 1 0-1.117 2.25 2.25 0 0 0-2.25-2.25h-12a2.25 2.25 0 0 0-2.25 2.25Zm1.5-4.5H21a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H3.75A2.25 2.25 0 0 0 1.5 6.75v4.5m18 0v-4.5" /></svg>
+         </div>
+         <div class="absolute top-1/4 right-10 w-6 h-6 text-gray-300 opacity-60 rotate-45 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.39l-.56.56a1.5 1.5 0 0 1-2.122 0l-.56-.56a1.5 1.5 0 0 1 0-2.122l.56-.56a1.5 1.5 0 0 1 2.122 0l.56.56a1.5 1.5 0 0 1 0 2.122Z" /></svg>
+         </div>
+         <div class="absolute bottom-1/4 left-8 w-7 h-7 text-gray-300 opacity-60 -rotate-30 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5m0 9V12m0-7.5V9m9-3.75V9m0 3.75V12m0 7.5V21M12 3v1.5m0 15V21m0-7.5V12m0 2.25V12M12 12H3v.75c0 1.724 1.039 3.274 2.625 3.974V21m-1.5-10.5h15v.75c0 1.724-1.039 3.274-2.625 3.974V21" /></svg>
+         </div>
+         <div class="absolute top-1/3 left-1/4 w-9 h-9 text-gray-300 opacity-60 rotate-3 pointer-events-none">
+              <!-- Camera Icon SVG -->
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15.5a2.25 2.25 0 0 0 2.25-2.25V9.574c0-1.067-.75-1.994-1.816-2.19l-.3-.046a2.253 2.253 0 0 0-1.96-2.64L8.167 4.992A2.31 2.31 0 0 1 6.827 6.175Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM12 9v.008h.008V9H12Z" /></svg>
+         </div>
+         <div class="absolute bottom-1/3 right-1/4 w-8 h-8 text-gray-300 opacity-60 -rotate-12 pointer-events-none">
+             <!-- Bluetooth Icon SVG -->
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 7.5.75-3 3 7.5M21 3l-3 7.5L17.25 9l-3 7.5" /></svg>
+         </div>
+         <div class="absolute top-1/2 left-16 w-5 h-5 text-gray-300 opacity-60 rotate-45 pointer-events-none transform -translate-y-1/2">
+             <!-- Grid/Apps Icon SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
+         </div>
+          <div class="absolute bottom-8 left-1/3 w-6 h-6 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
+             <!-- Location Icon SVG -->
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.75 1.5H10.5a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h5.25A3 3 0 0 1 18 5.25v10.375m-1.5 1.5H15M12 18v.008H12.012V18H12Z" /></svg>
+         </div>
+
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10"> <!-- Added relative z-10 -->
+            <div class="flex flex-col items-center md:items-start">
+                <div class="flex items-center mb-3">
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+                    </svg>
+                    <span class="font-bold text-xl"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 text-center md:text-left">
+                    Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena.
+                </p>
+            </div>
+            <div class="text-center md:text-left">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Tautan Cepat</h3>
+                <ul class="space-y-2">
+                    <li><a href="#search-section-container" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Pencarian</a></li>
+                    <li><a href="info.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Tentang Kami</a></li>
+                <li><a href="HpGaul-Sparepart.html" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Toko Sparepart</a></li>
+                    <li><a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Kontak</a></li>
+                </ul>
+            </div>
+            <div class="text-center md:text-left">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-3">Ikuti Kami</h3>
+                <div class="flex justify-center md:justify-start space-x-4">
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Facebook</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Instagram</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.137.353.3.882.344 1.857.047 1.023.058 1.351.058 3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Twitter</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 text-center relative z-10"> <!-- Added relative z-10 -->
+            <p class="text-sm text-gray-500 dark:text-gray-400">© 2025 <span class="font-bold"><span class="text-gray-900 dark:text-white">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
         </div>
     </footer>
-
     <script>
         // Dark Mode Toggle
         const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const iconSun = document.getElementById('icon-sun');
-        const iconMoon = document.getElementById('icon-moon');
+        const iconSun = document.getElementById('icon-sun'); // These elements don't exist in info.html, 
+        const iconMoon = document.getElementById('icon-moon'); // but the script is kept as is per instruction.
 
         // Check local storage for theme preference
         if (localStorage.getItem('color-theme') === 'dark' || 
             (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
+            // The icon toggling logic below will fail silently or cause errors
+            // because iconSun and iconMoon are null. However, the primary
+            // function of applying the 'dark' class to the documentElement works.
             if (iconSun) iconSun.classList.remove('block');
             if (iconSun) iconSun.classList.add('hidden');
             if (iconMoon) iconMoon.classList.remove('hidden');
@@ -182,32 +259,35 @@
             if (iconMoon) iconMoon.classList.add('hidden');
         }
 
-        darkModeToggle.addEventListener('click', () => {
-            // toggle icons inside button
-            iconSun.classList.toggle('hidden');
-            iconMoon.classList.toggle('hidden');
+        // The event listener will also fail if darkModeToggle is null,
+        // which it is in this info.html file. The original script is preserved.
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', () => {
+                // toggle icons inside button
+                if (iconSun) iconSun.classList.toggle('hidden');
+                if (iconMoon) iconMoon.classList.toggle('hidden');
 
-            // if set via local storage previously
-            if (localStorage.getItem('color-theme')) {
-                if (localStorage.getItem('color-theme') === 'light') {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
+                // if set via local storage previously
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                // if NOT set via local storage previously
                 } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
                 }
-            // if NOT set via local storage previously
-            } else {
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                }
-            }
-        });
+            });
+        }
     </script>
 </body>
 </html>
-
