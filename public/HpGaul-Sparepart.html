@@ -1,4 +1,3 @@
-
 <html lang="id">
 <head>
     <meta charset="utf-8"/>
@@ -678,8 +677,8 @@ document.addEventListener('alpine:init', () => {
     };
 
     // URL untuk file JSON spare part lokal
-     const OPPO_LOCAL_PARTS_URL = '/Oppo_sparepart.json'; // Path ke file JSON sparepart OPPO
-    const VIVO_LOCAL_PARTS_URL = '/vivo_spareparts_data_full.json'; // Path ke file JSON sparepart Vivo
+    const OPPO_LOCAL_PARTS_URL = '/public/Oppo_sparepart.json'; // Path ke file JSON sparepart OPPO
+    const VIVO_LOCAL_PARTS_URL = '/public/vivo_spareparts_data_full.json'; // Path ke file JSON sparepart Vivo
 
     // OPPO API Details (Dibuang karena sekarang fetch dari JSON lokal)
     // const OPPO_GET_PRICE_URL = 'https://sgp-sow-cms.oppo.com/oppo-api/basic/v1/getPartPriceNew';
@@ -816,18 +815,25 @@ document.addEventListener('alpine:init', () => {
         },
 
         getDisplayName(device) {
-            // Menampilkan brand dan nama model
-            // Jika ada nama seri yang berbeda dari nama model, tambahkan nama seri
-             if (device.series && device.series !== device.name && !device.name.toLowerCase().includes(device.series.toLowerCase())) {
-                 // Contoh: Vivo V29 (Seri V), OPPO Find N5 (Find N Series)
-                 return `${device.brand} ${device.name} (${device.series})`;
-             }
-             // Contoh: OPPO A58 (Seri A) - Seri A sudah implied di nama model, jadi cukup "OPPO A58"
-             // Kecuali jika brandName sudah ada di marketingModelName (misal: "OPPO Find N5")
-             if (device.name.toLowerCase().startsWith(device.brand.toLowerCase())) {
-                 return `${device.name}`; // Output: "OPPO Find N5"
-             }
-            return `${device.brand} ${device.name}`; // Output: "Vivo V29"
+            if (!device) return ''; // Guard clause for undefined device
+
+            let displayName = device.name;
+
+            // 1. Prepend brand if not already present in device.name
+            if (!device.name.toLowerCase().startsWith(device.brand.toLowerCase())) {
+                displayName = `${device.brand} ${displayName}`;
+            }
+
+            // 2. Append series if:
+            //    - series exists
+            //    - series is not identical to the original device.name (case-insensitive)
+            //    - series is not already contained within the current displayName (case-insensitive)
+            if (device.series &&
+                device.series.toLowerCase() !== device.name.toLowerCase() &&
+                !displayName.toLowerCase().includes(device.series.toLowerCase())) {
+                displayName += ` (${device.series})`;
+            }
+            return displayName;
         },
 
         async selectDevice(device) {
