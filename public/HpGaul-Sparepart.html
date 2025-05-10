@@ -1,4 +1,3 @@
-
 <html lang="id">
 <head>
     <meta charset="utf-8"/>
@@ -677,9 +676,11 @@ document.addEventListener('alpine:init', () => {
         ]
     };
 
-    // URL untuk file JSON spare part lokal
-     const OPPO_LOCAL_PARTS_URL = '/Oppo_sparepart.json'; // Path ke file JSON sparepart OPPO
-    const VIVO_LOCAL_PARTS_URL = '/vivo_spareparts_data_full.json'; // Path ke file JSON sparepart Vivo
+// Kembalikan ke path yang benar jika file ada di folder public
+const OPPO_LOCAL_PARTS_URL = '/public/Oppo_sparepart.json';
+const VIVO_LOCAL_PARTS_URL = '/public/vivo_spareparts_data_full.json';
+
+// Atau sesuaikan dengan lokasi file Anda yang sebenarnya
 
     // OPPO API Details (Dibuang karena sekarang fetch dari JSON lokal)
     // const OPPO_GET_PRICE_URL = 'https://sgp-sow-cms.oppo.com/oppo-api/basic/v1/getPartPriceNew';
@@ -816,18 +817,45 @@ document.addEventListener('alpine:init', () => {
         },
 
         getDisplayName(device) {
-            // Menampilkan brand dan nama model
-            // Jika ada nama seri yang berbeda dari nama model, tambahkan nama seri
-             if (device.series && device.series !== device.name && !device.name.toLowerCase().includes(device.series.toLowerCase())) {
-                 // Contoh: Vivo V29 (Seri V), OPPO Find N5 (Find N Series)
-                 return `${device.brand} ${device.name} (${device.series})`;
-             }
-             // Contoh: OPPO A58 (Seri A) - Seri A sudah implied di nama model, jadi cukup "OPPO A58"
-             // Kecuali jika brandName sudah ada di marketingModelName (misal: "OPPO Find N5")
-             if (device.name.toLowerCase().startsWith(device.brand.toLowerCase())) {
-                 return `${device.name}`; // Output: "OPPO Find N5"
-             }
-            return `${device.brand} ${device.name}`; // Output: "Vivo V29"
+            if (!device) return ''; // Guard clause for undefined device
+
+            let displayName = device.name;
+
+            // 1. Prepend brand if not already present in device.name (case-insensitive)
+            if (!device.name.toLowerCase().startsWith(device.brand.toLowerCase())) {
+                displayName = `${device.brand} ${displayName}`;
+            }
+
+            // 2. Append series if:
+            //    - series exists
+            //    - series is not identical to the original device.name (case-insensitive)
+            //    - series is not already contained within the current displayName (case-insensitive)
+            //    - series is not "A Series" when brand is "OPPO" and name already contains "A" followed by number (e.g. OPPO A58)
+            //    - series is not "Reno Series" when brand is "OPPO" and name already contains "Reno"
+            //    - series is not "Find X Series" or "Find N Series" when brand is "OPPO" and name already contains "Find"
+            if (device.series &&
+                device.series.toLowerCase() !== device.name.toLowerCase() &&
+                !displayName.toLowerCase().includes(device.series.toLowerCase())) {
+
+                // Smarter check for OPPO series to avoid redundancy like "OPPO A58 (A Series)"
+                let appendSeries = true;
+                if (device.brand === 'OPPO') {
+                    const nameLower = device.name.toLowerCase();
+                    const seriesLower = device.series.toLowerCase();
+                    if (seriesLower === 'a series' && nameLower.match(/^oppo a\d/)) { // "OPPO A" followed by digit
+                        appendSeries = false;
+                    } else if (seriesLower === 'reno series' && nameLower.includes('reno')) {
+                        appendSeries = false;
+                    } else if ((seriesLower === 'find x series' || seriesLower === 'find n series') && nameLower.includes('find')) {
+                        appendSeries = false;
+                    }
+                }
+                
+                if (appendSeries) {
+                    displayName += ` (${device.series})`;
+                }
+            }
+            return displayName;
         },
 
         async selectDevice(device) {
@@ -862,7 +890,7 @@ document.addEventListener('alpine:init', () => {
                           part.device_series.toLowerCase() === device.series.toLowerCase()
                      );
 
-                     console.log(`Found ${this.sparePartsList.length} parts for ${device.brand} device: ${device.name}.`);
+                     console.log(`Found ${this.sparePartsList.length} parts for ${device.brand} device: ${device.name} with series ${device.series}.`);
 
                      if (this.sparePartsList.length === 0) {
                            // Coba filter hanya berdasarkan nama jika tidak ketemu
