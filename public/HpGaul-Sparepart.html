@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 
 <html lang="id">
 <head>
@@ -18,9 +17,13 @@
 
     <!-- Alpine.js CDN dengan defer untuk performa -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+     <!-- Axios CDN untuk fetch API (digunakan untuk OPPO jika API POST masih relevan) -->
+     <!-- NOTE: Karena sekarang fetch dari JSON lokal, Axios tidak terlalu diperlukan di sini, tapi tetap disertakan jika Anda ingin beralih kembali ke API OPPO POST -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
     <script>
-        // Konfigurasi Tailwind (idealnya dipindahkan ke proses build CSS)
+        // Konfigurasi Tailwind (mengembalikan warna biru)
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -29,9 +32,13 @@
                         sans: ["Poppins", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
                     },
                     colors: {
-                        ios: {
-                            blue: '#0000FF',
-                        }
+                        "ios": { // Menggunakan kembali warna biru konsisten dengan halaman lain
+                            "blue": '#007AFF', // Common iOS Blue, adjust if your original was different
+                        },
+                         // Keep oppo green if needed elsewhere
+                        oppo: {
+                            green: '#00B061',
+                        },
                     }
                 }
             }
@@ -76,11 +83,11 @@
     >
     <!-- End Single Image -->
 
-    <p class="text-center text-xl font-semibold mb-8">pilih model produk anda</p>
+    <h1 class="text-center text-2xl font-semibold mb-8">Cari Sparepart HP</h1>
 
     <!-- Alpine.js component for search -->
     <div class="relative max-w-lg mx-auto mb-8" x-data="deviceSearchData()">
-        <input @keydown.enter="performSearch()" class="w-full p-4 text-sm border-gray-300 rounded-full shadow-sm focus:border-ios-blue focus:ring-ios-blue dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-ios-blue" id="searchInput" placeholder="Masukkan model atau seri produk Anda..." type="text" x-model="searchQuery"/>
+        <input @keydown.enter="performSearch()" class="w-full p-4 text-sm border-gray-300 rounded-full shadow-sm focus:border-ios-blue focus:ring-ios-blue dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-ios-blue" id="searchInput" placeholder="Masukkan model atau seri produk (misal: OPPO A58, Vivo V29)..." type="text" x-model="searchQuery"/>
         <button @click="performSearch()" class="mt-4 w-full bg-ios-blue text-white py-3 px-4 rounded-full hover:bg-opacity-90 focus:outline-none text-base font-medium" type="button">
             Cari Model
         </button>
@@ -108,7 +115,7 @@
             <div class="space-y-4" id="modal-content-container">
                 <!-- Show message if search query is empty when modal opens -->
                 <template x-if="rawQuery.trim() === ''">
-                    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Silakan masukkan kata kunci pencarian.</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Silakan masukkan kata kunci pencarian (misal: OPPO A58, Vivo V29).</p>
                 </template>
                 <!-- Show message if no results found after search -->
                 <template x-if="rawQuery.trim() !== '' && searchResults.length === 0">
@@ -117,12 +124,13 @@
                 <!-- Show results list -->
                 <template x-if="searchResults.length > 0">
                     <ul class="space-y-2">
-                        <template :key="device.dataid" x-for="device in searchResults">
+                        <template :key="device.brand + '-' + device.code" x-for="device in searchResults">
                             <li
-                                :data-id="device.dataid"
+                                :data-code="device.code"
+                                :data-brand="device.brand"
                                 @click="selectDevice(device)"
                                 class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:text-ios-blue dark:hover:text-ios-blue p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                                x-text="'Vivo ' + device.name + ' (' + device.originalSeries + ')'"
+                                x-text="getDisplayName(device)"
                             >
                             </li>
                         </template>
@@ -134,28 +142,30 @@
         <div @click="modalOpen = false" class="fixed inset-0 bg-black opacity-50 z-40" x-cloak x-show="modalOpen" x-transition:opacity></div>
 
         <!-- Area to display spare parts -->
-        <!-- !!! ADDED x-cloak here !!! -->
         <div class="text-center mt-4 text-gray-600 dark:text-gray-400" x-show="isLoadingParts" x-cloak>Memuat spare part...</div>
+        <div class="text-center mt-4 text-red-500 dark:text-red-400" x-show="errorFetchingParts" x-cloak x-text="errorFetchingParts"></div>
 
-        <!-- !!! ADDED x-cloak here !!! -->
-        <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow" x-show="!isLoadingParts && selectedDevice && sparePartsList.length > 0" x-cloak>
+
+        <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow" x-show="!isLoadingParts && selectedDevice && sparePartsList.length > 0 && !errorFetchingParts" x-cloak>
             <h3 class="text-lg font-semibold mb-0 px-4 py-3 border-b border-gray-200 dark:border-gray-700">Spare Part <span x-text="getDisplayName(selectedDevice)"></span></h3>
+             <p class="text-sm text-gray-600 dark:text-gray-400 px-4 text-center py-2">Data harga suku cadang ini hanya untuk referensi dan dapat berubah sewaktu-waktu. Harga yang sebenarnya mungkin bervariasi tergantung pada biaya tenaga kerja, biaya pengiriman, dan kebijakan layanan lokal. Silakan hubungi pusat layanan resmi brand terkait untuk harga pasti.</p>
             <div class="flex justify-between items-center px-4 py-2 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
-                <span class="font-medium text-sm text-gray-600 dark:text-gray-300">Komponen & Aksesori</span>
-                <span class="font-medium text-sm text-gray-600 dark:text-gray-300">Harga</span>
+                <span class="font-medium text-sm text-gray-600 dark:text-gray-300 w-1/2">Komponen & Aksesori</span>
+                <span class="font-medium text-sm text-gray-600 dark:text-gray-300 w-1/4 text-right">Harga Referensi</span>
+                 <span class="font-medium text-sm text-gray-600 dark:text-gray-300 w-1/4 text-right">Harga Promosi</span>
             </div>
             <ul class="divide-y divide-gray-200 dark:divide-gray-700" style="max-height: 300px; overflow-y: auto;">
-                <template :key="selectedDevice.dataid + '-' + part.part_name + '-' + index" x-for="(part, index) in sparePartsList">
+                <template :key="selectedDevice.brand + '-' + selectedDevice.code + '-' + part.part_name + '-' + index" x-for="(part, index) in sparePartsList">
                     <li class="flex justify-between items-center px-4 py-3">
-                        <span class="text-sm text-gray-700 dark:text-gray-200 flex-1 pr-2" x-text="part.part_name"></span>
-                        <span class="text-sm text-gray-700 dark:text-gray-200" x-text="part.part_price"></span>
+                        <span class="text-sm text-gray-700 dark:text-gray-200 w-1/2 pr-2" x-text="part.part_name"></span>
+                        <span class="text-sm text-gray-700 dark:text-gray-200 w-1/4 text-right pr-2" x-text="part.part_price"></span>
+                         <span class="text-sm text-ios-blue dark:text-ios-blue w-1/4 text-right" x-text="part.promotion_price ? part.promotion_price : '-'"></span>
                     </li>
                 </template>
             </ul>
         </div>
 
-        <!-- !!! ADDED x-cloak here !!! -->
-        <div class="text-center mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow text-gray-600 dark:text-gray-400" x-show="!isLoadingParts && selectedDevice && sparePartsList.length === 0" x-cloak>Tidak ada spare part yang ditemukan untuk model ini.</div>
+        <div class="text-center mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow text-gray-600 dark:text-gray-400" x-show="!isLoadingParts && selectedDevice && sparePartsList.length === 0 && !errorFetchingParts" x-cloak>Tidak ada data spare part yang ditemukan untuk model ini.</div>
 
     </div>
 </main>
@@ -164,7 +174,7 @@
 
         <section class="my-12 text-center">
 <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
-    HP kamu ngambek? <span class="bg-violet-700 text-white px-2 py-1 rounded-md inline-block my-1">Layarnya pecah</span><br>kayak hati<br> habis di ghosting?
+    HP kamu ngambek? <span class="bg-ios-blue text-white px-2 py-1 rounded-md inline-block my-1">Layarnya pecah</span><br>kayak hati<br> habis di ghosting?
 </h2>
             <p class="text-md sm:text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-teight">
                 Tenang, jangan langsung buang<br>ke HpGaul.my.id aja!<br>
@@ -172,7 +182,7 @@ Sparepart original brand lengkap:<br>
 layar, baterai, kamera… semua ori,<br> bukan KW rasa yakin!<br>
 <br>
 <p class="text-sm mt-2">
-    <span class="text-black-500 italic font-semi-bold">
+    <span class="text-gray-600 dark:text-gray-400 italic font-semi-bold">
         Disclaimer: Harga ngikut harga resmi brand,<br>
         tapi kadang suka berubah kayak mood gebetan.
         Selalu cek ke brand HP kamu dulu ya.
@@ -261,578 +271,487 @@ layar, baterai, kamera… semua ori,<br> bukan KW rasa yakin!<br>
 <!-- Alpine.js Component Definition and Data -->
 <script>
 document.addEventListener('alpine:init', () => {
-    // Embedded device data (pertimbangkan untuk dipindahkan ke file terpisah atau API jika sangat besar)
-    const embeddedDeviceData = {
-    "Seri X": [
-        {
-            "name": "X Fold3 Pro",
-            "dataid": "2842"
-        },
-        {
-            "name": "X100",
-            "dataid": "2840"
-        },
-        {
-            "name": "X100 Pro",
-            "dataid": "2841"
-        },
-        {
-            "name": "X200",
-            "dataid": "3044"
-        },
-        {
-            "name": "X200 Pro",
-            "dataid": "3045"
-        },
-        {
-            "name": "X5 Max",
-            "dataid": "25"
-        },
-        {
-            "name": "X5 Pro",
-            "dataid": "24"
-        },
-        {
-            "name": "X50",
-            "dataid": "843"
-        },
-        {
-            "name": "X50 Pro",
-            "dataid": "844"
-        },
-        {
-            "name": "X60",
-            "dataid": "1203"
-        },
-        {
-            "name": "X60 Pro",
-            "dataid": "1204"
-        },
-        {
-            "name": "X70 Pro",
-            "dataid": "1449"
-        },
-        {
-            "name": "X80",
-            "dataid": "1882"
-        },
-        {
-            "name": "X80 Pro",
-            "dataid": "1860"
-        }
-    ],
-    "Seri V": [
-        {
-            "name": "V11",
-            "dataid": "2"
-        },
-        {
-            "name": "V11 Pro",
-            "dataid": "1"
-        },
-        {
-            "name": "V15",
-            "dataid": "429"
-        },
-        {
-            "name": "V15 Pro（6+128）",
-            "dataid": "447"
-        },
-        {
-            "name": "V17 Pro",
-            "dataid": "576"
-        },
-        {
-            "name": "V19",
-            "dataid": "758"
-        },
-        {
-            "name": "V20",
-            "dataid": "926"
-        },
-        {
-            "name": "V20 SE",
-            "dataid": "927"
-        },
-        {
-            "name": "V21",
-            "dataid": "1246"
-        },
-        {
-            "name": "V21 5G",
-            "dataid": "1261"
-        },
-        {
-            "name": "V23 5G",
-            "dataid": "1658"
-        },
-        {
-            "name": "V23e",
-            "dataid": "1537"
-        },
-        {
-            "name": "V25",
-            "dataid": "1896"
-        },
-        {
-            "name": "V25 Pro",
-            "dataid": "1897"
-        },
-        {
-            "name": "V25e",
-            "dataid": "1895"
-        },
-        {
-            "name": "V27",
-            "dataid": "2491"
-        },
-        {
-            "name": "V27e",
-            "dataid": "2202"
-        },
-        {
-            "name": "V29",
-            "dataid": "2398"
-        },
-        {
-            "name": "V29e",
-            "dataid": "2417"
-        },
-        {
-            "name": "V3 Max",
-            "dataid": "10"
-        },
-        {
-            "name": "V30",
-            "dataid": "2648"
-        },
-        {
-            "name": "V30 Pro",
-            "dataid": "2649"
-        },
-        {
-            "name": "V30e",
-            "dataid": "2722"
-        },
-        {
-            "name": "V40",
-            "dataid": "2920"
-        },
-        {
-            "name": "V40 Lite",
-            "dataid": "2940"
-        },
-        {
-            "name": "V40 Lite 5G",
-            "dataid": "2941"
-        },
-        {
-            "name": "V5",
-            "dataid": "8"
-        },
-        {
-            "name": "V5 lite",
-            "dataid": "9"
-        },
-        {
-            "name": "V50",
-            "dataid": "3054"
-        },
-        {
-            "name": "V50 Lite",
-            "dataid": "3116"
-        },
-        {
-            "name": "V50 Lite 5G",
-            "dataid": "3115"
-        },
-        {
-            "name": "V5Plus",
-            "dataid": "164"
-        },
-        {
-            "name": "V5s",
-            "dataid": "7"
-        },
-        {
-            "name": "V7",
-            "dataid": "5"
-        },
-        {
-            "name": "V7+",
-            "dataid": "6"
-        },
-        {
-            "name": "V9",
-            "dataid": "388"
-        },
-        {
-            "name": "V9 6GB",
-            "dataid": "3"
-        }
-    ],
-    "Seri T": [
-        {
-            "name": "T1 5G",
-            "dataid": "1738"
-        },
-        {
-            "name": "T1Pro 5G",
-            "dataid": "1739"
-        }
-    ],
-    "Seri Y": [
-        {
-            "name": "Y01",
-            "dataid": "1740"
-        },
-        {
-            "name": "Y01A",
-            "dataid": "1925"
-        },
-        {
-            "name": "Y02",
-            "dataid": "2071"
-        },
-        {
-            "name": "Y02t",
-            "dataid": "2230"
-        },
-        {
-            "name": "Y03",
-            "dataid": "2652"
-        },
-        {
-            "name": "Y03t",
-            "dataid": "2919"
-        },
-        {
-            "name": "Y100",
-            "dataid": "2650"
-        },
-        {
-            "name": "Y100 5G",
-            "dataid": "2651"
-        },
-        {
-            "name": "Y11",
-            "dataid": "824"
-        },
-        {
-            "name": "Y12",
-            "dataid": "526"
-        },
-        {
-            "name": "Y12i",
-            "dataid": "897"
-        },
-        {
-            "name": "Y12s",
-            "dataid": "1048"
-        },
-        {
-            "name": "Y12s 2021",
-            "dataid": "1233"
-        },
-        {
-            "name": "Y15",
-            "dataid": "527"
-        },
-        {
-            "name": "Y15s",
-            "dataid": "1530"
-        },
-        {
-            "name": "Y16",
-            "dataid": "1893"
-        },
-        {
-            "name": "Y17",
-            "dataid": "492"
-        },
-        {
-            "name": "Y17s",
-            "dataid": "2403"
-        },
-        {
-            "name": "Y18",
-            "dataid": "2838"
-        },
-        {
-            "name": "Y19",
-            "dataid": "683"
-        },
-        {
-            "name": "Y19s",
-            "dataid": "2945"
-        },
-        {
-            "name": "Y1s",
-            "dataid": "1066"
-        },
-        {
-            "name": "Y20",
-            "dataid": "917"
-        },
-        {
-            "name": "Y20 2021",
-            "dataid": "1157"
-        },
-        {
-            "name": "Y20A",
-            "dataid": "1278"
-        },
-        {
-            "name": "Y20s",
-            "dataid": "1049"
-        },
-        {
-            "name": "Y20s【G】",
-            "dataid": "1156"
-        },
-        {
-            "name": "Y21",
-            "dataid": "23"
-        },
-        {
-            "name": "Y21 (2021)",
-            "dataid": "1378"
-        },
-        {
-            "name": "Y21A",
-            "dataid": "1677"
-        },
-        {
-            "name": "Y21T",
-            "dataid": "1628"
-        },
-        {
-            "name": "Y21s",
-            "dataid": "1379"
-        },
-        {
-            "name": "Y22",
-            "dataid": "1894"
-        },
-        {
-            "name": "Y27",
-            "dataid": "2307"
-        },
-        {
-            "name": "Y27 5G",
-            "dataid": "2308"
-        },
-        {
-            "name": "Y27s",
-            "dataid": "2492"
-        },
-        {
-            "name": "Y28",
-            "dataid": "2839"
-        },
-        {
-            "name": "Y29",
-            "dataid": "3046"
-        },
-        {
-            "name": "Y30",
-            "dataid": "825"
-        },
-        {
-            "name": "Y30i",
-            "dataid": "896"
-        },
-        {
-            "name": "Y30（6+128G）",
-            "dataid": "898"
-        },
-        {
-            "name": "Y33T",
-            "dataid": "1737"
-        },
-        {
-            "name": "Y33s",
-            "dataid": "1380"
-        },
-        {
-            "name": "Y35",
-            "dataid": "26"
-        },
-        {
-            "name": "Y35 2022",
-            "dataid": "1889"
-        },
-        {
-            "name": "Y36",
-            "dataid": "2267"
-        },
-        {
-            "name": "Y36 5G",
-            "dataid": "2268"
-        },
-        {
-            "name": "Y50",
-            "dataid": "826"
-        },
-        {
-            "name": "Y51",
-            "dataid": "1232"
-        },
-        {
-            "name": "Y51 (Tipe Lama)",
-            "dataid": "22"
-        },
-        {
-            "name": "Y51A",
-            "dataid": "1531"
-        },
-        {
-            "name": "Y51（8+128G）",
-            "dataid": "1061"
-        },
-        {
-            "name": "Y53",
-            "dataid": "18"
-        },
-        {
-            "name": "Y53C",
-            "dataid": "1808"
-        },
-        {
-            "name": "Y53s",
-            "dataid": "1328"
-        },
-        {
-            "name": "Y55",
-            "dataid": "20"
-        },
-        {
-            "name": "Y55s",
-            "dataid": "19"
-        },
-        {
-            "name": "Y65",
-            "dataid": "16"
-        },
-        {
-            "name": "Y69",
-            "dataid": "17"
-        },
-        {
-            "name": "Y71",
-            "dataid": "15"
-        },
-        {
-            "name": "Y75 5G",
-            "dataid": "1676"
-        },
-        {
-            "name": "Y81",
-            "dataid": "13"
-        },
-        {
-            "name": "Y81D",
-            "dataid": "14"
-        },
-        {
-            "name": "Y81i",
-            "dataid": "2160"
-        },
-        {
-            "name": "Y83",
-            "dataid": "12"
-        },
-        {
-            "name": "Y91",
-            "dataid": "315"
-        },
-        {
-            "name": "Y91 2019",
-            "dataid": "411"
-        },
-        {
-            "name": "Y91C",
-            "dataid": "493"
-        },
-        {
-            "name": "Y93",
-            "dataid": "392"
-        },
-        {
-            "name": "Y93 2019",
-            "dataid": "1807"
-        },
-        {
-            "name": "Y95",
-            "dataid": "317"
-        }
-    ],
-    "Seri S": [
-        {
-            "name": "S1",
-            "dataid": "529"
-        },
-        {
-            "name": "S1 Pro",
-            "dataid": "637"
-        }
-    ],
-    "Seri Z": [
-        {
-            "name": "Z1 Pro",
-            "dataid": "528"
-        }
-    ],
-    "TWS": [
-        {
-            "name": "TWS 2 ANC",
-            "dataid": "2911"
-        },
-        {
-            "name": "TWS 2e",
-            "dataid": "2910"
-        },
-        {
-            "name": "TWS 3e",
-            "dataid": "2914"
-        },
-        {
-            "name": "TWS Air",
-            "dataid": "2912"
-        },
-        {
-            "name": "TWS Air 2",
-            "dataid": "2913"
-        },
-        {
-            "name": "TWS Neo",
-            "dataid": "2909"
-        }
-    ]
-};
+
+    // Data perangkat OPPO dari fileoppo.txt (disematkan langsung)
+    const oppoRawData = [
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0574", "externalMarketingSeriesName": "Find N Series", "marketingModelName": "OPPO Find N5", "marketingModelCode": "08c024665d024cf9a66b3cf72497abea", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "59", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2671", "PKH110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PKH110": "01", "CPH2671": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A5 Pro 5G", "marketingModelCode": "1e7e8f2bbd854696b002114a6af9f2b3", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "58", "regionIsoCode2": "ID", "certifiedModels": [ "PKP110", "CPH2695" ], "imgUrl": "...", "queryCategoryCodeMap": { "PKP110": "01", "CPH2695": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A5 Pro", "marketingModelCode": "ed5fca9fd0834472a45b291e066904be", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "57", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2711" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2711": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno13 F", "marketingModelCode": "55e847e585e24bbc83ca91ec8cad72b3", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "56", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2701" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2701": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno13 F 5G", "marketingModelCode": "a03675360a3343f496d42fb8cf6856be", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "55", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2699" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2699": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno13 5G", "marketingModelCode": "9958af5abefd4250a159a65cef1d41db", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "54", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2689" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2689": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0573", "externalMarketingSeriesName": "Find X Series", "marketingModelName": "OPPO Find X8", "marketingModelCode": "83807488cba44c4687ea4a5011b67bd4", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "53", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2651", "PKB110" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2651": "01", "PKB110": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0573", "externalMarketingSeriesName": "Find X Series", "marketingModelName": "OPPO Find X8 Pro", "marketingModelCode": "f21a4e0e577d44deb5e19180f05d5efc", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "52", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2659", "PKC110" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2659": "01", "PKC110": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A3", "marketingModelCode": "b7c9e56aa4324d1c87f815e31626b0f1", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "51", "regionIsoCode2": "ID", "certifiedModels": [ "PADM00", "PADT00", "CPH1837", "CPH2669" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2669": "01", "CPH1837": "01", "PADT00": "01", "PADM00": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A3x", "marketingModelCode": "27e565008ce14022a74476140d063b92", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "50", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2641" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2641": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A3 Pro 5G", "marketingModelCode": "f9592080b2c2443bafaa023e019e2cb7", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "49", "regionIsoCode2": "ID", "certifiedModels": [ "PJY110", "CPH2639", "CPH2665" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2639": "01", "CPH2665": "01", "PJY110": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A60", "marketingModelCode": "427132b413864a598e27173fb1b2f630", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "48", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2631", "CPH3669" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH3669": "01", "CPH2631": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A98 5G", "marketingModelCode": "7e183a3171034f52a8a4651c97d6a15c", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "47", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2529" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2529": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A96", "marketingModelCode": "b915c0047dd54541b9f3dd3cd23fd977", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "46", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2333", "PESM10" ], "imgUrl": "...", "queryCategoryCodeMap": { "PESM10": "01", "CPH2333": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A95", "marketingModelCode": "d93e64f5f5634cd098cf98117cd0e1bf", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "45", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2365" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2365": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A79 5G", "marketingModelCode": "110b751d57584c5ab490d9632245436a", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "44", "regionIsoCode2": "ID", "certifiedModels": [ "A303OP", "CPH2553", "CPH2557" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2557": "01", "A303OP": "01", "CPH2553": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A78 5G", "marketingModelCode": "d1892777fc8d46fc8d12dfa21af26809", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "43", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2483", "CPH2495" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2495": "01", "CPH2483": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A78", "marketingModelCode": "bb70939bb9e5454783a125ce400209c0", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "42", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2565" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2565": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A77s", "marketingModelCode": "4f43ea7d0b8140e085f55308e92ef3bf", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "41", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2473" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2473": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A76", "marketingModelCode": "6152a12053e042a6bde6bc08903a1d2d", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "40", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2375" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2375": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A58", "marketingModelCode": "77aa3c05662d4d50826338ee514461bd", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "39", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2577" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2577": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A57", "marketingModelCode": "f89d2c6ecc3a4ae6b9a84639b8616b42", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "38", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2357", "CPH2387", "CPH2407", "A57", "A57t", "CPH1701" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1701": "01", "A57": "01", "CPH2407": "01", "CPH2387": "01", "CPH2357": "01", "A57t": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A55", "marketingModelCode": "d6ac8c913a89452f872690fecb1feb30", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "37", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2325" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2325": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A54", "marketingModelCode": "fa2d6a3fe6144a4a816345293c9f195e", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "36", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2239", "CPH2241" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2239": "01", "CPH2241": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A38", "marketingModelCode": "fb8734df988541b099d04dd3ed7c46b8", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "35", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2579", "CPH2591" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2579": "01", "CPH2591": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno12 F", "marketingModelCode": "c9f11696795f44e6806e09194fda3de5", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "34", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2687" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2687": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A18", "marketingModelCode": "ac29623742ae49a3a3de7ddc53a30034", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "34", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2591" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2591": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno12 F 5G", "marketingModelCode": "5c59165e46df4c33bb952369698c3368", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "33", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2637" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2637": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A17k", "marketingModelCode": "eb47fd6ea18d4c0aa0cb22644feadb08", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "33", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2471" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2471": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno12 Pro 5G", "marketingModelCode": "bdb755df172f465e9a2bf5cacf08b080", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "32", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2629" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2629": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A17", "marketingModelCode": "933068751bb94dd9947be9fdf45db8c4", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "32", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2477", "CPH2485" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2485": "01", "CPH2477": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno12 5G", "marketingModelCode": "c04dc10265d046b483d33a781acee713", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "31", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2625" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2625": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A16k", "marketingModelCode": "6630d79c876a4af1b00d308fcaafcd01", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "31", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2349", "CPH2351" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2349": "01", "CPH2351": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno11 Pro 5G", "marketingModelCode": "168d02bbf17a450898068833cf476468", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "30", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2607", "PJJ110" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2607": "01", "PJJ110": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A16e", "marketingModelCode": "feaa379194894eecbce6d35831623765", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "30", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2421" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2421": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno11 F 5G", "marketingModelCode": "efbf37d2b0a944d5918394fda34ccfe1", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "29", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2603" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2603": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A16", "marketingModelCode": "4e0bb42d6059432eba99b670b8dda791", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "29", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2269", "CPH2275" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2275": "01", "CPH2269": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno11 5G", "marketingModelCode": "99d4b7574fde465c808429df5ff5d370", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "28", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2599", "PJH110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PJH110": "01", "CPH2599": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A11K", "marketingModelCode": "fd81003389bd4776b8e5ba5f5e5b38c5", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "28", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2071", "CPH2083" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2071": "01", "CPH2083": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno10 Pro+ 5G", "marketingModelCode": "fcb8a30569ed44ef87d72b9ce4c8c64e", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "27", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2521", "PHU110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PHU110": "01", "CPH2521": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno10 Pro 5G", "marketingModelCode": "298ffdfa5a8e455fb11ef68fdc6163e7", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "26", "regionIsoCode2": "ID", "certifiedModels": [ "A302OP", "CPH2525", "CPH2541", "PHV110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PHV110": "01", "CPH2525": "01", "A302OP": "01", "CPH2541": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A12", "marketingModelCode": "577db09cc13149d594d0e4c01a77351f", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "26", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2083", "CPH2077" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2083": "01", "CPH2077": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno10 5G", "marketingModelCode": "d74d84aa621a479189724e06763fc6db", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "25", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2531", "PHW110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PHW110": "01", "CPH2531": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A15", "marketingModelCode": "d13b995ae964477ba729a6f1ca8b31d4", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "25", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2185", "CPH2185IN" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2185": "01", "CPH2185IN": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno8 Z 5G", "marketingModelCode": "3be786dda3af45fc871639c2a3b58494", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "24", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2455", "CPH2457", "CPH2343" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2343": "01", "CPH2457": "01", "CPH2455": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A15s", "marketingModelCode": "70ce3892bbb341ff815cea40ece41276", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "24", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2179" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2179": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno8 T 5G", "marketingModelCode": "274bbf51875d480c8d5e458cd8bd48ac", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "23", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2505", "CPH2507", "CPH2517" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2505": "01", "CPH2507": "01", "CPH2517": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A1K", "marketingModelCode": "b28b7d74f76149a59c3f273b2dcc9943", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "23", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1923" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1923": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno8 T", "marketingModelCode": "ac83c900b6764b7bb10f423472b3a1c7", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "22", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2481" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2481": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A31", "marketingModelCode": "4138ffa70c424f9a89c1969abe1c019b", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "22", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2015", "/历史数据", "16G", "A31", "CPH2031", "CPH2073", "CPH2081" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2081": "01", "16G": "01", "CPH2031": "01", "CPH2073": "01", "/历史数据": "01", "CPH2015": "01", "A31": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno8 Pro 5G", "marketingModelCode": "a1b4fcd63b0b4154893b145b2a4f12e8", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "21", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2357", "PGAM10" ], "imgUrl": "...", "queryCategoryCodeMap": { "PGAM10": "01", "CPH2357": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A33", "marketingModelCode": "9cb13e5efd2d454792c8db3100f65882", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "21", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2137", "A33", "CPH2127" ], "imgUrl": "...", "queryCategoryCodeMap": { "A33": "01", "CPH2127": "01", "CPH2137": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno8 5G", "marketingModelCode": "44d33db50454437aaafd8f563604c648", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "20", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2359", "PGBM10" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2359": "01", "PGBM10": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno8", "marketingModelCode": "8ab633fb3e074624907b0a05a4eeef54", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "19", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2461" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2461": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "02", "categoryName": "Wearables", "externalMarketingSeriesCode": "ES0674", "externalMarketingSeriesName": "Watch X", "marketingModelName": "OPPO Watch X", "marketingModelCode": "9eec9329b40944deaed40bd0feff00fd", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "19", "regionIsoCode2": "ID", "certifiedModels": [ "OWW231", "OWWE231" ], "imgUrl": "...", "queryCategoryCodeMap": { "OWW231": "02", "OWWE231": "02" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno7 Z", "marketingModelCode": "a691d745292c412891373ed06884bc57", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "18", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2343" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2343": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A39", "marketingModelCode": "f394378b4f324749a36282949154a438", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "18", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1605" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1605": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno7 5G", "marketingModelCode": "bcff35d1d4244b71be328380e1348b40", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "17", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2371", "PFJM10" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2371": "01", "PFJM10": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "08", "categoryName": "Tablet", "externalMarketingSeriesCode": "ES0648", "externalMarketingSeriesName": "Pad", "marketingModelName": "OPPO Pad 2", "marketingModelCode": "3927b8ae45c14e229287dbbedb43e64a", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "17", "regionIsoCode2": "ID", "certifiedModels": [ "OPD2201", "OPD2202" ], "imgUrl": "...", "queryCategoryCodeMap": { "OPD2202": "08", "OPD2201": "08" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A3s", "marketingModelCode": "0d6eb4e2394147f382f9423396067011", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "17", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1803", "CPH1805", "CPH1853" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1853": "01", "CPH1805": "01", "CPH1803": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno7", "marketingModelCode": "371fda754a53440b9910680d09836be0", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "16", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2363" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2363": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "08", "categoryName": "Tablet", "externalMarketingSeriesCode": "ES0677", "externalMarketingSeriesName": "Pad Air", "marketingModelName": "OPPO Pad Air", "marketingModelCode": "22ee744509744bafac226c992993ade1", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "16", "regionIsoCode2": "ID", "certifiedModels": [ "OPD2102A", "OPD2102" ], "imgUrl": "...", "queryCategoryCodeMap": { "OPD2102": "08", "OPD2102A": "08" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A5 2020", "marketingModelCode": "6f0edeb879bd4a40a1536a48167c40a3", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "16", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1931", "CPH1933", "CPH1943" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1943": "01", "CPH1933": "01", "CPH1931": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "03", "categoryName": "Audio", "externalMarketingSeriesCode": "ES0205", "externalMarketingSeriesName": "Air Series", "marketingModelName": "OPPO Enco Air3 True Wireless Earbuds", "marketingModelCode": "d8cdb694ccec4ee79bbf497bb52c5d21", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "15", "regionIsoCode2": "ID", "certifiedModels": [ "ETE31&ETE32" ], "imgUrl": "...", "queryCategoryCodeMap": { "ETE31&ETE32": "03" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno6 Pro 5G", "marketingModelCode": "57bb5986a7934f86b7d3cf7a0d27fa75", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "15", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2249", "PEPM00", "CPH2247" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2249": "01", "PEPM00": "01", "CPH2247": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "02", "categoryName": "Wearables", "externalMarketingSeriesCode": "ES0671", "externalMarketingSeriesName": "Band", "marketingModelName": "OPPO Band2", "marketingModelCode": "f285078f31d24ead86e5d9101e92a326", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "14", "regionIsoCode2": "ID", "certifiedModels": [ "OBBE215" ], "imgUrl": "...", "queryCategoryCodeMap": { "OBBE215": "02" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A52", "marketingModelCode": "c17396e08a3d4153acee9fa7f54dd246", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "14", "regionIsoCode2": "ID", "certifiedModels": [ "PDAM10", "PDAT10", "CPH2061", "CPH2069" ], "imgUrl": "...", "queryCategoryCodeMap": { "PDAT10": "01", "CPH2061": "01", "CPH2069": "01", "PDAM10": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno6 5G", "marketingModelCode": "20cca39b6b8441078d35fa5edbf99eb0", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "14", "regionIsoCode2": "ID", "certifiedModels": [ "PEQM00", "CPH2251" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2251": "01", "PEQM00": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "03", "categoryName": "Audio", "externalMarketingSeriesCode": "ES0205", "externalMarketingSeriesName": "Air Series", "marketingModelName": "OPPO Enco Air2 Pro True Wireless Noise Cancelling Earbuds", "marketingModelCode": "53f4cd49e8a24416859bf799765dc62e", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "13", "regionIsoCode2": "ID", "certifiedModels": [ "ETE21&ETE22", "ETE21&ETE2" ], "imgUrl": "...", "queryCategoryCodeMap": { "ETE21&ETE22": "03", "ETE21&ETE2": "03" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A53", "marketingModelCode": "276713815bb74514adcc102177b66c67", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "13", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2139", "A53", "CPH2127", "CPH2131", "CPH2133", "CPH2137" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2139": "01", "CPH2133": "01", "CPH2131": "01", "CPH2127": "01", "CPH2137": "01", "A53": "01" }, "isHighEndModel": false
+    },
+     {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno6", "marketingModelCode": "cfe0290ceaca459ca0e2093d252a595e", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "13", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2235" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2235": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "03", "categoryName": "Audio", "externalMarketingSeriesCode": "ES0583", "externalMarketingSeriesName": "Buds Series", "marketingModelName": "OPPO Enco Buds2", "marketingModelCode": "03909026088c4727a247ebd1564857c7", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "12", "regionIsoCode2": "ID", "certifiedModels": [ "ETE41&ETE42" ], "imgUrl": "...", "queryCategoryCodeMap": { "ETE41&ETE42": "03" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A53 5G", "marketingModelCode": "3604aa10ed8d430da29aab84edb20360", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "12", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2127", "CPH2139", "PECM20", "PECM30", "PECT30" ], "imgUrl": "...", "queryCategoryCodeMap": { "PECM20": "01", "PECM30": "01", "CPH2139": "01", "PECT30": "01", "CPH2127": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno5 F", "marketingModelCode": "c0acd223c081439c957310bd8013fb73", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "12", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2217" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2217": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "02", "categoryName": "Wearables", "externalMarketingSeriesCode": "ES0647", "externalMarketingSeriesName": "Watch Free", "marketingModelName": "OPPO Watch Free", "marketingModelCode": "0a724ac6e2f144b4a404a8f14746811b", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "11", "regionIsoCode2": "ID", "certifiedModels": [ "OWWE201", "OWW206" ], "imgUrl": "...", "queryCategoryCodeMap": { "OWWE201": "02", "OWW206": "02" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A5s", "marketingModelCode": "b80ce22d8c44486ea31a21260c44e12f", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "11", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1909", "CPH1912", "CPH1920" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1920": "01", "CPH1912": "01", "CPH1909": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno5 5G", "marketingModelCode": "6832371129914b75ab28c2dd3ab482f9", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "11", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2145", "PEGM00", "PEGT00" ], "imgUrl": "...", "queryCategoryCodeMap": { "PEGT00": "01", "CPH2145": "01", "PEGM00": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "03", "categoryName": "Audio", "externalMarketingSeriesCode": "ES0205", "externalMarketingSeriesName": "Air Series", "marketingModelName": "OPPO Enco Air True Wireless Earbuds", "marketingModelCode": "62946e87ccdb4686a60b691d28079f76", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "10", "regionIsoCode2": "ID", "certifiedModels": [ "", "ETI61&ETI62" ], "imgUrl": "...", "queryCategoryCodeMap": { "": "03", "ETI61&ETI62": "03" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno5", "marketingModelCode": "c59e9e761167487ba19b5575a2bc943a", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "10", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2159" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2159": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A7", "marketingModelCode": "ab8c9400f30a4fafacb199b28cc6490d", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "10", "regionIsoCode2": "ID", "certifiedModels": [ "PBFM00", "PBFT00", "CPH1901", "CPH1903", "CPH1905" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1903": "01", "CPH1901": "01", "PBFT00": "01", "CPH1905": "01", "PBFM00": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "03", "categoryName": "Audio", "externalMarketingSeriesCode": "ES0583", "externalMarketingSeriesName": "Buds Series", "marketingModelName": "OPPO Enco Buds", "marketingModelCode": "3458d83bceb64c73a1a77fca89345d2d", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "9", "regionIsoCode2": "ID", "certifiedModels": [ "ETI81&ETI82" ], "imgUrl": "...", "queryCategoryCodeMap": { "ETI81&ETI82": "03" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno4 Pro", "marketingModelCode": "bde62aa0eaed42ca8e199c895b4a51e1", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "9", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2109" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2109": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A71", "marketingModelCode": "1d45f73676fb4a94bb4dfc968e02fddb", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "9", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1717" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1717": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "02", "categoryName": "Wearables", "externalMarketingSeriesCode": "ES0671", "externalMarketingSeriesName": "Band", "marketingModelName": "OPPO Band", "marketingModelCode": "578e8d634c6940aba942fee68e4635cc", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "8", "regionIsoCode2": "ID", "certifiedModels": [ "OB19B1", "X19B2" ], "imgUrl": "...", "queryCategoryCodeMap": { "OB19B1": "02", "X19B2": "02" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno4 F", "marketingModelCode": "986f74c02cdc4c6db9f1c7fc727a0a0a", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "8", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2121", "CPH2209" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2209": "01", "CPH2121": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno4", "marketingModelCode": "230973433dba4d4a8ad79cabeeaed694", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "7", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2113" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2113": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A74", "marketingModelCode": "9d49a28badee48b38d14e1301bef3b6b", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "7", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2219" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2219": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno3 Pro", "marketingModelCode": "bf6b1a92b27d4504a2fcdd0f31342128", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "6", "regionIsoCode2": "ID", "certifiedModels": [ "PCRM00", "PCRT00", "CPH2009", "CPH2035", "CPH2036", "CPH2037" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2009": "01", "PCRM00": "01", "CPH2035": "01", "CPH2037": "01", "CPH2036": "01", "PCRT00": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A74 5G", "marketingModelCode": "a98485b7a2034a0e835b24362d8f14ca", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "6", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2197", "CPH2263" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2263": "01", "CPH2197": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "03", "categoryName": "Audio", "externalMarketingSeriesCode": "ES0206", "externalMarketingSeriesName": "X Series", "marketingModelName": "OPPO Enco X True Wireless Noise Canceling Earphones", "marketingModelCode": "5d42db31d8324cdea6d507b1be754100", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "5", "regionIsoCode2": "ID", "certifiedModels": [ "ETI51&ETI52" ], "imgUrl": "...", "queryCategoryCodeMap": { "ETI51&ETI52": "03" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0573", "externalMarketingSeriesName": "Find X Series", "marketingModelName": "OPPO Find X5 Pro", "marketingModelCode": "6f0a8a502f7242ed8a1b971f4558d701", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "5", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2305", "PFEM10" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2305": "01", "PFEM10": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno3", "marketingModelCode": "4bb7dfeedf0749b586ba53b882a65996", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "5", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2043", "PCLM50", "PDCM00", "A001OP", "PDCT00" ], "imgUrl": "...", "queryCategoryCodeMap": { "PDCT00": "01", "A001OP": "01", "PCLM50": "01", "CPH2043": "01", "PDCM00": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A83", "marketingModelCode": "1c2665ce61cc4ca3bb8b2d4fb6204341", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "5", "regionIsoCode2": "ID", "certifiedModels": [ "A1 A83", "A83", "CPH1715", "CPH1729", "CPH1827" ], "imgUrl": "...", "queryCategoryCodeMap": { "A1 A83": "01", "CPH1827": "01", "CPH1715": "01", "CPH1729": "01", "A83": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0573", "externalMarketingSeriesName": "Find X Series", "marketingModelName": "OPPO Find X3 Pro", "marketingModelCode": "f4f0abd1b085499ef9f51d9e2e28d271d", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "4", "regionIsoCode2": "ID", "certifiedModels": [ "PEEM00", "CPH2173", "OPG02", "OPG03" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2173": "01", "OPG02": "01", "OPG03": "01", "PEEM00": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno2 F", "marketingModelCode": "a5be5cb9cc584e4c8ed1d7d668db022c", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "4", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1989" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1989": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A9 2020", "marketingModelCode": "805e3ebb297d4fbead7ae3ae1b7bc906", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "4", "regionIsoCode2": "ID", "certifiedModels": [ "CPH1937", "CPH1941" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH1941": "01", "CPH1937": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0573", "externalMarketingSeriesName": "Find X Series", "marketingModelName": "OPPO Find X2 Pro", "marketingModelCode": "65e943b97c4a4c1ba97eb0a3bff1d2fc", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "3", "regionIsoCode2": "ID", "certifiedModels": [ "PDEM30", "CPH2025" ], "imgUrl": "...", "queryCategoryCodeMap": { "PDEM30": "01", "CPH2025": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0410", "externalMarketingSeriesName": "Reno Series", "marketingModelName": "OPPO Reno2", "marketingModelCode": "94dc5f99f8ea4a26b6c2583d979f7e6b", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "3", "regionIsoCode2": "ID", "certifiedModels": [ "PCKM00", "CPH1907" ], "imgUrl": "...", "queryCategoryCodeMap": { "PCKM00": "01", "CPH1907": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0574", "externalMarketingSeriesName": "Find N Series", "marketingModelName": "OPPO Find N3", "marketingModelCode": "bef56259de7745cf902a1d4a4db70782", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "3", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2499", "PHN110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PHN110": "01", "CPH2499": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A91", "marketingModelCode": "c121e058021c45fb89144d702dfd3611", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "3", "regionIsoCode2": "ID", "certifiedModels": [ "PCPM00", "CPH2001", "CPH2021", "PCPT00" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2001": "01", "PCPM00": "01", "CPH2021": "01", "PCPT00": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0573", "externalMarketingSeriesName": "Find X Series", "marketingModelName": "OPPO Find X2", "marketingModelCode": "9ebb01e788fe472a81656adfd12eb870", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "2", "regionIsoCode2": "ID", "certifiedModels": [ "PDEM10", "PDET10", "CPH2023" ], "imgUrl": "...", "queryCategoryCodeMap": { "PDET10": "01", "CPH2023": "01", "PDEM10": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0574", "externalMarketingSeriesName": "Find N Series", "marketingModelName": "OPPO Find N3 Flip", "marketingModelCode": "a3e523e5c7304e67980f6bf449f70a24", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "2", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2519", "PHT110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PHT110": "01", "CPH2519": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0376", "externalMarketingSeriesName": "A Series", "marketingModelName": "OPPO A92", "marketingModelCode": "0de4ac97b1df4219bfdf33dd5b40a49b", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "2", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2059" ], "imgUrl": "...", "queryCategoryCodeMap": { "CPH2059": "01" }, "isHighEndModel": false
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0573", "externalMarketingSeriesName": "Find X Series", "marketingModelName": "OPPO Find X", "marketingModelCode": "9004b230f2b746afb543bbfcfe36579d", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "1", "regionIsoCode2": "ID", "certifiedModels": [ "PAFM00", "PAFT00", "PAHM00", "CPH1871", "CPH1875" ], "imgUrl": "...", "queryCategoryCodeMap": { "PAFM00": "01", "CPH1875": "01", "PAFT00": "01", "CPH1871": "01", "PAHM00": "01" }, "isHighEndModel": true
+    },
+    {
+      "brandName": "OPPO", "brandCode": "11", "categoryCode": "01", "categoryName": "Mobile phone", "externalMarketingSeriesCode": "ES0574", "externalMarketingSeriesName": "Find N Series", "marketingModelName": "OPPO Find N2 Flip", "marketingModelCode": "cda00122f6c24cecb67efc5a2817d348", "isDisplayServiceOfficeSite": "true", "productMarketingModelOrderNo": "1", "regionIsoCode2": "ID", "certifiedModels": [ "CPH2437", "PGT110" ], "imgUrl": "...", "queryCategoryCodeMap": { "PGT110": "01", "CPH2437": "01" }, "isHighEndModel": true
+    }
+    ];
+
+    // Data perangkat Vivo dari embeddedData sebelumnya (disematkan langsung)
+     const vivoRawData = {
+        "Seri X": [
+            { "name": "X Fold3 Pro", "dataid": "2842" }, { "name": "X100", "dataid": "2840" },
+            { "name": "X100 Pro", "dataid": "2841" }, { "name": "X200", "dataid": "3044" },
+            { "name": "X200 Pro", "dataid": "3045" }, { "name": "X5 Max", "dataid": "25" },
+            { "name": "X5 Pro", "dataid": "24" }, { "name": "X50", "dataid": "843" },
+            { "name": "X50 Pro", "dataid": "844" }, { "name": "X60", "dataid": "1203" },
+            { "name": "X60 Pro", "dataid": "1204" }, { "name": "X70 Pro", "dataid": "1449" },
+            { "name": "X80", "dataid": "1882" }, { "name": "X80 Pro", "dataid": "1860" }
+        ],
+        "Seri V": [
+            { "name": "V11", "dataid": "2" }, { "name": "V11 Pro", "dataid": "1" },
+            { "name": "V15", "dataid": "429" }, { "name": "V15 Pro（6+128）", "dataid": "447" },
+            { "name": "V17 Pro", "dataid": "576" }, { "name": "V19", "dataid": "758" },
+            { "name": "V20", "dataid": "926" }, { "name": "V20 SE", "dataid": "927" },
+            { "name": "V21", "dataid": "1246" }, { "name": "V21 5G", "dataid": "1261" },
+            { "name": "V23 5G", "dataid": "1658" }, { "name": "V23e", "dataid": "1537" },
+            { "name": "V25", "dataid": "1896" }, { "name": "V25 Pro", "dataid": "1897" },
+            { "name": "V25e", "dataid": "1895" }, { "name": "V27", "dataid": "2491" },
+            { "name": "V27e", "dataid": "2202" }, { "name": "V29", "dataid": "2398" },
+            { "name": "V29e", "dataid": "2417" }, { "name": "V3 Max", "dataid": "10" },
+            { "name": "V30", "dataid": "2648" }, { "name": "V30 Pro", "dataid": "2649" },
+            { "name": "V30e", "dataid": "2722" }, { "name": "V40", "dataid": "2920" },
+            { "name": "V40 Lite", "dataid": "2940" }, { "name": "V40 Lite 5G", "dataid": "2941" },
+            { "name": "V5", "dataid": "8" }, { "name": "V5 lite", "dataid": "9" },
+            { "name": "V50", "dataid": "3054" }, { "name": "V50 Lite", "dataid": "3116" },
+            { "name": "V50 Lite 5G", "dataid": "3115" }, { "name": "V5Plus", "dataid": "164" },
+            { "name": "V5s", "dataid": "7" }, { "name": "V7", "dataid": "5" },
+            { "name": "V7+", "dataid": "6" }, { "name": "V9", "dataid": "388" },
+            { "name": "V9 6GB", "dataid": "3" }
+        ],
+        "Seri T": [
+            { "name": "T1 5G", "dataid": "1738" }, { "name": "T1Pro 5G", "dataid": "1739" }
+        ],
+        "Seri Y": [
+            { "name": "Y01", "dataid": "1740" }, { "name": "Y01A", "dataid": "1925" },
+            { "name": "Y02", "dataid": "2071" }, { "name": "Y02t", "dataid": "2230" },
+            { "name": "Y03", "dataid": "2652" }, { "name": "Y03t", "dataid": "2919" },
+            { "name": "Y100", "dataid": "2650" }, { "name": "Y100 5G", "dataid": "2651" },
+            { "name": "Y11", "dataid": "824" }, { "name": "Y12", "dataid": "526" },
+            { "name": "Y12i", "dataid": "897" }, { "name": "Y12s", "dataid": "1048" },
+            { "name": "Y12s 2021", "dataid": "1233" }, { "name": "Y15", "dataid": "527" },
+            { "name": "Y15s", "dataid": "1530" }, { "name": "Y16", "dataid": "1893" },
+            { "name": "Y17", "dataid": "492" }, { "name": "Y17s", "dataid": "2403" },
+            { "name": "Y18", "dataid": "2838" }, { "name": "Y19", "dataid": "683" },
+            { "name": "Y19s", "dataid": "2945" }, { "name": "Y1s", "dataid": "1066" },
+            { "name": "Y20", "dataid": "917" }, { "name": "Y20 2021", "dataid": "1157" },
+            { "name": "Y20A", "dataid": "1278" }, { "name": "Y20s", "dataid": "1049" },
+            { "name": "Y20s【G】", "dataid": "1156" }, { "name": "Y21", "dataid": "23" },
+            { "name": "Y21 (2021)", "dataid": "1378" }, { "name": "Y21A", "dataid": "1677" },
+            { "name": "Y21T", "dataid": "1628" }, { "name": "Y21s", "dataid": "1379" },
+            { "name": "Y22", "dataid": "1894" }, { "name": "Y27", "dataid": "2307" },
+            { "name": "Y27 5G", "dataid": "2308" }, { "name": "Y27s", "dataid": "2492" },
+            { "name": "Y28", "dataid": "2839" }, { "name": "Y29", "dataid": "3046" },
+            { "name": "Y30", "dataid": "825" }, { "name": "Y30i", "dataid": "896" },
+            { "name": "Y30（6+128G）", "dataid": "898" }, { "name": "Y33T", "dataid": "1737" },
+            { "name": "Y33s", "dataid": "1380" }, { "name": "Y35", "dataid": "26" },
+            { "name": "Y35 2022", "dataid": "1889" }, { "name": "Y36", "dataid": "2267" },
+            { "name": "Y36 5G", "dataid": "2268" }, { "name": "Y50", "dataid": "826" },
+            { "name": "Y51", "dataid": "1232" }, { "name": "Y51 (Tipe Lama)", "dataid": "22" },
+            { "name": "Y51A", "dataid": "1531" }, { "name": "Y51（8+128G）", "dataid": "1061" },
+            { "name": "Y53", "dataid": "18" }, { "name": "Y53C", "dataid": "1808" },
+            { "name": "Y53s", "dataid": "1328" }, { "name": "Y55", "dataid": "20" },
+            { "name": "Y55s", "dataid": "19" }, { "name": "Y65", "dataid": "16" },
+            { "name": "Y69", "dataid": "17" }, { "name": "Y71", "dataid": "15" },
+            { "name": "Y75 5G", "dataid": "1676" }, { "name": "Y81", "dataid": "13" },
+            { "name": "Y81D", "dataid": "14" }, { "name": "Y81i", "dataid": "2160" },
+            { "name": "Y83", "dataid": "12" }, { "name": "Y91", "dataid": "315" },
+            { "name": "Y91 2019", "dataid": "411" }, { "name": "Y91C", "dataid": "493" },
+            { "name": "Y93", "dataid": "392" }, { "name": "Y93 2019", "dataid": "1807" },
+            { "name": "Y95", "dataid": "317" }
+        ],
+        "Seri S": [
+            { "name": "S1", "dataid": "529" }, { "name": "S1 Pro", "dataid": "637" }
+        ],
+        "Seri Z": [
+            { "name": "Z1 Pro", "dataid": "528" }
+        ],
+        "TWS": [ // Note: TWS is Audio category, not Mobile phone, but included in the original list structure
+            { "name": "TWS 2 ANC", "dataid": "2911" }, { "name": "TWS 2e", "dataid": "2910" },
+            { "name": "TWS 3e", "dataid": "2914" }, { "name": "TWS Air", "dataid": "2912" },
+            { "name": "TWS Air 2", "dataid": "2913" }, { "name": "TWS Neo", "dataid": "2909" }
+        ]
+    };
+
+    // URL untuk file JSON spare part lokal
+    const OPPO_LOCAL_PARTS_URL = '/public/Oppo_sparepart.json'; // Path ke file JSON sparepart OPPO
+    const VIVO_LOCAL_PARTS_URL = '/public/vivo_spareparts_data_full.json'; // Path ke file JSON sparepart Vivo
+
+    // OPPO API Details (Dibuang karena sekarang fetch dari JSON lokal)
+    // const OPPO_GET_PRICE_URL = 'https://sgp-sow-cms.oppo.com/oppo-api/basic/v1/getPartPriceNew';
+    // const OPPO_BASE_HEADERS = { ... };
+    // const OPPO_BASE_PAYLOAD = { ... };
 
 
     Alpine.data('deviceSearchData', () => ({
         searchQuery: '',
-        rawQuery: '',
+        rawQuery: '', // Untuk menampilkan query asli di pesan "tidak ditemukan"
         searchResults: [],
         modalOpen: false,
-        allDevices: [],
+        allDevices: [], // Akan diisi dengan data gabungan OPPO dan Vivo
         selectedDevice: null,
         sparePartsList: [],
         isLoadingParts: false,
+        errorFetchingParts: null, // Untuk menyimpan pesan error jika gagal fetch spare part
 
         init() {
-            // Menggabungkan data perangkat dari semua seri ke dalam satu array
-            for (const series_key in embeddedDeviceData) {
-                if (embeddedDeviceData.hasOwnProperty(series_key)) {
-                    embeddedDeviceData[series_key].forEach(device => {
-                        this.allDevices.push({ ...device, originalSeries: series_key });
-                    });
+            // Menggabungkan data OPPO dan Vivo ke dalam satu array allDevices
+            // Memetakan properti agar konsisten
+            const processedOppo = oppoRawData
+                // Filter jika diperlukan, misalnya isDisplayServiceOfficeSite
+                .map(device => ({
+                    brand: 'OPPO',
+                    name: device.marketingModelName,
+                    series: device.externalMarketingSeriesName,
+                    code: device.marketingModelCode, // marketingModelCode untuk OPPO
+                    category: device.categoryName,
+                    certifiedModels: device.certifiedModels || [] // Tambahkan certified models untuk pencarian
+                }));
+
+            const processedVivo = [];
+            for (const series_key in vivoRawData) {
+                if (vivoRawData.hasOwnProperty(series_key)) {
+                    // Pastikan vivoRawData[series_key] adalah array
+                    if (Array.isArray(vivoRawData[series_key])) {
+                         vivoRawData[series_key].forEach(device => {
+                              // Pastikan Vivo TWS masuk kategori Audio, lainnya Mobile phone
+                              const category = (series_key === "TWS") ? "Audio" : "Mobile phone";
+                               // Pastikan device memiliki properti 'name' dan 'dataid'
+                              if (device.name && device.dataid !== undefined) {
+                                 processedVivo.push({
+                                      brand: 'Vivo',
+                                      name: device.name,
+                                      series: series_key, // originalSeries untuk Vivo data
+                                      code: device.dataid, // dataid untuk Vivo data (digunakan untuk filter JSON lokal)
+                                      category: category,
+                                      certifiedModels: [] // Vivo raw data doesn't have this in the provided structure
+                                 });
+                              } else {
+                                 console.warn(`Skipping malformed Vivo device data in series "${series_key}":`, device);
+                              }
+                         });
+                    } else {
+                         console.warn(`Skipping non-array entry for Vivo series "${series_key}":`, vivoRawData[series_key]);
+                    }
                 }
             }
-            // Mengurutkan perangkat berdasarkan nama
-            this.allDevices.sort((a, b) => a.name.localeCompare(b.name));
+
+            this.allDevices = [...processedOppo, ...processedVivo]; // Gabungkan kedua array
+
+            // Mengurutkan perangkat berdasarkan nama brand dan kemudian nama model
+            this.allDevices.sort((a, b) => {
+                const brandComparison = a.brand.localeCompare(b.brand);
+                if (brandComparison !== 0) {
+                    return brandComparison;
+                }
+                return a.name.localeCompare(b.name);
+            });
+
+             console.log(`Loaded ${this.allDevices.length} devices (${processedOppo.length} OPPO, ${processedVivo.length} Vivo).`);
         },
 
         performSearch() {
@@ -840,69 +759,75 @@ document.addEventListener('alpine:init', () => {
             const query = this.searchQuery.trim().toLowerCase();
             let results = [];
 
+            // Reset tampilan spare part sebelumnya saat pencarian baru dimulai
+            this.selectedDevice = null;
+            this.sparePartsList = [];
+            this.isLoadingParts = false;
+            this.errorFetchingParts = null;
+
+
             if (query === '') {
                 this.searchResults = [];
             } else {
                 const queryWords = query.split(/\s+/).filter(w => w.length > 0); // Pisahkan query menjadi kata-kata
 
-                // Cari perangkat yang namanya mengandung semua kata dari query
                 results = this.allDevices.filter(device => {
                     const deviceNameLower = device.name.toLowerCase();
-                    // Periksa apakah nama perangkat mengandung seluruh query
+                    const seriesNameLower = device.series ? device.series.toLowerCase() : ''; // Handle null/undefined series
+                    const brandLower = device.brand.toLowerCase();
+                     const certifiedModelsLower = device.certifiedModels ? device.certifiedModels.map(m => String(m).toLowerCase()).join(' ') : ''; // Ensure certifiedModels are strings for join
+
+                    // Pencarian fleksibel: cocok jika...
+                    // 1. Query lengkap ada di nama device (misal "reno 8")
                     if (deviceNameLower.includes(query)) return true;
-                    // Periksa apakah query mengandung nama perangkat (misal: "v20 vivo")
-                    if (query.includes(deviceNameLower)) return true;
-                     // Periksa apakah nama perangkat mengandung SEMUA kata dari query (misal: "v20 se")
-                    return queryWords.every(qw => deviceNameLower.includes(qw));
+                    // 2. Query lengkap ada di nama brand + nama device (misal "oppo a58")
+                    if (`${brandLower} ${deviceNameLower}`.includes(query)) return true;
+                    // 3. Query lengkap ada di nama brand + nama seri (misal "vivo y series")
+                     if (seriesNameLower && `${brandLower} ${seriesNameLower}`.includes(query)) return true; // Check if seriesNameLower exists
+                     // 4. Query lengkap ada di certified models (misal "cph2591") - primarily for OPPO, but included in search filter
+                     if (certifiedModelsLower.includes(query)) return true;
+                    // 5. Setiap kata di query ada di nama device (misal query "a 58" cocok dengan "OPPO A58")
+                    if (queryWords.every(qw => deviceNameLower.includes(qw))) return true;
+                     // 6. Setiap kata di query ada di nama brand + nama device (misal query "o a58" cocok dengan "OPPO A58")
+                     if (queryWords.every(qw => `${brandLower} ${deviceNameLower}`.includes(qw))) return true;
+                    // 7. Setiap kata di query ada di nama brand + nama seri (misal query "v y series" cocok dengan "Vivo Y Series")
+                     if (seriesNameLower && queryWords.every(qw => `${brandLower} ${seriesNameLower}`.includes(qw))) return true; // Check if seriesNameLower exists
+                     // 8. Setiap kata di query ada di certified models (misal query "cph 2591")
+                     if (queryWords.some(qw => certifiedModelsLower.includes(qw))) return true; // Use some for partial match on any word in certified models string
+
+
+                    return false; // Jika tidak ada kecocokan
                 });
 
-                // Jika tidak ditemukan hasil, coba cari berdasarkan nama seri
-                 if (results.length === 0) {
-                    let targetSeriesKey = null;
-                    const seriesPatterns = [
-                         // Pola untuk menangkap format seperti "vivo X", "seri Y", "V series", "T"
-                        { 'pattern': /^vivo\s+([xyvts])$/i, 'seriesPrefix': 'Seri ' },
-                        { 'pattern': /^seri\s+([xyvts])$/i, 'seriesPrefix': 'Seri ' },
-                        { 'pattern': /^([xyvts])\s+series$/i, 'seriesPrefix': 'Seri ' },
-                        { 'pattern': /^([xyvts])$/i, 'seriesPrefix': 'Seri ' } // Hanya huruf seri (misal: "y")
-                    ];
-                    for (const item of seriesPatterns) {
-                        const match = query.match(item.pattern);
-                        if (match && match[1]) {
-                            targetSeriesKey = item.seriesPrefix + match[1].toUpperCase();
-                            break;
-                        }
+                 // Optional: Sort results by relevance (how many query words matched) or alphabetically
+                 // For simplicity, let's just sort alphabetically by brand, then name
+                 results.sort((a, b) => {
+                    const brandComparison = a.brand.localeCompare(b.brand);
+                    if (brandComparison !== 0) {
+                        return brandComparison;
                     }
-                    if (targetSeriesKey) {
-                         // Filter perangkat yang termasuk dalam seri yang dicari
-                        results = this.allDevices.filter(device =>
-                            device.originalSeries.toLowerCase() === targetSeriesKey.toLowerCase()
-                        );
-                    }
-                }
+                    return a.name.localeCompare(b.name);
+                });
 
-                 // Jika masih belum ada hasil, coba cari berdasarkan nama perangkat atau nama seri secara longgar
-                if (results.length === 0 && query.length > 0) {
-                     results = this.allDevices.filter(device =>
-                        device.name.toLowerCase().includes(query) ||
-                        device.originalSeries.toLowerCase().includes(query) // Termasuk jika query adalah bagian dari nama seri (misal: "seri y")
-                     );
-                }
 
                 this.searchResults = results;
             }
             this.modalOpen = true; // Buka modal
-            this.selectedDevice = null; // Reset perangkat terpilih
-            this.sparePartsList = [];   // Kosongkan daftar sparepart sebelumnya
         },
 
         getDisplayName(device) {
-            // Pastikan nama dimulai dengan "Vivo " jika belum
-            let name = device.name;
-            if (!name.toLowerCase().startsWith('vivo ')) {
-                name = 'Vivo ' + name;
-            }
-            return `${name} (${device.originalSeries})`; // Tambahkan nama seri asli
+            // Menampilkan brand dan nama model
+            // Jika ada nama seri yang berbeda dari nama model, tambahkan nama seri
+             if (device.series && device.series !== device.name && !device.name.toLowerCase().includes(device.series.toLowerCase())) {
+                 // Contoh: Vivo V29 (Seri V), OPPO Find N5 (Find N Series)
+                 return `${device.brand} ${device.name} (${device.series})`;
+             }
+             // Contoh: OPPO A58 (Seri A) - Seri A sudah implied di nama model, jadi cukup "OPPO A58"
+             // Kecuali jika brandName sudah ada di marketingModelName (misal: "OPPO Find N5")
+             if (device.name.toLowerCase().startsWith(device.brand.toLowerCase())) {
+                 return `${device.name}`; // Output: "OPPO Find N5"
+             }
+            return `${device.brand} ${device.name}`; // Output: "Vivo V29"
         },
 
         async selectDevice(device) {
@@ -910,29 +835,96 @@ document.addEventListener('alpine:init', () => {
             this.modalOpen = false; // Tutup modal pencarian
             this.isLoadingParts = true; // Tampilkan indikator loading
             this.sparePartsList = []; // Kosongkan daftar sebelumnya
+            this.errorFetchingParts = null; // Reset pesan error
 
-            console.log(`Fetching spare parts for ${this.getDisplayName(device)} (ID: ${device.dataid})`);
-            try {
-                // Mengambil data sparepart dari file JSON lokal
-                const response = await fetch('./vivo_spareparts_data_full.json');
-                if (!response.ok) {
-                    let errorText = await response.text();
-                    console.error(`HTTP error! status: ${response.status}`, errorText);
-                    throw new Error(`HTTP error! status: ${response.status}`);
+            console.log(`Selected device: ${this.getDisplayName(device)} (${device.brand}, Code: ${device.code})`);
+
+            if (device.brand === 'OPPO') {
+                // Logika untuk mengambil data dari file JSON lokal OPPO
+                 console.log(`Fetching from local OPPO JSON at ${OPPO_LOCAL_PARTS_URL}...`);
+                try {
+                     const response = await fetch(OPPO_LOCAL_PARTS_URL); // Memuat file JSON lokal OPPO
+                     if (!response.ok) {
+                         let errorText = await response.text();
+                          this.errorFetchingParts = `Gagal memuat file data spare part lokal ${device.brand} (${response.status}). Pastikan file '${OPPO_LOCAL_PARTS_URL}' ada dan dapat diakses.`;
+                         console.error(`HTTP error fetching ${device.brand} JSON! status: ${response.status}`, errorText);
+                         throw new Error(`HTTP error! status: ${response.status}`);
+                     }
+                     const allOppoParts = await response.json();
+
+                     // Filter sparepart berdasarkan device.name (menggunakan device_name di JSON OPPO)
+                     // dan device.series (menggunakan device_series di JSON OPPO)
+                     // Menggunakan filter yang lebih spesifik agar lebih akurat
+                     this.sparePartsList = allOppoParts.filter(part =>
+                          // Pastikan part memiliki properti yang diperlukan dan cocok
+                          part.device_name && part.device_series &&
+                          part.device_name.toLowerCase() === device.name.toLowerCase() &&
+                          part.device_series.toLowerCase() === device.series.toLowerCase()
+                     );
+
+                     console.log(`Found ${this.sparePartsList.length} parts for ${device.brand} device: ${device.name}.`);
+
+                     if (this.sparePartsList.length === 0) {
+                           // Coba filter hanya berdasarkan nama jika tidak ketemu
+                            this.sparePartsList = allOppoParts.filter(part =>
+                                part.device_name && part.device_name.toLowerCase() === device.name.toLowerCase()
+                            );
+                             console.log(`Found ${this.sparePartsList.length} parts by name only for ${device.brand} device: ${device.name}.`);
+                             if (this.sparePartsList.length === 0) {
+                                this.errorFetchingParts = `Tidak ada data spare part ditemukan untuk model ${this.getDisplayName(device)} di file lokal OPPO.`;
+                             } else {
+                                // Data ditemukan hanya berdasarkan nama
+                                 this.errorFetchingParts = null;
+                             }
+                     } else {
+                         // Data ditemukan berdasarkan nama dan seri
+                         this.errorFetchingParts = null;
+                     }
+
+                } catch (error) {
+                     this.errorFetchingParts = `Gagal memuat atau memproses data spare part lokal untuk ${device.brand}. Detail: ${error.message}`;
+                     console.error(`Error fetching or processing local ${device.brand} spare parts:`, error);
+                } finally {
+                     this.isLoadingParts = false; // Sembunyikan indikator loading
                 }
-                const allPartsData = await response.json();
 
-                // Filter sparepart yang sesuai dengan device_id perangkat yang dipilih
-                this.sparePartsList = allPartsData.filter(part => part.device_id == parseInt(device.dataid));
+            } else if (device.brand === 'Vivo') {
+                // Logika untuk mengambil data dari file JSON lokal Vivo
+                 console.log(`Fetching from local Vivo JSON at ${VIVO_LOCAL_PARTS_URL}...`);
+                try {
+                     const response = await fetch(VIVO_LOCAL_PARTS_URL); // Memuat file JSON lokal Vivo
+                     if (!response.ok) {
+                         let errorText = await response.text();
+                         this.errorFetchingParts = `Gagal memuat file data spare part lokal ${device.brand} (${response.status}). Pastikan file '${VIVO_LOCAL_PARTS_URL}' ada dan dapat diakses.`;
+                         console.error(`HTTP error fetching ${device.brand} JSON! status: ${response.status}`, errorText);
+                         throw new Error(`HTTP error! status: ${response.status}`);
+                     }
+                     const allVivoParts = await response.json();
 
-                if (this.sparePartsList.length === 0) {
-                    console.log(`No spare parts found for device ID: ${device.dataid}`);
+                     // Filter sparepart berdasarkan device.code (yang berisi device.dataid untuk Vivo)
+                     // Menggunakan == untuk membandingkan string device.code dengan number device_id
+                     this.sparePartsList = allVivoParts.filter(part => part.device_id == device.code);
+                     console.log(`Found ${this.sparePartsList.length} parts for Vivo device ID: ${device.code}.`);
+
+                     if (this.sparePartsList.length === 0) {
+                           this.errorFetchingParts = `Tidak ada data spare part ditemukan untuk model ${this.getDisplayName(device)} di file lokal Vivo.`;
+                     } else {
+                         this.errorParts = null; // Reset error jika data ditemukan
+                     }
+
+                } catch (error) {
+                     this.errorFetchingParts = `Gagal memuat atau memproses data spare part lokal untuk ${device.brand}. Detail: ${error.message}`;
+                     console.error(`Error fetching or processing local ${device.brand} spare parts:`, error);
+                } finally {
+                     this.isLoadingParts = false;
                 }
-            } catch (error) {
-                console.error("Error fetching or processing spare parts:", error);
-                 // Mungkin tampilkan pesan error ke user
-            } finally {
-                this.isLoadingParts = false; // Sembunyikan indikator loading
+
+            } else {
+                // Handle brand lain jika ada
+                this.isLoadingParts = false;
+                this.sparePartsList = []; // Pastikan kosong
+                this.errorFetchingParts = `Data spare part untuk brand ${device.brand} tidak didukung saat ini.`;
+                 console.warn(`Spare parts fetching not implemented for unknown brand: ${device.brand}`);
             }
         }
     }));
