@@ -6,7 +6,7 @@
     <title>Pencari Produk - HpGaul</title>
     <meta name="description" content="Temukan dan bandingkan spesifikasi smartphone dengan mudah di HpGaul.">
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,9 +24,9 @@
                             gray: { 100: '#F2F2F7', 200: '#E5E5EA', 300: '#D1D1D6', 400: '#C7C7CC', 500: '#AEAEB2', 600: '#8E8E93' },
                             text: '#1C1C1E', red: '#FF3B30',
                         },
-                        highlight: { 
-                            yellow: '#FEF3C7', 
-                            blue: '#DBEAFE',   
+                        highlight: {
+                            yellow: '#FEF3C7',
+                            blue: '#DBEAFE',
                         }
                     }
                 },
@@ -42,23 +42,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .spinner { border: 4px solid rgba(0, 0, 0, 0.1); width: 36px; height: 36px; border-radius: 50%; border-left-color: #0000FF; animation: spin 1s ease infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Perubahan di sini untuk .discount-badge */
-        .discount-badge { 
-            background-color: #FF3B30; 
-            color: white; 
-            padding: 2px 8px; /* Padding horizontal seragam */
-            border-radius: 6px; 
-            font-weight: bold; 
-            font-size: 0.75rem; /* text-xs */
-            line-height: 1rem; /* Sesuaikan jika perlu */
-            min-width: 55px;  /* Lebar minimum, sesuaikan berdasarkan teks terpanjang seperti "XX% OFF" */
-            text-align: center;
-            display: inline-block; /* Agar min-width efektif */
-            white-space: nowrap; /* Mencegah teks wrap */
-            vertical-align: middle; /* Jaga alignment vertikal jika perlu */
-        }
-
+        .discount-badge { background-color: #FF3B30; color: white; padding: 2px 8px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; line-height: 1rem; min-width: 55px; text-align: center; display: inline-block; white-space: nowrap; vertical-align: middle;}
         body { padding-top: 4rem; }
         .modal-thumbnail.active { border: 2px solid #0000FF; }
         .color-swatch { width: 1rem; height: 1rem; border-radius: 50%; display: inline-block; margin-right: 0.25rem; border: 1px solid #ccc; vertical-align: middle; }
@@ -73,7 +57,11 @@
             background-color: tailwind.theme.colors.highlight.blue;
             padding: 0.1rem 0.3rem;
             border-radius: 0.2rem;
-            font-weight: 500; 
+            font-weight: 500;
+        }
+        /* Added transition for the blur effect */
+        #productResults {
+            transition: filter 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -99,37 +87,49 @@
     </nav>
 
     <main class="container mx-auto px-4 py-6 max-w-6xl">
-        <h1 class="text-2xl font-bold text-center mt-4 mb-1 text-gray-900">Pilih Brand <span class="bg-blue-700 text-white px-1 py-1 rounded">smartphone</span> <br> Impian Kamu 
-        </h1>
+        <h1 class="text-3xl font-bold text-center mt-4 mb-0.75 text-gray-900">Pilih Brand <span class="bg-ios-blue text-white">Smartphone</span>
+Impian Kamu</h1>
         <p class="text-center text-gray-600 mb-4 text-sm leading-relaxed max-w-2xl mx-auto">
-            <br> Di sini Anda dapat dengan mudah<span class="text-highlight">menemukan</span> berbagai tipe smartphone dari brand favorit.
-            Pilih salah satu brand di bawah ini untuk melihat produk dan spesifikasinya.
+        <br> Di sini Anda dapat dengan mudahmenemukan berbagai tipe smartphone dari brand favorit.<br> Pilih salah satu brand di bawah ini untuk melihat produk dan spesifikasinya.
         </p>
-        <p class="text-center text-xs text-gray-500 mb-8">
-            Harga yang tertera adalah harga resmi dari Erafone store dan bisa berubah kapan saja.
-        </p>
-        
-        <div class="grid grid-cols-5 gap-3 mb-8" id="brandList">
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Oppo">Oppo</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Samsung">Samsung</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Xiaomi">Xiaomi</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Apple">Apple</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Infinix">Infinix</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Tecno">Tecno</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Asus">Asus</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Vivo">Vivo</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Realme">Realme</button>
-            <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Huawei">Huawei</button>
+
+        <div class="mb-8 text-center">
+            <button id="smartphoneCategoryButton" class="bg-ios-blue text-white py-3 px-6 rounded-lg shadow-md hover:bg-violet-600 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                Daftar Brand Smartphone
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 inline-block ml-2 transition-transform duration-300" id="smartphoneCaret">
+                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>
+            </button>
         </div>
-        
+
+        <div id="brandListContainer" class="hidden">
+            <h2 class="text-xl font-semibold text-center mb-4 text-gray-800">Pilih Brand Smartphone</h2>
+            <div class="grid grid-cols-5 gap-3 mb-8" id="brandList">
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Oppo">Oppo</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Samsung">Samsung</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Xiaomi">Xiaomi</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Apple">Apple</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Infinix">Infinix</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Tecno">Tecno</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Asus">Asus</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Vivo">Vivo</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Realme">Realme</button>
+                <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Huawei">Huawei</button>
+            </div>
+            <p class="text-center text-xs text-red-500 mb-8">
+                Harga yang tertera adalah harga resmi dari Erafone store dan bisa berubah kapan saja.
+            </p>
+        </div>
+
         <div id="loadingIndicator" class="hidden py-4 text-center text-gray-600 animate-pulse">
             <div class="spinner inline-block mr-2"></div>
             Memuat produk...
         </div>
         <div id="errorMessage" class="hidden py-4 text-center text-ios-red font-medium"></div>
-        
+
+        <!-- Added transition class here via style tag earlier -->
         <div id="productResults" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        
+
         <div class="flex justify-center mt-8">
           <button id="loadMoreButton" class="hidden py-3 px-6 text-white font-semibold bg-ios-text hover:bg-gray-700 rounded-md transition-colors">
             Muat tipe Lainnya
@@ -137,43 +137,86 @@
         </div>
     </main>
 
-    <footer class="bg-white mt-16 py-10 border-t border-ios-gray-200 relative overflow-hidden font-sans">
+    <footer class="bg-gray-100 mt-16 py-10 border-t border-gray-200 relative overflow-hidden font-sans">
+    
+         <div class="absolute top-8 left-10 w-8 h-8 text-gray-300 opacity-60 rotate-12 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3m0 0v3H9m3-3h3m-3 0V3m0 0v3H9m3-3h3" /></svg>
+        </div>
+         <div class="absolute bottom-6 right-12 w-10 h-10 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h16.5m-16.5 0a2.25 2.25 0 0 0 2.25 2.25h12c1.03 0 1.9-.693 2.077-1.676a7.483 7.483 0 0 1 0-1.117 2.25 2.25 0 0 0-2.25-2.25h-12a2.25 2.25 0 0 0-2.25 2.25Zm1.5-4.5H21a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H3.75A2.25 2.25 0 0 0 1.5 6.75v4.5m18 0v-4.5" /></svg>
+         </div>
+         <div class="absolute top-1/4 right-10 w-6 h-6 text-gray-300 opacity-60 rotate-45 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.39l-.56.56a1.5 1.5 0 0 1-2.122 0l-.56-.56a1.5 1.5 0 0 1 0-2.122l.56-.56a1.5 1.5 0 0 1 2.122 0l.56.56a1.5 1.5 0 0 1 0 2.122Z" /></svg>
+         </div>
+         <div class="absolute bottom-1/4 left-8 w-7 h-7 text-gray-300 opacity-60 -rotate-30 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5m0 9V12m0-7.5V9m9-3.75V9m0 3.75V12m0 7.5V21M12 3v1.5m0 15V21m0-7.5V12m0 2.25V12M12 12H3v.75c0 1.724 1.039 3.274 2.625 3.974V21m-1.5-10.5h15v.75c0 1.724-1.039 3.274-2.625 3.974V21" /></svg>
+         </div>
+         <div class="absolute top-1/3 left-1/4 w-9 h-9 text-gray-300 opacity-60 rotate-3 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15.5a2.25 2.25 0 0 0 2.25-2.25V9.574c0-1.067-.75-1.994-1.816-2.19l-.3-.046a2.253 2.253 0 0 0-1.96-2.64L8.167 4.992A2.31 2.31 0 0 1 6.827 6.175Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM12 9v.008h.008V9H12Z" /></svg>
+         </div>
+         <div class="absolute bottom-1/3 right-1/4 w-8 h-8 text-gray-300 opacity-60 -rotate-12 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 7.5.75-3 3 7.5M21 3l-3 7.5L17.25 9l-3 7.5" /></svg>
+         </div>
+         <div class="absolute top-1/2 left-16 w-5 h-5 text-gray-300 opacity-60 rotate-45 pointer-events-none transform -translate-y-1/2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
+         </div>
+          <div class="absolute bottom-8 left-1/3 w-6 h-6 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.75 1.5H10.5a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h5.25A3 3 0 0 1 18 5.25v10.375m-1.5 1.5H15M12 18v.008H12.012V18H12Z" /></svg>
+         </div>
+
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             <div class="flex flex-col items-center md:items-start">
                 <div class="flex items-center mb-3">
-                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" /></svg>
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+                    </svg>
                     <span class="font-bold text-xl"><span class="text-gray-900">Hp</span><span class="text-ios-blue">Gaul</span></span>
                 </div>
-                <p class="text-sm text-gray-500 text-center md:text-left">Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena..</p>
+                <p class="text-sm text-gray-500 text-center md:text-left">
+                    Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena.
+                </p>
             </div>
             <div class="text-center md:text-left">
                 <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-3">Tautan Cepat</h3>
                 <ul class="space-y-2">
-                    <li><a href="index.html" class="text-sm text-gray-500 hover:text-gray-900">Beranda</a></li>
+                    <li><a href="#search-section-container" class="text-sm text-gray-500 hover:text-gray-900">Pencarian</a></li>
                     <li><a href="info.html" class="text-sm text-gray-500 hover:text-gray-900">Tentang Kami</a></li>
-                     <li><a href="HpGaul-Sparepart.html" class="text-sm text-gray-500 hover:text-gray-900">Toko Sparepart</a></li>
+                    <li><a href="HpGaul-Sparepart.html" class="text-sm text-gray-500 hover:text-gray-900">Toko Sparepart</a></li>
+                    <li><a href="store-resmi.html" class="text-sm text-gray-500 hover:text-gray-900">Store Resmi</a></li>
+                    <li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Kontak Kami</a></li>
                 </ul>
             </div>
             <div class="text-center md:text-left">
                 <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-3">Ikuti Kami</h3>
                 <div class="flex justify-center md:justify-start space-x-4">
-                    <a href="#" class="text-ios-blue hover:opacity-80"><span class="sr-only">Facebook</span><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
-                    <a href="#" class="text-ios-blue hover:opacity-80"><span class="sr-only">Instagram</span><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218 1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.137.353.3.882.344 1.857.047 1.023.058 1.351.058 3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg></a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Facebook</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Instagram</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218 1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.137.353.3.882.344 1.857.047 1.023.058 1.351.058 3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-ios-blue hover:opacity-80">
+                        <span class="sr-only">Twitter</span>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="mt-8 border-t border-ios-gray-200 pt-8 text-center relative z-10">
-            <p class="text-sm text-gray-500">© <span id="currentYear"></span> <span class="font-bold"><span class="text-gray-900">Hp</span><span class="text-ios-blue">Gaul</span></span>. Hak cipta dilindungi.</p>
+        <div class="mt-8 border-t border-gray-200 pt-8 text-center relative z-10">
+            <p class="text-sm text-gray-500">© <span id="currentYear">2024</span> <span class="font-bold"><span class="text-gray-900">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
         </div>
     </footer>
 
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden p-4 transition-opacity duration-300 ease-in-out" onclick="handleModalOverlayClick(event)">
-        <div id="imageModalContent" class="bg-white p-4 sm:p-6 rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] flex flex-col">
+         {/* Modal content remains the same */}
+         <div id="imageModalContent" class="bg-white p-4 sm:p-6 rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center mb-3 sm:mb-4">
                 <h3 id="modalProductName" class="text-base sm:text-lg font-semibold text-ios-text truncate">Nama Produk</h3>
                 <button id="closeModalButton" class="text-2xl text-gray-500 hover:text-ios-red focus:outline-none">×</button>
             </div>
-            <div class="flex-grow overflow-y-auto no-scrollbar"> 
+            <div class="flex-grow overflow-y-auto no-scrollbar">
                 <div class="relative flex items-center justify-center bg-ios-gray-100 rounded aspect-square mb-3 sm:mb-4 mx-auto" style="max-height: 45vh; max-width: 75%;">
                     <img id="modalMainImage" src="" alt="Gambar Produk" class="max-w-full max-h-full object-contain">
                     <button id="modalPrevImage" class="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white p-2 rounded-full focus:outline-none transition-opacity"><svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
@@ -181,7 +224,7 @@
                 </div>
                 <div id="modalThumbnails" class="flex space-x-2 overflow-x-auto no-scrollbar pb-1 justify-center mb-4"></div>
                 <h4 class="text-md font-semibold text-ios-text mt-4 mb-2 border-b border-ios-gray-300 pb-1">Spesifikasi Produk</h4>
-                <div id="modalSpecifications" class="text-sm text-ios-text"> 
+                <div id="modalSpecifications" class="text-sm text-ios-text">
                      <div class="text-center py-4 hidden" id="modalSpecLoading"><div class="spinner inline-block mr-2"></div> Memuat spesifikasi...</div>
                     <div class="text-center py-4 hidden" id="modalSpecError">Gagal memuat spesifikasi atau spesifikasi tidak tersedia.</div>
                 </div>
@@ -193,6 +236,10 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         const brandListEl = document.getElementById('brandList');
+        const brandListContainerEl = document.getElementById('brandListContainer');
+        const smartphoneCategoryButtonEl = document.getElementById('smartphoneCategoryButton');
+        const smartphoneCaretEl = document.getElementById('smartphoneCaret');
+
         const productResultsEl = document.getElementById('productResults');
         const loadingIndicatorEl = document.getElementById('loadingIndicator');
         const errorMessageEl = document.getElementById('errorMessage');
@@ -212,7 +259,7 @@
         let currentBrand = '';
         let currentPage = 1;
         const limitPerPage = 30;
-        let allProducts = [];
+        let allProducts = []; // Stores ALL products loaded for the current brand
         let totalItems = 0;
         let currentModalImages = [];
         let currentModalImageIndex = 0;
@@ -231,8 +278,39 @@
         const uiUtils = {
             showLoading: () => { loadingIndicatorEl.classList.remove('hidden'); errorMessageEl.classList.add('hidden'); loadMoreButtonEl.classList.add('hidden'); },
             hideLoading: () => loadingIndicatorEl.classList.add('hidden'),
-            showError: (message) => { uiUtils.hideLoading(); errorMessageEl.textContent = message; errorMessageEl.classList.remove('hidden'); if (productResultsEl) productResultsEl.innerHTML = ''; loadMoreButtonEl.classList.add('hidden'); }
+            showError: (message) => { uiUtils.hideLoading(); errorMessageEl.textContent = message; errorMessageEl.classList.remove('hidden'); if (productResultsEl) productResultsEl.innerHTML = ''; loadMoreButtonEl.classList.add('hidden'); productResultsEl.classList.remove('blur-sm');}
         };
+
+        // --- Helper function to sort products by discount (Robust version) ---
+        function sortProductsByDiscount(products) {
+            // console.log("Sorting products:", JSON.stringify(products.map(p => ({name: p.name, price: p.price, special: p.special_price})), null, 2));
+            const sorted = products.sort((a, b) => {
+                // Check if a has a valid discount
+                const priceA = typeof a.price === 'number' && !isNaN(a.price) ? a.price : 0;
+                const specialPriceA = typeof a.special_price === 'number' && !isNaN(a.special_price) ? a.special_price : null;
+                const hasDiscountA = specialPriceA !== null && specialPriceA < priceA;
+
+                // Check if b has a valid discount
+                const priceB = typeof b.price === 'number' && !isNaN(b.price) ? b.price : 0;
+                const specialPriceB = typeof b.special_price === 'number' && !isNaN(b.special_price) ? b.special_price : null;
+                const hasDiscountB = specialPriceB !== null && specialPriceB < priceB;
+
+                if (hasDiscountA && !hasDiscountB) {
+                    return -1; // a (discounted) comes before b (not discounted)
+                }
+                if (!hasDiscountA && hasDiscountB) {
+                    return 1;  // b (discounted) comes before a (not discounted)
+                }
+                // Optional: Add secondary sort if needed (e.g., by name if discount status is the same)
+                // if (a.name && b.name) {
+                //     return a.name.localeCompare(b.name);
+                // }
+                return 0; // Keep original relative order if discount status is the same
+            });
+            // console.log("Sorted result:", JSON.stringify(sorted.map(p => ({name: p.name, price: p.price, special: p.special_price})), null, 2));
+            return sorted;
+        }
+        // ---------------------------------------------------------------------
 
         function extractRamRomFromName(productName) {
             let ram = "N/A", rom = "N/A";
@@ -240,10 +318,10 @@
             const name = productName.toUpperCase();
             let matchSlash = name.match(/(\d+)\s*\/\s*(\d+)\s*(GB|TB)/);
             if (matchSlash) return { ram: matchSlash[1] + "GB", rom: matchSlash[2] + matchSlash[3] };
-            
+
             const ramMatch = name.match(/(\d+)\s*GB\s*RAM/);
             if (ramMatch) ram = ramMatch[1] + "GB";
-            
+
             const romMatches = [...name.matchAll(/(\d+)\s*(GB|TB)(?:\s*(?:STORAGE|ROM|INTERNAL|MEMORY))?/g)];
             if (romMatches.length > 0) {
                 for (const rm of romMatches) {
@@ -273,24 +351,35 @@
         }
 
         async function fetchData(url, cacheKey) {
-            if (apiCache.has(cacheKey)) return apiCache.get(cacheKey);
+            // Basic caching, consider more sophisticated strategies if needed
+            if (apiCache.has(cacheKey)) {
+                // console.log("Cache hit:", cacheKey);
+                return apiCache.get(cacheKey);
+            }
+            // console.log("Cache miss, fetching:", url);
             try {
                 const response = await fetch(url);
                 if (!response.ok) { console.warn(`API call failed for ${url}: ${response.status}`); apiCache.set(cacheKey, null); return null; }
                 const data = await response.json();
-                if (data && (Array.isArray(data.data) || data.data === null)) { apiCache.set(cacheKey, data.data); return data.data; }
+                // Check specifically for the 'data' property expected from Eraspace API
+                if (data && typeof data.data !== 'undefined') { // Allows data.data to be null or an array
+                    apiCache.set(cacheKey, data.data);
+                    return data.data;
+                }
                 console.warn(`Unexpected data format from ${url}:`, data); apiCache.set(cacheKey, null); return null;
             } catch (error) { console.error(`Error fetching ${url}:`, error); apiCache.set(cacheKey, null); return null; }
         }
 
+
         const fetchProductConfigurationOptions = (productBaseId) => fetchData(`https://jeanne.eraspace.com/products/api/v4.1/products/${productBaseId}/variants?store_code=eraspace`, `config_${productBaseId}`);
         const fetchProductSpecifications = (productId) => fetchData(`https://jeanne.eraspace.com/products/api/v4.1/products/${productId}/specification?store_code=eraspace`, `spec_${productId}`);
-        
+
         function getBaseProductIdFromSku(sku, productName) {
             if (typeof sku !== 'string') return sku;
             if (sku.endsWith("-CON") || sku.endsWith("-CFG")) return sku;
-            if (productName?.includes("Galaxy S24 FE")) return "SAM-GS24FE-CON";
-            return sku; 
+            // Example specific override (keep if necessary, remove if not)
+            // if (productName?.includes("Galaxy S24 FE")) return "SAM-GS24FE-CON";
+            return sku;
         }
 
         async function fetchProducts(brand, page) {
@@ -299,29 +388,30 @@
                 if (!brandConfig) throw new Error(`Konfigurasi untuk merek ${brand} tidak ditemukan.`);
                 const { apiBrand, categoryId } = brandConfig;
                 const listUrl = `https://jeanne.eraspace.com/products/api/v4.1/products/?page=${page}&limit=${limitPerPage}&category_id=${categoryId}&store_code=eraspace&facets%5Bproduct_brand_filter%5D=${encodeURIComponent(apiBrand)}`;
-                
+
                 const listResponse = await fetch(listUrl);
                 if (!listResponse.ok) throw new Error(`HTTP error mengambil daftar produk! Status: ${listResponse.status}`);
                 const listData = await listResponse.json();
                 if (!listData.data?.items) throw new Error('Format data daftar produk tidak valid dari server.');
 
                 totalItems = listData.data.total_count || 0;
-                
-                return await Promise.all(listData.data.items.map(async (item) => {
-                    let actualColorLabel = "N/A", actualRam = "N/A", actualRom = "N/A", colorValueForSwatch = null;
-                    let productBaseId = getBaseProductIdFromSku(item.sku, item.name); 
+
+                // Process items ensuring price/special_price are numbers
+                const processedItems = await Promise.all(listData.data.items.map(async (item) => {
+                     let actualColorLabel = "N/A", actualRam = "N/A", actualRom = "N/A", colorValueForSwatch = null;
+                    let productBaseId = getBaseProductIdFromSku(item.sku, item.name);
 
                     if (item.custom_attributes?.length) {
                         const attrs = item.custom_attributes.reduce((acc, attr) => { acc[attr.attribute_code] = String(attr.value ?? '').trim(); return acc; }, {});
-                        actualColorLabel = attrs.color ?? attrs.warna_smartphone ?? attrs.pilihan_warna ?? attrs.product_color_group_name ?? attrs.product_color_name ?? actualColorLabel; 
+                        actualColorLabel = attrs.color ?? attrs.warna_smartphone ?? attrs.pilihan_warna ?? attrs.product_color_group_name ?? attrs.product_color_name ?? actualColorLabel;
                         actualRom = attrs.storage ?? attrs.kapasitas_penyimpanan ?? attrs.product_storage_capacity ?? attrs.smartphone_rom ?? actualRom;
                         actualRam = attrs.ram ?? attrs.ram_kapasitas ?? attrs.kapasitas_ram ?? attrs.product_ram ?? attrs.smartphone_ram ?? actualRam;
                     }
-                    
+
                     const fromName = extractRamRomFromName(item.name);
                     if (actualRam === "N/A" && fromName.ram !== "N/A") actualRam = fromName.ram;
                     if (actualRom === "N/A" && fromName.rom !== "N/A") actualRom = fromName.rom;
-                    
+
                     if (actualColorLabel === "N/A" && item.name) {
                         const nameParts = item.name.toLowerCase().split(/[\s/-]+/);
                         const knownColors = ["blue", "gray", "graphite", "black", "white", "green", "red", "silver", "gold", "pink", "purple", "violet", "yellow", "orange", "bronze", "cream", "beige", "lemon", "lilac", "navy", "ice", "sky", "awesome"];
@@ -332,18 +422,24 @@
                             if (potentialColor) { actualColorLabel = potentialColor; break; }
                         }
                     }
-                    
-                    if (actualColorLabel !== "N/A" && productBaseId) {
-                        const configOptions = await fetchProductConfigurationOptions(productBaseId);
-                        if (configOptions) {
-                            const colorAttrOpts = configOptions.find(attr => attr.attribute_label?.toLowerCase().includes("warna") || attr.attribute_name?.toLowerCase().includes("color"));
-                            if (colorAttrOpts?.options) {
-                                const matchedOpt = colorAttrOpts.options.find(opt => { const oLN = opt.option_label?.trim().toLowerCase(), aLN = actualColorLabel.trim().toLowerCase(); return oLN === aLN || aLN.includes(oLN) || oLN.includes(aLN); });
-                                if (matchedOpt && colorAttrOpts.is_swatch) colorValueForSwatch = typeof matchedOpt.option_value === 'string' ? matchedOpt.option_value : null;
+
+                    // Fetch color swatch value
+                     if (actualColorLabel !== "N/A" && productBaseId) {
+                        try { // Wrap async call in try-catch
+                            const configOptions = await fetchProductConfigurationOptions(productBaseId);
+                            if (configOptions) {
+                                const colorAttrOpts = configOptions.find(attr => attr.attribute_label?.toLowerCase().includes("warna") || attr.attribute_name?.toLowerCase().includes("color"));
+                                if (colorAttrOpts?.options) {
+                                    const matchedOpt = colorAttrOpts.options.find(opt => { const oLN = opt.option_label?.trim().toLowerCase(), aLN = actualColorLabel.trim().toLowerCase(); return oLN === aLN || aLN.includes(oLN) || oLN.includes(aLN); });
+                                    if (matchedOpt && colorAttrOpts.is_swatch) colorValueForSwatch = typeof matchedOpt.option_value === 'string' ? matchedOpt.option_value : null;
+                                }
                             }
+                        } catch (configError) {
+                            console.warn(`Error fetching config for ${productBaseId}:`, configError);
+                            // Continue without swatch color if config fails
                         }
                     }
-                    
+
                     const imageGalleries = (item.media_gallery_entries || []).filter(e => e.media_type === 'image' && e.file).map(e => e.file.startsWith('http') ? e.file : ERASPACE_IMAGE_BASE_URL + (e.file.startsWith('/') ? e.file : '/' + e.file));
                     let productThumbnail = item.thumbnail || 'https://placehold.co/200x200/fafafa/ccc?text=Tidak+Ada+Gambar';
                     if (productThumbnail && !productThumbnail.startsWith('http') && !productThumbnail.includes('placehold.co')) {
@@ -352,33 +448,67 @@
                          productThumbnail = useBase ? ERASPACE_IMAGE_BASE_URL + thumbPath : (item.thumbnail_url || productThumbnail);
                     } else if (item.thumbnail_url && productThumbnail.includes('placehold.co')) productThumbnail = item.thumbnail_url;
 
-                    return { sku: item.sku, name: item.name, product_base_id: productBaseId, price: item.price, special_price: item.special_price || null, thumbnail: productThumbnail, ram_api: actualRam, rom_api: actualRom, color_label: actualColorLabel, color_value: colorValueForSwatch, media_galleries: imageGalleries };
+                    // Ensure price is a number, default to 0 if invalid
+                    const price = parseFloat(item.price);
+                    const special_price = item.special_price ? parseFloat(item.special_price) : null; // Keep null if not present or invalid
+
+                    return {
+                        sku: item.sku,
+                        name: item.name,
+                        product_base_id: productBaseId,
+                        price: !isNaN(price) ? price : 0, // Ensure price is a valid number
+                        special_price: !isNaN(special_price) ? special_price : null, // Ensure special_price is valid or null
+                        thumbnail: productThumbnail,
+                        ram_api: actualRam,
+                        rom_api: actualRom,
+                        color_label: actualColorLabel,
+                        color_value: colorValueForSwatch,
+                        media_galleries: imageGalleries
+                    };
                 }));
+
+                return processedItems;
+
             } catch (error) { console.error("Gagal mengambil data produk utama:", error); uiUtils.showError(`Gagal memuat produk ${brand}: ${error.message}`); return []; }
         }
 
-        function displayProducts(productsToDisplay) {
+        // Function to render products (expects a pre-sorted list)
+        function renderProducts(productsToRender) {
             if (!productResultsEl) return;
-            if (currentPage === 1) productResultsEl.innerHTML = ''; 
-            
-            if (allProducts.length === 0 && loadingIndicatorEl.classList.contains('hidden')) { 
-                productResultsEl.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">Tidak ada produk untuk merek ini.</p>'; 
-                loadMoreButtonEl.classList.add('hidden'); return; 
+
+            // Clear the container before rendering the full list
+            productResultsEl.innerHTML = '';
+
+            if (productsToRender.length === 0) {
+                 // Show 'no products' message only if loading is finished and list is truly empty
+                if (loadingIndicatorEl.classList.contains('hidden')) {
+                    productResultsEl.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">Tidak ada produk untuk merek ini.</p>';
+                }
+                loadMoreButtonEl.classList.add('hidden');
+                // Do not hide loading here, let the caller handle it
+                // uiUtils.hideLoading(); // Moved out
+                productResultsEl.classList.remove('blur-sm'); // Ensure blur is removed
+                return;
             }
 
-            productsToDisplay.forEach(product => {
-                const discount = product.special_price && product.special_price < product.price ? Math.round((1 - product.special_price / product.price) * 100) : 0;
-                const displayPrice = discount ? product.special_price : product.price;
-                const originalPrice = discount ? product.price : null;
+
+            productsToRender.forEach(product => {
+                // Calculate discount based on validated numbers
+                const discount = product.special_price !== null && product.price > 0 && product.special_price < product.price
+                    ? Math.round((1 - product.special_price / product.price) * 100)
+                    : 0;
+                const displayPrice = discount > 0 ? product.special_price : product.price;
+                const originalPrice = discount > 0 ? product.price : null;
+
                 const ramText = (product.ram_api !== 'N/A' && product.ram_api) ? product.ram_api : '';
                 const romText = (product.rom_api !== 'N/A' && product.rom_api) ? product.rom_api : '';
                 let specText = `${ramText}${ramText && romText ? ' / ' : ''}${romText}`.trim();
-                let colorDisplayText = (product.color_label !== 'N/A' && product.color_label) ? product.color_label : ""; 
-                
+                let colorDisplayText = (product.color_label !== 'N/A' && product.color_label) ? product.color_label : "";
+
                 const detailPromptText = "Klik gambar untuk detail spesifikasi";
                 let showDetailPrompt = (!colorDisplayText || colorDisplayText === "Warna tidak tersedia") && (!specText || specText === "Spek tidak tersedia" || specText === "");
 
-                if (showDetailPrompt) { colorDisplayText = ""; specText = detailPromptText; } 
+                if (showDetailPrompt) { colorDisplayText = ""; specText = detailPromptText; }
                 else {
                     if (!colorDisplayText) colorDisplayText = "Warna tidak tersedia";
                     if (!specText || specText === "/" || specText === "N/A") specText = "Spek tidak tersedia";
@@ -386,40 +516,70 @@
 
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl shadow-md overflow-hidden flex flex-col transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer';
-                card.dataset.sku = product.sku; card.dataset.baseId = product.product_base_id; 
+                card.dataset.sku = product.sku; card.dataset.baseId = product.product_base_id;
                 card.innerHTML = `
                     <div class="w-full h-48 bg-ios-gray-100 flex items-center justify-center p-1 aspect-square pointer-events-none"><img src="${product.thumbnail}" alt="${product.name}" class="max-w-full max-h-full object-contain"></div>
                     <div class="p-3 flex flex-col flex-grow pointer-events-none">
-                        <h3 class="text-sm font-semibold text-ios-text mb-1 leading-tight">${product.name}</h3> 
+                        <h3 class="text-sm font-semibold text-ios-text mb-1 leading-tight">${product.name}</h3>
                         <div class="flex items-center mb-1 text-xs text-ios-gray-600 min-h-[1.25rem]">${product.color_value && CSS.supports('background-color', product.color_value) && !showDetailPrompt ? `<span class="color-swatch" style="background-color: ${product.color_value};"></span>` : ''}<span>${showDetailPrompt ? '' : colorDisplayText}</span></div>
-                        <div class="flex items-center justify-between mb-2 min-h-[1.25rem]"><p class="text-xs text-ios-gray-600 ${showDetailPrompt ? 'italic' : ''} flex-grow pr-1">${specText}</p>${discount && !showDetailPrompt ? `<span class="discount-badge text-xs whitespace-nowrap">${discount}% OFF</span>` : '<span class="w-10"></span>'}</div>
+                        <div class="flex items-center justify-between mb-2 min-h-[1.25rem]"><p class="text-xs text-ios-gray-600 ${showDetailPrompt ? 'italic' : ''} flex-grow pr-1">${specText}</p>${discount > 0 && !showDetailPrompt ? `<span class="discount-badge text-xs whitespace-nowrap">${discount}% OFF</span>` : '<span class="w-10"></span>'}</div>
                         <div class="mt-auto pt-2 border-t border-ios-gray-200">
                             <div class="flex items-baseline mb-1"><span class="text-base font-bold text-ios-blue">${displayPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</span></div>
                             ${originalPrice ? `<p class="text-xs text-ios-gray-400 line-through h-[18px]">${originalPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>` : '<div class="h-[18px]"></div>'}
                             <div class="flex items-center text-xs text-ios-gray-600 mt-2"><svg class="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.38 2.454a1 1 0 00-.364 1.118l1.287 3.97c.3.921-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.197-1.539-1.118l1.287-3.97a1 1 0 00-.364-1.118L2.28 9.397c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.97z"></path></svg><span class="font-medium">5.0</span><span class="ml-1 text-ios-gray-400">(Review)</span></div>
                         </div></div>`;
-                card.addEventListener('click', (e) => { const el = e.currentTarget; openImageModal(el.dataset.sku, el.dataset.baseId); });
+                card.addEventListener('click', (e) => {
+                    const clickedSku = e.currentTarget.dataset.sku;
+                    const clickedProduct = allProducts.find(p => p.sku === clickedSku);
+                    if (clickedProduct) {
+                         openImageModal(clickedProduct.sku, clickedProduct.product_base_id);
+                    } else {
+                        console.warn("Product data not found for SKU:", clickedSku);
+                    }
+                });
                 productResultsEl.appendChild(card);
             });
+
+            // Check visibility based on total items vs. current cumulative product count
             loadMoreButtonEl.classList.toggle('hidden', !(allProducts.length > 0 && allProducts.length < totalItems));
-            uiUtils.hideLoading();
+             // Remove blur only after rendering is complete
+             productResultsEl.classList.remove('blur-sm');
+            // uiUtils.hideLoading(); // Moved out, let caller handle loading indicator
         }
-        
-        async function openImageModal(productSku, productBaseId) { 
+
+
+        async function openImageModal(productSku, productBaseId) {
             const product = allProducts.find(p => p.sku === productSku);
-            if (!product) return;
+            if (!product) {
+                console.error("Cannot open modal, product data not found for SKU:", productSku);
+                return;
+            }
             modalProductNameEl.textContent = product.name;
-            currentModalImages = product.media_galleries?.length ? product.media_galleries : [product.thumbnail]; 
+            currentModalImages = product.media_galleries?.length ? product.media_galleries : [product.thumbnail];
             if (!currentModalImages[0] || currentModalImages[0].includes('placehold.co')) currentModalImages = ['https://placehold.co/600x600/E5E5EA/AEAEB2?text=Gambar+Tidak+Tersedia&fontsize=20'];
             currentModalImageIndex = 0;
-            updateModalImageView(); 
+            updateModalImageView();
             modalSpecificationsEl.innerHTML = ''; modalSpecLoadingEl.classList.remove('hidden'); modalSpecErrorEl.classList.add('hidden');
             imageModalEl.classList.remove('hidden'); imageModalEl.classList.add('opacity-100'); document.body.style.overflow = 'hidden';
-            const idForSpec = productBaseId || product.product_base_id || product.sku; 
-            const specs = await fetchProductSpecifications(idForSpec); 
-            modalSpecLoadingEl.classList.add('hidden');
-            if (specs?.length) displaySpecificationsInModal(specs);
-            else { modalSpecErrorEl.classList.remove('hidden'); modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi detail tidak tersedia untuk produk ini.</p>'; }
+            const idForSpec = productBaseId || product.product_base_id || product.sku;
+
+            // Fetch specifications only if needed (e.g., not already cached or fetched)
+            // Re-using fetchData handles caching internally
+            try {
+                const specs = await fetchProductSpecifications(idForSpec);
+                modalSpecLoadingEl.classList.add('hidden');
+                if (specs?.length) {
+                    displaySpecificationsInModal(specs);
+                } else {
+                    modalSpecErrorEl.classList.remove('hidden');
+                    modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi detail tidak tersedia untuk produk ini.</p>';
+                }
+            } catch (specError) {
+                 console.error(`Error fetching specs for ${idForSpec}:`, specError);
+                 modalSpecLoadingEl.classList.add('hidden');
+                 modalSpecErrorEl.classList.remove('hidden');
+                 modalSpecificationsEl.innerHTML = '<p class="text-center py-4 text-ios-red">Gagal memuat spesifikasi.</p>';
+            }
         }
 
         function displaySpecificationsInModal(specificationsArray) {
@@ -429,16 +589,16 @@
             specificationsArray.forEach(spec => { if (spec.attribute_label && spec.value && !ignoredAttrs.includes(spec.attribute_code) && String(spec.value).trim() && !["tidak", "no"].includes(String(spec.value).toLowerCase())) tableHTML += `<tr><th>${spec.attribute_label}</th><td>${spec.value}</td></tr>`; });
             tableHTML += '</table>';
             modalSpecificationsEl.innerHTML = tableHTML;
-            modalSpecErrorEl.classList.add('hidden'); 
+            modalSpecErrorEl.classList.add('hidden');
         }
 
         function closeModal() {
             imageModalEl.classList.add('hidden'); imageModalEl.classList.remove('opacity-100'); document.body.style.overflow = '';
-            if (modalThumbnailsEl) modalThumbnailsEl.innerHTML = ''; if (modalSpecificationsEl) modalSpecificationsEl.innerHTML = ''; 
+            if (modalThumbnailsEl) modalThumbnailsEl.innerHTML = ''; if (modalSpecificationsEl) modalSpecificationsEl.innerHTML = '';
             modalSpecLoadingEl.classList.add('hidden'); modalSpecErrorEl.classList.add('hidden');
         }
 
-        function updateModalImageView() { 
+        function updateModalImageView() {
             if (!modalMainImageEl || !modalThumbnailsEl || !currentModalImages.length) return;
             modalMainImageEl.src = currentModalImages[currentModalImageIndex]; modalMainImageEl.alt = `${modalProductNameEl.textContent} - Gambar ${currentModalImageIndex + 1}`;
             modalThumbnailsEl.innerHTML = '';
@@ -455,26 +615,87 @@
         const showPrevImage = () => { currentModalImageIndex = (currentModalImageIndex - 1 + currentModalImages.length) % currentModalImages.length; updateModalImageView(); };
         const showNextImage = () => { currentModalImageIndex = (currentModalImageIndex + 1) % currentModalImages.length; updateModalImageView(); };
         const handleModalOverlayClick = (e) => { if (e.target === imageModalEl) closeModal(); };
-        
-        if (brandListEl) {
+
+        // --- Event Listeners ---
+        if (brandListEl && smartphoneCategoryButtonEl && brandListContainerEl && smartphoneCaretEl) {
+            smartphoneCategoryButtonEl.addEventListener('click', () => {
+                brandListContainerEl.classList.toggle('hidden');
+                smartphoneCaretEl.classList.toggle('rotate-180');
+                if (!brandListContainerEl.classList.contains('hidden') && !currentBrand) {
+                    const defaultButton = brandListEl.querySelector('button[data-brand="Oppo"]') || brandListEl.querySelector('button');
+                    if (defaultButton) defaultButton.click();
+                } else if (brandListContainerEl.classList.contains('hidden')) {
+                    productResultsEl.innerHTML = '';
+                    loadMoreButtonEl.classList.add('hidden');
+                    currentBrand = '';
+                    brandListEl.querySelectorAll('button').forEach(btn => {
+                        btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
+                        btn.classList.add('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
+                    });
+                    productResultsEl.classList.remove('blur-sm');
+                }
+            });
+
             brandListEl.addEventListener('click', async (e) => {
                 const button = e.target.closest('button[data-brand]');
-                if (!button) return;
-                uiUtils.showLoading();
-                brandListEl.querySelectorAll('button').forEach(btn => { btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue'); btn.classList.add('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300'); });
-                button.classList.remove('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300'); button.classList.add('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
-                currentBrand = button.dataset.brand; currentPage = 1; allProducts = []; 
+                if (!button || button.dataset.brand === currentBrand) return;
+
+                productResultsEl.classList.add('blur-sm'); // Add blur
+                uiUtils.showLoading(); // Show loading
+
+                brandListEl.querySelectorAll('button').forEach(btn => {
+                     btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
+                     btn.classList.add('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
+                });
+                button.classList.remove('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
+                button.classList.add('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
+
+                currentBrand = button.dataset.brand;
+                currentPage = 1;
+                allProducts = []; // Reset list
+
                 const fetchedProducts = await fetchProducts(currentBrand, currentPage);
                 allProducts = fetchedProducts || [];
-                displayProducts(allProducts); 
+
+                // Sort the initial list
+                const sortedProducts = sortProductsByDiscount(allProducts); // Sort here
+
+                // Render the sorted first page
+                renderProducts(sortedProducts);
+                uiUtils.hideLoading(); // Hide loading AFTER rendering
             });
         }
-        if (loadMoreButtonEl) loadMoreButtonEl.addEventListener('click', async () => { loadMoreButtonEl.classList.add('hidden'); loadingIndicatorEl.classList.remove('hidden'); currentPage++; const newProds = await fetchProducts(currentBrand, currentPage); if(newProds?.length) allProducts.push(...newProds); displayProducts(newProds || []); loadingIndicatorEl.classList.add('hidden'); });
+
+        if (loadMoreButtonEl) loadMoreButtonEl.addEventListener('click', async () => {
+            loadMoreButtonEl.classList.add('hidden'); // Hide button immediately
+            loadingIndicatorEl.classList.remove('hidden'); // Show loading
+            // No blur effect for 'load more'
+
+            currentPage++;
+            const newProds = await fetchProducts(currentBrand, currentPage);
+
+            if(newProds?.length) {
+                allProducts.push(...newProds); // Add new products
+
+                // Re-sort the *entire* list
+                const sortedAllProducts = sortProductsByDiscount(allProducts); // Sort everything
+
+                // Re-render the entire sorted list
+                renderProducts(sortedAllProducts);
+            }
+             // Hide loading indicator after processing, even if no new products
+             uiUtils.hideLoading();
+             // renderProducts will handle showing the button again if necessary
+        });
+
         if (closeModalButtonEl) closeModalButtonEl.addEventListener('click', closeModal);
         if (modalPrevImageEl) modalPrevImageEl.addEventListener('click', showPrevImage);
         if (modalNextImageEl) modalNextImageEl.addEventListener('click', showNextImage);
         document.addEventListener('keydown', (e) => { if (!imageModalEl.classList.contains('hidden')) { if (e.key === 'Escape') closeModal(); else if (e.key === 'ArrowLeft' && currentModalImages.length > 1) showPrevImage(); else if (e.key === 'ArrowRight' && currentModalImages.length > 1) showNextImage(); } });
-        document.addEventListener('DOMContentLoaded', () => { const btn = brandListEl?.querySelector('button[data-brand="Samsung"]') || brandListEl?.querySelector('button'); if (btn) btn.click(); else uiUtils.showError("Tidak ada merek yang dapat dimuat."); });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial state: No brand selected
+        });
     </script>
 </body>
 </html>
