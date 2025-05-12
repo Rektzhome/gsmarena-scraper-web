@@ -24,9 +24,9 @@
                             gray: { 100: '#F2F2F7', 200: '#E5E5EA', 300: '#D1D1D6', 400: '#C7C7CC', 500: '#AEAEB2', 600: '#8E8E93' },
                             text: '#1C1C1E', red: '#FF3B30',
                         },
-                        highlight: { // Warna baru untuk sorotan
-                            yellow: '#FEF3C7', // Tailwind yellow-100
-                            blue: '#DBEAFE',   // Tailwind blue-100
+                        highlight: { 
+                            yellow: '#FEF3C7', 
+                            blue: '#DBEAFE',   
                         }
                     }
                 },
@@ -42,7 +42,23 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .spinner { border: 4px solid rgba(0, 0, 0, 0.1); width: 36px; height: 36px; border-radius: 50%; border-left-color: #0000FF; animation: spin 1s ease infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .discount-badge { background-color: #FF3B30; color: white; padding: 2px 6px; border-radius: 6px; font-weight: bold; }
+        
+        /* Perubahan di sini untuk .discount-badge */
+        .discount-badge { 
+            background-color: #FF3B30; 
+            color: white; 
+            padding: 2px 8px; /* Padding horizontal seragam */
+            border-radius: 6px; 
+            font-weight: bold; 
+            font-size: 0.75rem; /* text-xs */
+            line-height: 1rem; /* Sesuaikan jika perlu */
+            min-width: 55px;  /* Lebar minimum, sesuaikan berdasarkan teks terpanjang seperti "XX% OFF" */
+            text-align: center;
+            display: inline-block; /* Agar min-width efektif */
+            white-space: nowrap; /* Mencegah teks wrap */
+            vertical-align: middle; /* Jaga alignment vertikal jika perlu */
+        }
+
         body { padding-top: 4rem; }
         .modal-thumbnail.active { border: 2px solid #0000FF; }
         .color-swatch { width: 1rem; height: 1rem; border-radius: 50%; display: inline-block; margin-right: 0.25rem; border: 1px solid #ccc; vertical-align: middle; }
@@ -54,10 +70,10 @@
         .spec-table td p { margin: 0 0 0.25rem 0; }
         .spec-table td strong { font-weight: 600; }
         .text-highlight {
-            background-color: tailwind.theme.colors.highlight.blue; /* Atau highlight.yellow */
+            background-color: tailwind.theme.colors.highlight.blue;
             padding: 0.1rem 0.3rem;
             border-radius: 0.2rem;
-            font-weight: 500; /* Medium */
+            font-weight: 500; 
         }
     </style>
 </head>
@@ -83,21 +99,16 @@
     </nav>
 
     <main class="container mx-auto px-4 py-6 max-w-6xl">
-        <h1 class="text-2xl font-bold text-center mt-4 mb-1 text-gray-900">Pilih Brand <span class="bg-blue-700 text-white px-1 py-1 rounded">smartphone</span> <br> Impian Kamu <br>
-         
+        <h1 class="text-2xl font-bold text-center mt-4 mb-1 text-gray-900">Pilih Brand <span class="bg-blue-700 text-white px-1 py-1 rounded">smartphone</span> <br> Impian Kamu 
         </h1>
         <p class="text-center text-gray-600 mb-4 text-sm leading-relaxed max-w-2xl mx-auto">
             <br> Di sini Anda dapat dengan mudah<span class="text-highlight">menemukan</span> berbagai tipe smartphone dari brand favorit.
-            Pilih salah satu brand di bawah ini untuk melihat  produk dan spesifikasinya.
+            Pilih salah satu brand di bawah ini untuk melihat produk dan spesifikasinya.
         </p>
-
-<div role="alert" class="mb-4 relative flex w-full p-3 text-sm text-white bg-red-600 mb-8 rounded-md">
-    harga real time dari erafone store , bisa berubah kapan saja tanpa pemberitahuan.
-    <button class="flex items-center justify-center transition-all w-8 h-8 rounded-md text-white hover:bg-white/10 active:bg-white/10 absolute top-1.5 right-1.5" type="button">
+        <p class="text-center text-xs text-gray-500 mb-8">
+            Harga yang tertera adalah harga resmi dari Erafone store dan bisa berubah kapan saja.
+        </p>
         
-    </button>
-  </div>
-
         <div class="grid grid-cols-5 gap-3 mb-8" id="brandList">
             <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Oppo">Oppo</button>
             <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Samsung">Samsung</button>
@@ -381,15 +392,8 @@
                     <div class="p-3 flex flex-col flex-grow pointer-events-none">
                         <h3 class="text-sm font-semibold text-ios-text mb-1 leading-tight">${product.name}</h3> 
                         <div class="flex items-center mb-1 text-xs text-ios-gray-600 min-h-[1.25rem]">${product.color_value && CSS.supports('background-color', product.color_value) && !showDetailPrompt ? `<span class="color-swatch" style="background-color: ${product.color_value};"></span>` : ''}<span>${showDetailPrompt ? '' : colorDisplayText}</span></div>
-                        
-
-                        <div class="flex items-center mb-2 min-h-[1.25rem]">
-                            <p class="text-xs text-ios-gray-600 ${showDetailPrompt ? 'italic' : ''}">${specText}</p>
-                            ${discount && !showDetailPrompt ? `<span class="discount-badge text-xs ml-1">${discount}% OFF</span>` : ''}
-                        </div>
-
+                        <div class="flex items-center justify-between mb-2 min-h-[1.25rem]"><p class="text-xs text-ios-gray-600 ${showDetailPrompt ? 'italic' : ''} flex-grow pr-1">${specText}</p>${discount && !showDetailPrompt ? `<span class="discount-badge text-xs whitespace-nowrap">${discount}% OFF</span>` : '<span class="w-10"></span>'}</div>
                         <div class="mt-auto pt-2 border-t border-ios-gray-200">
-                        
                             <div class="flex items-baseline mb-1"><span class="text-base font-bold text-ios-blue">${displayPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</span></div>
                             ${originalPrice ? `<p class="text-xs text-ios-gray-400 line-through h-[18px]">${originalPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>` : '<div class="h-[18px]"></div>'}
                             <div class="flex items-center text-xs text-ios-gray-600 mt-2"><svg class="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.38 2.454a1 1 0 00-.364 1.118l1.287 3.97c.3.921-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.197-1.539-1.118l1.287-3.97a1 1 0 00-.364-1.118L2.28 9.397c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.97z"></path></svg><span class="font-medium">5.0</span><span class="ml-1 text-ios-gray-400">(Review)</span></div>
