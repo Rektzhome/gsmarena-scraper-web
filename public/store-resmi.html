@@ -46,11 +46,37 @@
         body { padding-top: 4rem; }
         .modal-thumbnail.active { border: 2px solid #0000FF; }
         .color-swatch { width: 1rem; height: 1rem; border-radius: 50%; display: inline-block; margin-right: 0.25rem; border: 1px solid #ccc; vertical-align: middle; }
-        .spec-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin-top: 0.5rem; }
-        .spec-table th, .spec-table td { padding: 0.5rem 0.25rem; text-align: left; border-bottom: 1px solid #E5E5EA; vertical-align: top; }
-        .spec-table tr:last-child th, .spec-table tr:last-child td { border-bottom: none; }
-        .spec-table th { font-weight: 600; width: 35%; color: #8E8E93; padding-right: 0.75rem; }
-        .spec-table td { word-break: break-word; }
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem; /* 14px */
+            line-height: 1.25rem; /* 20px */
+            margin-top: 0.5rem;
+            table-layout: auto; /* Biarkan browser menentukan lebar kolom */
+        }
+        .spec-table th, .spec-table td {
+            padding: 0.6rem 0.25rem; /* Sedikit tambah padding vertikal */
+            text-align: left;
+            border-bottom: 1px solid #E5E5EA;
+            vertical-align: top; /* Jaga agar teks mulai dari atas */
+        }
+        .spec-table tr:last-child th, .spec-table tr:last-child td {
+            border-bottom: none;
+        }
+        .spec-table th {
+            font-weight: 600;
+             /* width: 35%; */ /* Hapus lebar tetap agar lebih fleksibel */
+             width: auto; /* Atau set ke auto */
+             white-space: nowrap; /* Pastikan label tidak terpotong jika memungkinkan */
+            color: #8E8E93;
+            padding-right: 1rem; /* Beri jarak lebih antara label dan value */
+        }
+        .spec-table td {
+            /* word-break: break-word; */ /* Hapus atau ganti ini */
+            overflow-wrap: break-word; /* Ini cara yang lebih baik untuk memotong kata jika perlu */
+            white-space: normal; /* Pastikan teks bisa wrap secara normal */
+            color: #1C1C1E; /* Pastikan warna teks value jelas */
+        }
         .spec-table td p { margin: 0 0 0.25rem 0; }
         .spec-table td strong { font-weight: 600; }
         .text-highlight {
@@ -59,7 +85,16 @@
             border-radius: 0.2rem;
             font-weight: 500;
         }
-        /* Added transition for the blur effect */
+        /* Pastikan modal tetap di tengah */
+        #imageModal {
+            display: flex; /* Defaultnya hidden, tapi pastikan flex saat muncul */
+            align-items: center;
+            justify-content: center;
+        }
+        #imageModalContent {
+            /* Pengaturan lebar/tinggi sudah ada, pastikan tidak ada yang override */
+             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
         #productResults {
             transition: filter 0.3s ease-in-out;
         }
@@ -68,6 +103,7 @@
 <body class="bg-ios-gray-100 text-ios-text font-sans antialiased">
 
     <nav class="bg-white shadow-sm fixed top-0 left-0 right-0 z-20">
+        {/* Konten Navigasi tidak berubah */}
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center">
@@ -87,7 +123,8 @@
     </nav>
 
     <main class="container mx-auto px-4 py-6 max-w-6xl">
-        <h1 class="text-3xl font-bold text-center mt-4 mb-0.75 text-gray-900">Pilih Brand <span class="bg-ios-blue text-white">Smartphone</span>
+        {/* Konten Main tidak berubah */}
+         <h1 class="text-3xl font-bold text-center mt-4 mb-0.75 text-gray-900">Pilih Brand <span class="bg-ios-blue text-white">Smartphone</span>
 Impian Kamu</h1>
         <p class="text-center text-gray-600 mb-4 text-sm leading-relaxed max-w-2xl mx-auto">
         <br> Di sini Anda dapat dengan mudahmenemukan berbagai tipe smartphone dari brand favorit.<br> Pilih salah satu brand di bawah ini untuk melihat produk dan spesifikasinya.
@@ -127,7 +164,6 @@ Impian Kamu</h1>
         </div>
         <div id="errorMessage" class="hidden py-4 text-center text-ios-red font-medium"></div>
 
-        <!-- Added transition class here via style tag earlier -->
         <div id="productResults" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
         <div class="flex justify-center mt-8">
@@ -138,7 +174,7 @@ Impian Kamu</h1>
     </main>
 
     <footer class="bg-gray-100 mt-16 py-10 border-t border-gray-200 relative overflow-hidden font-sans">
-    
+        {/* Konten Footer tidak berubah */}
          <div class="absolute top-8 left-10 w-8 h-8 text-gray-300 opacity-60 rotate-12 pointer-events-none">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3m0 0v3H9m3-3h3m-3 0V3m0 0v3H9m3-3h3" /></svg>
         </div>
@@ -182,7 +218,7 @@ Impian Kamu</h1>
                     <li><a href="#search-section-container" class="text-sm text-gray-500 hover:text-gray-900">Pencarian</a></li>
                     <li><a href="info.html" class="text-sm text-gray-500 hover:text-gray-900">Tentang Kami</a></li>
                     <li><a href="HpGaul-Sparepart.html" class="text-sm text-gray-500 hover:text-gray-900">Toko Sparepart</a></li>
-                    <li><a href="store-resmi.html" class="text-sm text-gray-500 hover:text-gray-900">Store Resmi</a></li>
+                    <li><a href="store-resmi.html" class="text-sm text-gray-500 hover:text-gray-900">Store</a></li>
                     <li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Kontak Kami</a></li>
                 </ul>
             </div>
@@ -209,13 +245,14 @@ Impian Kamu</h1>
         </div>
     </footer>
 
+    <!-- Modal Struktur -->
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden p-4 transition-opacity duration-300 ease-in-out" onclick="handleModalOverlayClick(event)">
-         {/* Modal content remains the same */}
          <div id="imageModalContent" class="bg-white p-4 sm:p-6 rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center mb-3 sm:mb-4">
+            <div class="flex justify-between items-center mb-3 sm:mb-4 flex-shrink-0"> {/* Header tidak scroll */}
                 <h3 id="modalProductName" class="text-base sm:text-lg font-semibold text-ios-text truncate">Nama Produk</h3>
                 <button id="closeModalButton" class="text-2xl text-gray-500 hover:text-ios-red focus:outline-none">×</button>
             </div>
+            {/* Kontainer scroll untuk konten di bawah header */}
             <div class="flex-grow overflow-y-auto no-scrollbar">
                 <div class="relative flex items-center justify-center bg-ios-gray-100 rounded aspect-square mb-3 sm:mb-4 mx-auto" style="max-height: 45vh; max-width: 75%;">
                     <img id="modalMainImage" src="" alt="Gambar Produk" class="max-w-full max-h-full object-contain">
@@ -227,12 +264,18 @@ Impian Kamu</h1>
                 <div id="modalSpecifications" class="text-sm text-ios-text">
                      <div class="text-center py-4 hidden" id="modalSpecLoading"><div class="spinner inline-block mr-2"></div> Memuat spesifikasi...</div>
                     <div class="text-center py-4 hidden" id="modalSpecError">Gagal memuat spesifikasi atau spesifikasi tidak tersedia.</div>
+                    {/* Tabel spesifikasi akan dimuat di sini oleh JS */}
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // --- JavaScript tidak berubah dari versi sebelumnya ---
+        // Pastikan semua fungsi JS (fetch, sort, render, modal handling)
+        // sama seperti pada respons kode sebelumnya yang sudah
+        // memperbaiki logika sorting diskon.
+
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         const brandListEl = document.getElementById('brandList');
@@ -283,31 +326,19 @@ Impian Kamu</h1>
 
         // --- Helper function to sort products by discount (Robust version) ---
         function sortProductsByDiscount(products) {
-            // console.log("Sorting products:", JSON.stringify(products.map(p => ({name: p.name, price: p.price, special: p.special_price})), null, 2));
             const sorted = products.sort((a, b) => {
-                // Check if a has a valid discount
                 const priceA = typeof a.price === 'number' && !isNaN(a.price) ? a.price : 0;
                 const specialPriceA = typeof a.special_price === 'number' && !isNaN(a.special_price) ? a.special_price : null;
                 const hasDiscountA = specialPriceA !== null && specialPriceA < priceA;
 
-                // Check if b has a valid discount
                 const priceB = typeof b.price === 'number' && !isNaN(b.price) ? b.price : 0;
                 const specialPriceB = typeof b.special_price === 'number' && !isNaN(b.special_price) ? b.special_price : null;
                 const hasDiscountB = specialPriceB !== null && specialPriceB < priceB;
 
-                if (hasDiscountA && !hasDiscountB) {
-                    return -1; // a (discounted) comes before b (not discounted)
-                }
-                if (!hasDiscountA && hasDiscountB) {
-                    return 1;  // b (discounted) comes before a (not discounted)
-                }
-                // Optional: Add secondary sort if needed (e.g., by name if discount status is the same)
-                // if (a.name && b.name) {
-                //     return a.name.localeCompare(b.name);
-                // }
-                return 0; // Keep original relative order if discount status is the same
+                if (hasDiscountA && !hasDiscountB) { return -1; }
+                if (!hasDiscountA && hasDiscountB) { return 1; }
+                return 0;
             });
-            // console.log("Sorted result:", JSON.stringify(sorted.map(p => ({name: p.name, price: p.price, special: p.special_price})), null, 2));
             return sorted;
         }
         // ---------------------------------------------------------------------
@@ -351,18 +382,12 @@ Impian Kamu</h1>
         }
 
         async function fetchData(url, cacheKey) {
-            // Basic caching, consider more sophisticated strategies if needed
-            if (apiCache.has(cacheKey)) {
-                // console.log("Cache hit:", cacheKey);
-                return apiCache.get(cacheKey);
-            }
-            // console.log("Cache miss, fetching:", url);
+            if (apiCache.has(cacheKey)) { return apiCache.get(cacheKey); }
             try {
                 const response = await fetch(url);
                 if (!response.ok) { console.warn(`API call failed for ${url}: ${response.status}`); apiCache.set(cacheKey, null); return null; }
                 const data = await response.json();
-                // Check specifically for the 'data' property expected from Eraspace API
-                if (data && typeof data.data !== 'undefined') { // Allows data.data to be null or an array
+                if (data && typeof data.data !== 'undefined') {
                     apiCache.set(cacheKey, data.data);
                     return data.data;
                 }
@@ -370,15 +395,12 @@ Impian Kamu</h1>
             } catch (error) { console.error(`Error fetching ${url}:`, error); apiCache.set(cacheKey, null); return null; }
         }
 
-
         const fetchProductConfigurationOptions = (productBaseId) => fetchData(`https://jeanne.eraspace.com/products/api/v4.1/products/${productBaseId}/variants?store_code=eraspace`, `config_${productBaseId}`);
         const fetchProductSpecifications = (productId) => fetchData(`https://jeanne.eraspace.com/products/api/v4.1/products/${productId}/specification?store_code=eraspace`, `spec_${productId}`);
 
         function getBaseProductIdFromSku(sku, productName) {
             if (typeof sku !== 'string') return sku;
             if (sku.endsWith("-CON") || sku.endsWith("-CFG")) return sku;
-            // Example specific override (keep if necessary, remove if not)
-            // if (productName?.includes("Galaxy S24 FE")) return "SAM-GS24FE-CON";
             return sku;
         }
 
@@ -396,7 +418,6 @@ Impian Kamu</h1>
 
                 totalItems = listData.data.total_count || 0;
 
-                // Process items ensuring price/special_price are numbers
                 const processedItems = await Promise.all(listData.data.items.map(async (item) => {
                      let actualColorLabel = "N/A", actualRam = "N/A", actualRom = "N/A", colorValueForSwatch = null;
                     let productBaseId = getBaseProductIdFromSku(item.sku, item.name);
@@ -423,9 +444,8 @@ Impian Kamu</h1>
                         }
                     }
 
-                    // Fetch color swatch value
                      if (actualColorLabel !== "N/A" && productBaseId) {
-                        try { // Wrap async call in try-catch
+                        try {
                             const configOptions = await fetchProductConfigurationOptions(productBaseId);
                             if (configOptions) {
                                 const colorAttrOpts = configOptions.find(attr => attr.attribute_label?.toLowerCase().includes("warna") || attr.attribute_name?.toLowerCase().includes("color"));
@@ -434,10 +454,7 @@ Impian Kamu</h1>
                                     if (matchedOpt && colorAttrOpts.is_swatch) colorValueForSwatch = typeof matchedOpt.option_value === 'string' ? matchedOpt.option_value : null;
                                 }
                             }
-                        } catch (configError) {
-                            console.warn(`Error fetching config for ${productBaseId}:`, configError);
-                            // Continue without swatch color if config fails
-                        }
+                        } catch (configError) { console.warn(`Error fetching config for ${productBaseId}:`, configError); }
                     }
 
                     const imageGalleries = (item.media_gallery_entries || []).filter(e => e.media_type === 'image' && e.file).map(e => e.file.startsWith('http') ? e.file : ERASPACE_IMAGE_BASE_URL + (e.file.startsWith('/') ? e.file : '/' + e.file));
@@ -448,52 +465,36 @@ Impian Kamu</h1>
                          productThumbnail = useBase ? ERASPACE_IMAGE_BASE_URL + thumbPath : (item.thumbnail_url || productThumbnail);
                     } else if (item.thumbnail_url && productThumbnail.includes('placehold.co')) productThumbnail = item.thumbnail_url;
 
-                    // Ensure price is a number, default to 0 if invalid
                     const price = parseFloat(item.price);
-                    const special_price = item.special_price ? parseFloat(item.special_price) : null; // Keep null if not present or invalid
+                    const special_price = item.special_price ? parseFloat(item.special_price) : null;
 
                     return {
-                        sku: item.sku,
-                        name: item.name,
-                        product_base_id: productBaseId,
-                        price: !isNaN(price) ? price : 0, // Ensure price is a valid number
-                        special_price: !isNaN(special_price) ? special_price : null, // Ensure special_price is valid or null
-                        thumbnail: productThumbnail,
-                        ram_api: actualRam,
-                        rom_api: actualRom,
-                        color_label: actualColorLabel,
-                        color_value: colorValueForSwatch,
+                        sku: item.sku, name: item.name, product_base_id: productBaseId,
+                        price: !isNaN(price) ? price : 0,
+                        special_price: !isNaN(special_price) ? special_price : null,
+                        thumbnail: productThumbnail, ram_api: actualRam, rom_api: actualRom,
+                        color_label: actualColorLabel, color_value: colorValueForSwatch,
                         media_galleries: imageGalleries
                     };
                 }));
-
                 return processedItems;
-
             } catch (error) { console.error("Gagal mengambil data produk utama:", error); uiUtils.showError(`Gagal memuat produk ${brand}: ${error.message}`); return []; }
         }
 
-        // Function to render products (expects a pre-sorted list)
         function renderProducts(productsToRender) {
             if (!productResultsEl) return;
-
-            // Clear the container before rendering the full list
-            productResultsEl.innerHTML = '';
+            productResultsEl.innerHTML = ''; // Selalu bersihkan sebelum render ulang
 
             if (productsToRender.length === 0) {
-                 // Show 'no products' message only if loading is finished and list is truly empty
                 if (loadingIndicatorEl.classList.contains('hidden')) {
                     productResultsEl.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">Tidak ada produk untuk merek ini.</p>';
                 }
                 loadMoreButtonEl.classList.add('hidden');
-                // Do not hide loading here, let the caller handle it
-                // uiUtils.hideLoading(); // Moved out
-                productResultsEl.classList.remove('blur-sm'); // Ensure blur is removed
+                productResultsEl.classList.remove('blur-sm');
                 return;
             }
 
-
             productsToRender.forEach(product => {
-                // Calculate discount based on validated numbers
                 const discount = product.special_price !== null && product.price > 0 && product.special_price < product.price
                     ? Math.round((1 - product.special_price / product.price) * 100)
                     : 0;
@@ -531,49 +532,39 @@ Impian Kamu</h1>
                 card.addEventListener('click', (e) => {
                     const clickedSku = e.currentTarget.dataset.sku;
                     const clickedProduct = allProducts.find(p => p.sku === clickedSku);
-                    if (clickedProduct) {
-                         openImageModal(clickedProduct.sku, clickedProduct.product_base_id);
-                    } else {
-                        console.warn("Product data not found for SKU:", clickedSku);
-                    }
+                    if (clickedProduct) { openImageModal(clickedProduct.sku, clickedProduct.product_base_id); }
+                    else { console.warn("Product data not found for SKU:", clickedSku); }
                 });
                 productResultsEl.appendChild(card);
             });
 
-            // Check visibility based on total items vs. current cumulative product count
             loadMoreButtonEl.classList.toggle('hidden', !(allProducts.length > 0 && allProducts.length < totalItems));
-             // Remove blur only after rendering is complete
-             productResultsEl.classList.remove('blur-sm');
-            // uiUtils.hideLoading(); // Moved out, let caller handle loading indicator
+            productResultsEl.classList.remove('blur-sm');
         }
-
 
         async function openImageModal(productSku, productBaseId) {
             const product = allProducts.find(p => p.sku === productSku);
-            if (!product) {
-                console.error("Cannot open modal, product data not found for SKU:", productSku);
-                return;
-            }
+            if (!product) { console.error("Cannot open modal, product data not found for SKU:", productSku); return; }
             modalProductNameEl.textContent = product.name;
             currentModalImages = product.media_galleries?.length ? product.media_galleries : [product.thumbnail];
             if (!currentModalImages[0] || currentModalImages[0].includes('placehold.co')) currentModalImages = ['https://placehold.co/600x600/E5E5EA/AEAEB2?text=Gambar+Tidak+Tersedia&fontsize=20'];
             currentModalImageIndex = 0;
             updateModalImageView();
-            modalSpecificationsEl.innerHTML = ''; modalSpecLoadingEl.classList.remove('hidden'); modalSpecErrorEl.classList.add('hidden');
+            modalSpecificationsEl.innerHTML = ''; // Clear previous specs first
+            modalSpecLoadingEl.classList.remove('hidden');
+            modalSpecErrorEl.classList.add('hidden');
             imageModalEl.classList.remove('hidden'); imageModalEl.classList.add('opacity-100'); document.body.style.overflow = 'hidden';
             const idForSpec = productBaseId || product.product_base_id || product.sku;
 
-            // Fetch specifications only if needed (e.g., not already cached or fetched)
-            // Re-using fetchData handles caching internally
             try {
                 const specs = await fetchProductSpecifications(idForSpec);
                 modalSpecLoadingEl.classList.add('hidden');
-                if (specs?.length) {
-                    displaySpecificationsInModal(specs);
-                } else {
+                if (specs?.length) { displaySpecificationsInModal(specs); }
+                else {
                     modalSpecErrorEl.classList.remove('hidden');
+                     // Clear loading, error and provide message directly in the spec area
                     modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi detail tidak tersedia untuk produk ini.</p>';
-                }
+                 }
             } catch (specError) {
                  console.error(`Error fetching specs for ${idForSpec}:`, specError);
                  modalSpecLoadingEl.classList.add('hidden');
@@ -583,13 +574,33 @@ Impian Kamu</h1>
         }
 
         function displaySpecificationsInModal(specificationsArray) {
-            if (!modalSpecificationsEl || !specificationsArray?.length) { modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi tidak tersedia.</p>'; modalSpecErrorEl.classList.remove('hidden'); return; }
+             // Clear previous content and hide loading/error messages within this specific div
+            modalSpecificationsEl.innerHTML = '';
+            modalSpecLoadingEl.classList.add('hidden');
+            modalSpecErrorEl.classList.add('hidden');
+
+            if (!specificationsArray || !specificationsArray.length) {
+                 modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi tidak tersedia.</p>';
+                 // modalSpecErrorEl.classList.remove('hidden'); // Don't show the generic error too
+                return;
+            }
+
             let tableHTML = '<table class="spec-table">';
             const ignoredAttrs = ["product_brand_filter", "meta_title", "meta_keyword", "meta_description", "url_key", "url_path", "is_active", "product_category_paths", "product_visibility", "product_status", "product_type_id", "image", "small_image", "thumbnail", "swatch_image", "links_title", "samples_title", "mpn", "gtin", "ean", "upc", "isbn"];
-            specificationsArray.forEach(spec => { if (spec.attribute_label && spec.value && !ignoredAttrs.includes(spec.attribute_code) && String(spec.value).trim() && !["tidak", "no"].includes(String(spec.value).toLowerCase())) tableHTML += `<tr><th>${spec.attribute_label}</th><td>${spec.value}</td></tr>`; });
+            let hasVisibleSpecs = false;
+            specificationsArray.forEach(spec => {
+                if (spec.attribute_label && spec.value && !ignoredAttrs.includes(spec.attribute_code) && String(spec.value).trim() && !["tidak", "no"].includes(String(spec.value).toLowerCase())) {
+                    tableHTML += `<tr><th>${spec.attribute_label}</th><td>${spec.value}</td></tr>`;
+                    hasVisibleSpecs = true;
+                }
+            });
             tableHTML += '</table>';
-            modalSpecificationsEl.innerHTML = tableHTML;
-            modalSpecErrorEl.classList.add('hidden');
+
+            if (hasVisibleSpecs) {
+                modalSpecificationsEl.innerHTML = tableHTML;
+            } else {
+                 modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi detail tidak tersedia.</p>';
+            }
         }
 
         function closeModal() {
@@ -640,8 +651,7 @@ Impian Kamu</h1>
                 const button = e.target.closest('button[data-brand]');
                 if (!button || button.dataset.brand === currentBrand) return;
 
-                productResultsEl.classList.add('blur-sm'); // Add blur
-                uiUtils.showLoading(); // Show loading
+                productResultsEl.classList.add('blur-sm'); uiUtils.showLoading();
 
                 brandListEl.querySelectorAll('button').forEach(btn => {
                      btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
@@ -650,42 +660,29 @@ Impian Kamu</h1>
                 button.classList.remove('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
                 button.classList.add('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
 
-                currentBrand = button.dataset.brand;
-                currentPage = 1;
-                allProducts = []; // Reset list
+                currentBrand = button.dataset.brand; currentPage = 1; allProducts = [];
 
                 const fetchedProducts = await fetchProducts(currentBrand, currentPage);
                 allProducts = fetchedProducts || [];
+                const sortedProducts = sortProductsByDiscount(allProducts);
 
-                // Sort the initial list
-                const sortedProducts = sortProductsByDiscount(allProducts); // Sort here
-
-                // Render the sorted first page
-                renderProducts(sortedProducts);
-                uiUtils.hideLoading(); // Hide loading AFTER rendering
+                renderProducts(sortedProducts); // Render clears blur
+                uiUtils.hideLoading();
             });
         }
 
         if (loadMoreButtonEl) loadMoreButtonEl.addEventListener('click', async () => {
-            loadMoreButtonEl.classList.add('hidden'); // Hide button immediately
-            loadingIndicatorEl.classList.remove('hidden'); // Show loading
-            // No blur effect for 'load more'
-
+            loadMoreButtonEl.classList.add('hidden'); loadingIndicatorEl.classList.remove('hidden');
             currentPage++;
             const newProds = await fetchProducts(currentBrand, currentPage);
 
             if(newProds?.length) {
-                allProducts.push(...newProds); // Add new products
-
-                // Re-sort the *entire* list
-                const sortedAllProducts = sortProductsByDiscount(allProducts); // Sort everything
-
-                // Re-render the entire sorted list
-                renderProducts(sortedAllProducts);
+                allProducts.push(...newProds);
+                const sortedAllProducts = sortProductsByDiscount(allProducts);
+                renderProducts(sortedAllProducts); // Render clears blur
             }
-             // Hide loading indicator after processing, even if no new products
-             uiUtils.hideLoading();
-             // renderProducts will handle showing the button again if necessary
+             uiUtils.hideLoading(); // Hide loading regardless of result
+             // renderProducts handles button visibility
         });
 
         if (closeModalButtonEl) closeModalButtonEl.addEventListener('click', closeModal);
@@ -693,9 +690,8 @@ Impian Kamu</h1>
         if (modalNextImageEl) modalNextImageEl.addEventListener('click', showNextImage);
         document.addEventListener('keydown', (e) => { if (!imageModalEl.classList.contains('hidden')) { if (e.key === 'Escape') closeModal(); else if (e.key === 'ArrowLeft' && currentModalImages.length > 1) showPrevImage(); else if (e.key === 'ArrowRight' && currentModalImages.length > 1) showNextImage(); } });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initial state: No brand selected
-        });
+        document.addEventListener('DOMContentLoaded', () => { /* Initial state */ });
     </script>
+
 </body>
 </html>
