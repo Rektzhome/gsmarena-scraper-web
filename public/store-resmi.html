@@ -3,8 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencari Produk - HpGaul</title>
-    <meta name="description" content="Temukan dan bandingkan spesifikasi smartphone dengan mudah di HpGaul.">
+    <title>Pencari Produk Store Resmi - HpGaul</title>
+    <meta name="description" content="Temukan dan bandingkan spesifikasi smartphone dari store resmi dengan mudah di HpGaul. Harga terupdate dari Erafone.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Pencari Produk Store Resmi - HpGaul" />
+    <meta property="og:description" content="Temukan smartphone impianmu dari berbagai brand resmi. Cek spesifikasi dan harga terbaru di HpGaul!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.hpgaul.my.id/store-resmi.html" /> <!-- DIUBAH AGAR KONSISTEN -->
+    <meta property="og:image" content="https://www.hpgaul.my.id/public/img/logohpgaul.png"/> <!-- GANTI DENGAN PATH LOGO/GAMBAR SHARE ANDA -->
+    <meta property="og:image:alt" content="HpGaul - Pencari Gadget" />
+    <meta property="og:site_name" content="HpGaul" />
+    <meta property="og:locale" content="id_ID" />
+
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pencari Produk Store Resmi - HpGaul">
+    <meta name="twitter:description" content="Temukan smartphone impianmu dari berbagai brand resmi. Cek spesifikasi dan harga terbaru di HpGaul!">
+    <meta name="twitter:image" content="https://www.hpgaul.my.id/public/img/logohpgaul.png">
+
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,74 +65,60 @@
         body { padding-top: 4rem; }
         .modal-thumbnail.active { border: 2px solid #0000FF; }
         .color-swatch { width: 1rem; height: 1rem; border-radius: 50%; display: inline-block; margin-right: 0.25rem; border: 1px solid #ccc; vertical-align: middle; }
-        .spec-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin-top: 0.5rem; }
-        .spec-table th, .spec-table td { padding: 0.5rem 0.25rem; text-align: left; border-bottom: 1px solid #E5E5EA; vertical-align: top; }
-        .spec-table tr:last-child th, .spec-table tr:last-child td { border-bottom: none; }
-        .spec-table th { font-weight: 600; width: 35%; color: #8E8E93; padding-right: 0.75rem; }
-        .spec-table td { word-break: break-word; }
-        .spec-table td p { margin: 0 0 0.25rem 0; }
-        .spec-table td strong { font-weight: 600; }
         .text-highlight {
-            background-color: tailwind.theme.colors.highlight.blue;
+            background-color: tailwind.theme.colors.highlight.blue; /* Digunakan di Tailwind config */
             padding: 0.1rem 0.3rem;
             border-radius: 0.2rem;
             font-weight: 500;
         }
-        /* Added transition for the blur effect */
         #productResults {
             transition: filter 0.3s ease-in-out;
         }
 
-/* Modal centering, responsive, and professional look */
+/* Modal #specModal (jika masih digunakan terpisah) */
 #specModal {
-    display: none; /* Default hidden, shown via JS */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow-y: auto; /* Allow vertical scroll if content is too long */
-    background-color: rgba(0,0,0,0.6); /* Slightly darker overlay */
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.6);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px; /* Padding around the modal for smaller screens */
-    box-sizing: border-box; /* Include padding in width/height calculation */
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 #specModal .modal-content-wrapper {
     background-color: #ffffff;
-    margin: auto; /* This helps with centering in flex container */
+    margin: auto;
     padding: 20px;
     border: none;
-    width: auto; /* Allow content to determine width up to max-width */
-    min-width: 300px; /* Minimum width for very small screens */
-    max-width: 90%; /* Max width relative to viewport */
-    max-height: 90vh; /* Max height relative to viewport height */
+    width: auto;
+    min-width: 300px;
+    max-width: 90%;
+    max-height: 90vh;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     text-align: left;
     position: relative;
-    overflow-y: auto; /* Scroll inside modal if content overflows */
-    display: flex; /* Use flex for internal layout */
-    flex-direction: column; /* Stack header, body, footer vertically */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Ensure the wrapper itself doesn't grow beyond viewport on small screens */
 @media (max-width: 600px) {
     #specModal .modal-content-wrapper {
         width: 95%;
         padding: 15px;
     }
-    #specModal .modal-header h2 {
-        font-size: 1.2em;
-    }
+    #specModal .modal-header h2 { font-size: 1.2em; }
     #specModal .spec-table th,
-    #specModal .spec-table td {
-        padding: 8px 6px;
-        font-size: 0.85em;
-    }
+    #specModal .spec-table td { padding: 8px 6px; font-size: 0.85em; }
 }
 
 #specModal .modal-header {
@@ -123,7 +128,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-shrink: 0; /* Prevent header from shrinking */
+    flex-shrink: 0;
 }
 
 #specModal .modal-header h2 {
@@ -131,11 +136,11 @@
     font-size: 1.3em;
     font-weight: 600;
     color: #333;
-    white-space: normal; /* Allow title to wrap */
-    word-break: break-word; /* Break long words in title */
+    white-space: normal;
+    word-break: break-word;
     overflow-wrap: break-word;
-    flex-grow: 1; /* Allow title to take available space */
-    padding-right: 10px; /* Space before close button */
+    flex-grow: 1;
+    padding-right: 10px;
 }
 
 #specModal .close-button {
@@ -147,105 +152,64 @@
     cursor: pointer;
     padding: 0 5px;
     line-height: 1;
-    flex-shrink: 0; /* Prevent button from shrinking */
+    flex-shrink: 0;
 }
-
 #specModal .close-button:hover,
-#specModal .close-button:focus {
-    color: #000;
-}
+#specModal .close-button:focus { color: #000; }
 
 #specModal .modal-body {
     padding-top: 0;
-    overflow-y: auto; /* Allow body to scroll if content is too much */
-    flex-grow: 1; /* Allow body to take available space */
+    overflow-y: auto;
+    flex-grow: 1;
 }
 
-#specModal .spec-table {
+#specModal .spec-table, #imageModal .spec-table { /* Gabungkan style tabel untuk kedua modal */
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9em;
-    margin-top: 0;
+    font-size: 0.875em;
+    margin-top: 0.5rem;
+    table-layout: fixed;
 }
 
-#specModal .spec-table th,
-#specModal .spec-table td {
-    padding: 12px 8px;
+#specModal .spec-table th, #specModal .spec-table td,
+#imageModal .spec-table th, #imageModal .spec-table td {
+    padding: 10px 8px;
     text-align: left;
-    border-bottom: 1px solid #f0f0f0;
-    vertical-align: top; /* Align text to top for better readability */
+    border-bottom: 1px solid #E5E5EA;
+    vertical-align: top;
     white-space: normal !important;
-    word-wrap: break-word !important;
     overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
 }
 
-#specModal .spec-table tr:last-child th,
-#specModal .spec-table tr:last-child td {
+#specModal .spec-table tr:last-child th, #specModal .spec-table tr:last-child td,
+#imageModal .spec-table tr:last-child th, #imageModal .spec-table tr:last-child td {
     border-bottom: none;
 }
 
-#specModal .spec-table th {
-    font-weight: 500;
+#specModal .spec-table th, #imageModal .spec-table th {
+    font-weight: 600;
     width: 35%;
-    color: #555;
+    color: #8E8E93;
     padding-right: 10px;
 }
 
-#specModal .spec-table td {
+#specModal .spec-table td, #imageModal .spec-table td {
     width: 65%;
-    color: #222;
+    color: #1C1C1E;
 }
 
-/* START: CSS Fix for #imageModal spec table */
-#imageModal .spec-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85em; /* Adjusted font size */
-    margin-top: 0.5rem;
-    table-layout: fixed; /* CRUCIAL for preventing column collapse/expansion */
-}
-
-#imageModal .spec-table th,
-#imageModal .spec-table td {
-    padding: 10px 8px; /* Consistent padding */
-    text-align: left;
-    border-bottom: 1px solid #f0f0f0; /* Softer border */
-    vertical-align: top;
-
-    /* CRUCIAL for text wrapping, !important to override potential conflicts */
-    white-space: normal !important;
-    overflow-wrap: break-word !important; /* Modern standard for word breaking */
-    word-wrap: break-word !important;   /* Older alias for word breaking */
-}
-
-#imageModal .spec-table tr:last-child th,
-#imageModal .spec-table tr:last-child td {
-    border-bottom: none;
-}
-
-#imageModal .spec-table th {
-    font-weight: 500; /* Consistent with #specModal */
-    width: 35%;       /* Will be respected due to table-layout: fixed */
-    color: #555;      /* Consistent with #specModal */
-    padding-right: 10px; /* Space after TH content */
-}
-
-#imageModal .spec-table td {
-    width: 65%;       /* Will be respected due to table-layout: fixed */
-    color: #222;      /* Consistent with #specModal */
-}
-/* END: CSS Fix for #imageModal spec table */
-
-
-/* Blur effect for background content */
 body.modal-open > main,
 body.modal-open > nav,
 body.modal-open > footer {
   filter: blur(4px);
   pointer-events: none;
 }
-
-</style>
+.share-button:focus {
+    outline: 2px solid var(--ios-blue, #0000FF);
+    outline-offset: 2px;
+}
+    </style>
 </head>
 <body class="bg-ios-gray-100 text-ios-text font-sans antialiased">
 
@@ -269,39 +233,66 @@ body.modal-open > footer {
     </nav>
 
     <main class="container mx-auto px-4 py-6 max-w-6xl">
-        <h1 class="text-3xl font-bold text-center mt-4 mb-0.75 text-gray-900">Pilih Brand <span class="bg-ios-blue text-white">Smartphone</span>
+        <h1 class="text-2xl font-bold text-center mt-4 mb-0.75 text-gray-900">Pilih Brand <span class="bg-ios-blue text-white mt-3 px-2 py-1 rounded-md">Smartphone</span>
 Impian Kamu</h1>
         <p class="text-center text-gray-600 mb-4 text-sm leading-relaxed max-w-2xl mx-auto">
-        <br> Di sini Anda dapat dengan mudahmenemukan berbagai tipe smartphone dari brand favorit.<br> Pilih salah satu brand di bawah ini untuk melihat produk dan spesifikasinya.
+        <br> Di sini Anda dapat dengan mudah menemukan berbagai tipe smartphone dari brand favorit.<br> Pilih salah satu brand atau cari berdasarkan harga di semua brand.
         </p>
 
         <div class="mb-8 text-center">
-            <button id="smartphoneCategoryButton" class="bg-ios-blue text-white py-3 px-6 rounded-lg shadow-md hover:bg-violet-600 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
-                Daftar Brand Smartphone
+            <button id="smartphoneCategoryButton" class="bg-ios-blue text-white py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                Daftar Brand & Filter Harga
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 inline-block ml-2 transition-transform duration-300" id="smartphoneCaret">
                     <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                 </svg>
             </button>
         </div>
 
-        <div id="brandListContainer" class="hidden">
+        <div id="brandListContainer" class="hidden bg-ios-gray-100 p-4 rounded-lg">
             <h2 class="text-xl font-semibold text-center mb-4 text-gray-800">Pilih Brand Smartphone</h2>
-            <div class="grid grid-cols-5 gap-3 mb-8" id="brandList">
+            
+            <div class="grid grid-cols-5 gap-3 mb-3" id="brandListRow1">
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Oppo">Oppo</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Samsung">Samsung</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Xiaomi">Xiaomi</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Apple">Apple</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Infinix">Infinix</button>
+            </div>
+
+            <div class="grid grid-cols-5 gap-3 mb-6" id="brandListRow2">
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Tecno">Tecno</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Asus">Asus</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Vivo">Vivo</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Realme">Realme</button>
                 <button class="py-2 px-3 text-sm whitespace-nowrap rounded-md focus:outline-none focus:ring-2 focus:ring-ios-blue transition-colors duration-150 bg-ios-gray-200 text-gray-700 hover:bg-ios-gray-300 flex items-center justify-center" data-brand="Huawei">Huawei</button>
             </div>
-            <p class="text-center text-xs text-red-500 mb-8">
+            
+            <p class="text-center text-xs text-gray-500 mb-4">
                 Harga yang tertera adalah harga resmi dari Erafone store dan bisa berubah kapan saja.
             </p>
+
+            <!-- BAGIAN BARU UNTUK FILTER HARGA -->
+            <div id="priceFilterSection" class="mt-4 mb-8 p-4 bg-white rounded-lg shadow-sm border border-ios-gray-200">
+                <label for="priceInput" class="block text-sm font-medium text-gray-700 mb-1">
+                    Lakukan pencarian dengan filter harga.
+                </label>
+                <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+                    <input type="text" id="priceInput" name="priceInput" class="flex-grow block w-full px-3 py-2 border border-ios-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-ios-blue focus:border-ios-blue sm:text-sm" placeholder="Contoh: 1500000 atau 1.500.000">
+                    <div class="flex space-x-2">
+                        <button id="searchPriceButton" class="flex-1 sm:flex-none bg-ios-blue text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-ios-blue text-sm font-medium">
+                        Mencari
+                        </button>
+                        <button id="clearPriceFilterButton" class="flex-1 sm:flex-none bg-red-500 text-white px-4 py-2 rounded-md hover:bg-ios-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-ios-gray-400 text-sm font-medium">
+                            Reset Filter
+                        </button>
+                    </div>
+                </div>
+                <!-- Elemen priceFilterInfo disembunyikan secara visual -->
+                <p id="priceFilterInfo" class="text-xs text-gray-500 mt-2 hidden"></p>
+            </div>
+            <!-- AKHIR BAGIAN BARU -->
         </div>
+
 
         <div id="loadingIndicator" class="hidden py-4 text-center text-gray-600 animate-pulse">
             <div class="spinner inline-block mr-2"></div>
@@ -309,7 +300,6 @@ Impian Kamu</h1>
         </div>
         <div id="errorMessage" class="hidden py-4 text-center text-ios-red font-medium"></div>
 
-        <!-- Added transition class here via style tag earlier -->
         <div id="productResults" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
         <div class="flex justify-center mt-8">
@@ -320,74 +310,56 @@ Impian Kamu</h1>
     </main>
 
     <footer class="bg-gray-100 mt-16 py-10 border-t border-gray-200 relative overflow-hidden font-sans">
-    
-         <div class="absolute top-8 left-10 w-8 h-8 text-gray-300 opacity-60 rotate-12 pointer-events-none">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3m0 0v3H9m3-3h3m-3 0V3m0 0v3H9m3-3h3" /></svg>
-        </div>
-         <div class="absolute bottom-6 right-12 w-10 h-10 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h16.5m-16.5 0a2.25 2.25 0 0 0 2.25 2.25h12c1.03 0 1.9-.693 2.077-1.676a7.483 7.483 0 0 1 0-1.117 2.25 2.25 0 0 0-2.25-2.25h-12a2.25 2.25 0 0 0-2.25 2.25Zm1.5-4.5H21a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H3.75A2.25 2.25 0 0 0 1.5 6.75v4.5m18 0v-4.5" /></svg>
-         </div>
-         <div class="absolute top-1/4 right-10 w-6 h-6 text-gray-300 opacity-60 rotate-45 pointer-events-none">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.39l-.56.56a1.5 1.5 0 0 1-2.122 0l-.56-.56a1.5 1.5 0 0 1 0-2.122l.56-.56a1.5 1.5 0 0 1 2.122 0l.56.56a1.5 1.5 0 0 1 0 2.122Z" /></svg>
-         </div>
-         <div class="absolute bottom-1/4 left-8 w-7 h-7 text-gray-300 opacity-60 -rotate-30 pointer-events-none">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5m0 9V12m0-7.5V9m9-3.75V9m0 3.75V12m0 7.5V21M12 3v1.5m0 15V21m0-7.5V12m0 2.25V12M12 12H3v.75c0 1.724 1.039 3.274 2.625 3.974V21m-1.5-10.5h15v.75c0 1.724-1.039 3.274-2.625 3.974V21" /></svg>
-         </div>
-         <div class="absolute top-1/3 left-1/4 w-9 h-9 text-gray-300 opacity-60 rotate-3 pointer-events-none">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15.5a2.25 2.25 0 0 0 2.25-2.25V9.574c0-1.067-.75-1.994-1.816-2.19l-.3-.046a2.253 2.253 0 0 0-1.96-2.64L8.167 4.992A2.31 2.31 0 0 1 6.827 6.175Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM12 9v.008h.008V9H12Z" /></svg>
-         </div>
-         <div class="absolute bottom-1/3 right-1/4 w-8 h-8 text-gray-300 opacity-60 -rotate-12 pointer-events-none">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 7.5.75-3 3 7.5M21 3l-3 7.5L17.25 9l-3 7.5" /></svg>
-         </div>
-         <div class="absolute top-1/2 left-16 w-5 h-5 text-gray-300 opacity-60 rotate-45 pointer-events-none transform -translate-y-1/2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
-         </div>
-          <div class="absolute bottom-8 left-1/3 w-6 h-6 text-gray-300 opacity-60 -rotate-6 pointer-events-none">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.75 1.5H10.5a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h5.25A3 3 0 0 1 18 5.25v10.375m-1.5 1.5H15M12 18v.008H12.012V18H12Z" /></svg>
-         </div>
+        <!-- Decorative SVGs in footer -->
+        <svg class="hidden">
+            <symbol id="logo-symbol-footer" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
+            </symbol>
+        </svg>
+        <div class="absolute top-8 left-10 w-8 h-8 text-gray-300 opacity-60 rotate-12 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3m0 0v3H9m3-3h3m-3 0V3m0 0v3H9m3-3h3" /></svg></div>
+        <div class="absolute bottom-6 right-12 w-10 h-10 text-gray-300 opacity-60 -rotate-6 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h16.5m-16.5 0a2.25 2.25 0 0 0 2.25 2.25h12c1.03 0 1.9-.693 2.077-1.676a7.483 7.483 0 0 1 0-1.117 2.25 2.25 0 0 0-2.25-2.25h-12a2.25 2.25 0 0 0-2.25 2.25Zm1.5-4.5H21a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H3.75A2.25 2.25 0 0 0 1.5 6.75v4.5m18 0v-4.5" /></svg></div>
+        <div class="absolute top-1/4 right-10 w-6 h-6 text-gray-300 opacity-60 rotate-45 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.39l-.56.56a1.5 1.5 0 0 1-2.122 0l-.56-.56a1.5 1.5 0 0 1 0-2.122l.56-.56a1.5 1.5 0 0 1 2.122 0l.56.56a1.5 1.5 0 0 1 0 2.122Z" /></svg></div>
+        <div class="absolute bottom-1/4 left-8 w-7 h-7 text-gray-300 opacity-60 -rotate-30 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5m0 9V12m0-7.5V9m9-3.75V9m0 3.75V12m0 7.5V21M12 3v1.5m0 15V21m0-7.5V12m0 2.25V12M12 12H3v.75c0 1.724 1.039 3.274 2.625 3.974V21m-1.5-10.5h15v.75c0 1.724-1.039 3.274-2.625 3.974V21" /></svg></div>
+        <div class="absolute top-1/3 left-1/4 w-9 h-9 text-gray-300 opacity-60 rotate-3 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15.5a2.25 2.25 0 0 0 2.25-2.25V9.574c0-1.067-.75-1.994-1.816-2.19l-.3-.046a2.253 2.253 0 0 0-1.96-2.64L8.167 4.992A2.31 2.31 0 0 1 6.827 6.175Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM12 9v.008h.008V9H12Z" /></svg></div>
+        <div class="absolute bottom-1/3 right-1/4 w-8 h-8 text-gray-300 opacity-60 -rotate-12 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 7.5.75-3 3 7.5M21 3l-3 7.5L17.25 9l-3 7.5" /></svg></div>
+        <div class="absolute top-1/2 left-16 w-5 h-5 text-gray-300 opacity-60 rotate-45 pointer-events-none transform -translate-y-1/2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75A2.25 2.25 0 0 1 15.75 13.5H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg></div>
+        <div class="absolute bottom-8 left-1/3 w-6 h-6 text-gray-300 opacity-60 -rotate-6 pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.75 1.5H10.5a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h5.25A3 3 0 0 1 18 5.25v10.375m-1.5 1.5H15M12 18v.008H12.012V18H12Z" /></svg></div>
 
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
             <div class="flex flex-col items-center md:items-start">
                 <div class="flex items-center mb-3">
-                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4C2 2.89543 2.89543 2 4 2ZM8 6C7.44772 6 7 6.44772 7 7V17C7 17.5523 7.44772 18 8 18H9C9.55228 18 10 17.5523 10 17V7C10 6.44772 9.55228 6 9 6H8ZM12 10C11.4477 10 11 10.4477 11 11V17C11 17.5523 11.4477 18 12 18H13C13.5523 18 14 17.5523 14 17V11C14 10.4477 13.5523 10 13 10H12ZM16 8C15.4477 8 15 8.44772 15 9V17C15 17.5523 15.4477 18 16 18H17C17.5523 18 18 17.5523 18 17V9C18 8.44772 17.5523 8 17 8H16Z" />
-                    </svg>
-                    <span class="font-bold text-xl"><span class="text-gray-900">Hp</span><span class="text-ios-blue">Gaul</span></span>
+                    <svg class="h-8 w-auto mr-2 text-ios-blue" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><use href="#logo-symbol-footer" /></svg>
+                     <span class="font-bold text-xl"><span class="text-gray-900">Hp</span><span class="text-ios-blue">Gaul</span></span>
                 </div>
                 <p class="text-sm text-gray-500 text-center md:text-left">
-                    Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Ditenagai oleh data dari GSMArena.
+                    Temukan spesifikasi ponsel terlengkap dengan mudah dan cepat. Harga dari store resmi.
                 </p>
             </div>
             <div class="text-center md:text-left">
                 <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-3">Tautan Cepat</h3>
                 <ul class="space-y-2">
-                    <li><a href="#search-section-container" class="text-sm text-gray-500 hover:text-gray-900">Pencarian</a></li>
+                    <li><a href="index.html" class="text-sm text-gray-500 hover:text-gray-900">Beranda</a></li>
                     <li><a href="info.html" class="text-sm text-gray-500 hover:text-gray-900">Tentang Kami</a></li>
                     <li><a href="HpGaul-Sparepart.html" class="text-sm text-gray-500 hover:text-gray-900">Toko Sparepart</a></li>
                     <li><a href="store-resmi.html" class="text-sm text-gray-500 hover:text-gray-900">Store Resmi</a></li>
-                    <li><a href="#" class="text-sm text-gray-500 hover:text-gray-900">Kontak Kami</a></li>
                 </ul>
             </div>
             <div class="text-center md:text-left">
                 <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-3">Ikuti Kami</h3>
                 <div class="flex justify-center md:justify-start space-x-4">
-                    <a href="#" class="text-ios-blue hover:opacity-80">
+                    <a href="https://facebook.com/HpGaul.id" target="_blank" rel="noopener noreferrer" class="text-ios-blue hover:opacity-80" aria-label="Facebook HpGaul">
                         <span class="sr-only">Facebook</span>
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
                     </a>
-                    <a href="#" class="text-ios-blue hover:opacity-80">
+                    <a href="https://instagram.com/HpGaul.id" target="_blank" rel="noopener noreferrer" class="text-ios-blue hover:opacity-80" aria-label="Instagram HpGaul">
                         <span class="sr-only">Instagram</span>
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218 1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.137.353.3.882.344 1.857.047 1.023.058 1.351.058 3.807v-.468c0-2.456-.011-2.784-.058-3.807-.045-.975-.207-1.504-.344-1.857-.182-.467-.399-.8-.748-1.15-.35-.35-.683-.566-1.15-.748-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z" clip-rule="evenodd" /></svg>
-                    </a>
-                    <a href="#" class="text-ios-blue hover:opacity-80">
-                        <span class="sr-only">Twitter</span>
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
                     </a>
                 </div>
             </div>
         </div>
         <div class="mt-8 border-t border-gray-200 pt-8 text-center relative z-10">
-            <p class="text-sm text-gray-500">© <span id="currentYear">2024</span> <span class="font-bold"><span class="text-gray-900">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
+            <p class="text-sm text-gray-500">© <span id="currentYear"></span> <span class="font-bold"><span class="text-gray-900">Hp</span><span class="text-ios-blue">Gaul</span></span>. All rights reserved.</p>
         </div>
     </footer>
 
@@ -395,7 +367,7 @@ Impian Kamu</h1>
          <div id="imageModalContent" class="bg-white p-4 sm:p-6 rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center mb-3 sm:mb-4">
                 <h3 id="modalProductName" class="text-base sm:text-lg font-semibold text-ios-text truncate">Nama Produk</h3>
-                <button id="closeModalButton" class="text-2xl text-gray-500 hover:text-ios-red focus:outline-none">×</button>
+                <button id="closeModalButton" class="text-4xl text-blue-500 hover:text-ios-red focus:outline-none">×</button>
             </div>
             <div class="flex-grow overflow-y-auto no-scrollbar">
                 <div class="relative flex items-center justify-center bg-ios-gray-100 rounded aspect-square mb-3 sm:mb-4 mx-auto" style="max-height: 45vh; max-width: 75%;">
@@ -416,7 +388,6 @@ Impian Kamu</h1>
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        const brandListEl = document.getElementById('brandList');
         const brandListContainerEl = document.getElementById('brandListContainer');
         const smartphoneCategoryButtonEl = document.getElementById('smartphoneCategoryButton');
         const smartphoneCaretEl = document.getElementById('smartphoneCaret');
@@ -425,6 +396,11 @@ Impian Kamu</h1>
         const loadingIndicatorEl = document.getElementById('loadingIndicator');
         const errorMessageEl = document.getElementById('errorMessage');
         const loadMoreButtonEl = document.getElementById('loadMoreButton');
+
+        const priceInputEl = document.getElementById('priceInput');
+        const searchPriceButtonEl = document.getElementById('searchPriceButton');
+        const clearPriceFilterButtonEl = document.getElementById('clearPriceFilterButton');
+        const priceFilterInfoEl = document.getElementById('priceFilterInfo'); 
 
         const imageModalEl = document.getElementById('imageModal');
         const closeModalButtonEl = document.getElementById('closeModalButton');
@@ -437,13 +413,14 @@ Impian Kamu</h1>
         const modalSpecLoadingEl = document.getElementById('modalSpecLoading');
         const modalSpecErrorEl = document.getElementById('modalSpecError');
 
-        let currentBrand = '';
+        let currentBrand = ''; 
         let currentPage = 1;
-        const limitPerPage = 30;
-        let allProducts = []; // Stores ALL products loaded for the current brand
-        let totalItems = 0;
-        let currentModalImages = [];
-        let currentModalImageIndex = 0;
+        const limitPerPage = 30; 
+        let allProductsMasterList = []; 
+        let totalItemsByBrand = {}; 
+
+        let currentPriceFilterLowerBound = null;
+        const PRICE_RANGE_INTERVAL = 999999; 
 
         const apiCache = new Map();
 
@@ -456,35 +433,154 @@ Impian Kamu</h1>
         };
         const ERASPACE_IMAGE_BASE_URL = 'https://cdnpro.eraspace.com/media/catalog/product';
 
+        let currentModalImages = [];
+        let currentModalImageIndex = 0;
+
         const uiUtils = {
-            showLoading: () => { loadingIndicatorEl.classList.remove('hidden'); errorMessageEl.classList.add('hidden'); loadMoreButtonEl.classList.add('hidden'); },
-            hideLoading: () => loadingIndicatorEl.classList.add('hidden'),
+            showLoading: () => { loadingIndicatorEl.classList.remove('hidden'); errorMessageEl.classList.add('hidden'); loadMoreButtonEl.classList.add('hidden'); productResultsEl.classList.add('blur-sm'); },
+            hideLoading: () => { loadingIndicatorEl.classList.add('hidden'); productResultsEl.classList.remove('blur-sm'); },
             showError: (message) => { uiUtils.hideLoading(); errorMessageEl.textContent = message; errorMessageEl.classList.remove('hidden'); if (productResultsEl) productResultsEl.innerHTML = ''; loadMoreButtonEl.classList.add('hidden'); productResultsEl.classList.remove('blur-sm');}
         };
+        
+        function parsePriceInput(value) {
+            if (!value || typeof value !== 'string') return null;
+            const cleanedValue = value.replace(/\D/g, '');
+            const number = parseInt(cleanedValue, 10);
+            return isNaN(number) ? null : number;
+        }
 
-        // --- Helper function to sort products by discount (Robust version) ---
+        function formatCurrency(amount) {
+            return amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 });
+        }
+
+        async function applyPriceFilter() {
+            const rawValue = priceInputEl.value;
+            const parsedPrice = parsePriceInput(rawValue);
+
+            if (parsedPrice === null || parsedPrice < 0) {
+                if (priceFilterInfoEl) {
+                    priceFilterInfoEl.innerHTML = '<span class="text-ios-red">Masukkan harga yang valid (angka positif).</span>';
+                    // Anda mungkin ingin membuat priceFilterInfoEl terlihat sementara untuk pesan error ini,
+                    // atau log ke console.
+                    // priceFilterInfoEl.classList.remove('hidden'); 
+                    // setTimeout(() => priceFilterInfoEl.classList.add('hidden'), 3000);
+                    console.warn("Invalid price input for filter.");
+                }
+                return;
+            }
+
+            currentPriceFilterLowerBound = parsedPrice;
+            currentBrand = "__PRICE_FILTER_ALL_BRANDS__"; 
+            currentPage = 1; 
+            allProductsMasterList = []; 
+            totalItemsByBrand = {}; 
+
+            uiUtils.showLoading();
+            brandListContainerEl.querySelectorAll('button[data-brand]').forEach(btn => {
+                btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
+                btn.classList.add('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300', 'opacity-50', 'cursor-not-allowed');
+            });
+            loadMoreButtonEl.classList.add('hidden'); 
+
+            try {
+                const allBrandFetchPromises = Object.keys(KNOWN_BRANDS_CONFIG).map(brandName =>
+                    fetchProducts(brandName, 1) 
+                );
+                const resultsPerBrand = await Promise.all(allBrandFetchPromises);
+                
+                resultsPerBrand.forEach(brandProducts => {
+                    if (brandProducts && brandProducts.length > 0) {
+                        allProductsMasterList.push(...brandProducts);
+                    }
+                });
+                filterAndRenderProducts();
+            } catch (error) {
+                console.error("Error fetching products for price filter:", error);
+                uiUtils.showError("Gagal memuat produk untuk filter harga.");
+            } finally {
+                uiUtils.hideLoading();
+            }
+        }
+
+        function clearPriceFilter(shouldRefetchAndRender = true) {
+            const wasAllBrandsPriceFilterActive = currentBrand === "__PRICE_FILTER_ALL_BRANDS__";
+            
+            priceInputEl.value = '';
+            currentPriceFilterLowerBound = null;
+            
+            if (priceFilterInfoEl) { // Tetap update innerHTML meskipun hidden
+                priceFilterInfoEl.innerHTML = `Masukkan angka tanpa titik atau koma, misal <span class="text-highlight">2jt</span> sebagai <span class="text-highlight">2000000</span>. Akan dicari dalam rentang harga <span class="text-highlight">Rp X</span> hingga <span class="text-highlight">Rp X + ${formatCurrency(PRICE_RANGE_INTERVAL).replace('Rp','').trim()}</span>.`;
+            }
+            
+            brandListContainerEl.querySelectorAll('button[data-brand]').forEach(btn => {
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            });
+
+            if (wasAllBrandsPriceFilterActive) {
+                currentBrand = ''; 
+                allProductsMasterList = [];
+                productResultsEl.innerHTML = ''; 
+                loadMoreButtonEl.classList.add('hidden');
+                brandListContainerEl.querySelectorAll('button[data-brand].bg-ios-blue').forEach(activeBtn => {
+                    activeBtn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
+                    activeBtn.classList.add('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
+                });
+            }
+            
+            if (shouldRefetchAndRender) {
+                 filterAndRenderProducts(); 
+            }
+        }
+
+        function filterAndRenderProducts() {
+            let productsToDisplay = [...allProductsMasterList]; 
+
+            if (priceFilterInfoEl) { // Tetap update innerHTML meskipun hidden
+                if (currentPriceFilterLowerBound !== null) {
+                    const lower = currentPriceFilterLowerBound;
+                    const upper = lower + PRICE_RANGE_INTERVAL;
+                    productsToDisplay = productsToDisplay.filter(p => {
+                        const price = p.special_price !== null ? p.special_price : p.price;
+                        return price >= lower && price <= upper;
+                    });
+                    if (currentBrand === "__PRICE_FILTER_ALL_BRANDS__") {
+                        priceFilterInfoEl.innerHTML = `Menampilkan produk dari <span class="text-highlight">semua brand</span> dengan harga <span class="text-highlight">${formatCurrency(lower)}</span> hingga <span class="text-highlight">${formatCurrency(upper)}</span>. (Halaman 1 per brand)`;
+                    } else { 
+                        priceFilterInfoEl.innerHTML = `Menampilkan produk merek <span class="text-highlight">${currentBrand}</span> harga <span class="text-highlight">${formatCurrency(lower)}</span> - <span class="text-highlight">${formatCurrency(upper)}</span>.`;
+                    }
+                } else {
+                    priceFilterInfoEl.innerHTML = `Masukkan angka tanpa titik atau koma, misal <span class="text-highlight">2jt</span> sebagai <span class="text-highlight">2000000</span>. Akan dicari dalam rentang harga <span class="text-highlight">Rp X</span> hingga <span class="text-highlight">Rp X + ${formatCurrency(PRICE_RANGE_INTERVAL).replace('Rp','').trim()}</span>.`;
+                }
+            }
+            
+            productsToDisplay = sortProductsByDiscount(productsToDisplay);
+            renderProducts(productsToDisplay); 
+
+            const isPriceFilteringAllBrands = currentBrand === "__PRICE_FILTER_ALL_BRANDS__" && currentPriceFilterLowerBound !== null;
+            const isPriceFilteringSpecificBrand = currentBrand && currentBrand !== "__PRICE_FILTER_ALL_BRANDS__" && currentPriceFilterLowerBound !== null;
+
+            if (isPriceFilteringAllBrands || isPriceFilteringSpecificBrand) {
+                loadMoreButtonEl.classList.add('hidden');
+            } else if (currentBrand && currentBrand !== "__PRICE_FILTER_ALL_BRANDS__") { 
+                const totalForThisBrand = totalItemsByBrand[currentBrand] || 0;
+                loadMoreButtonEl.classList.toggle('hidden', !(allProductsMasterList.length > 0 && allProductsMasterList.length < totalForThisBrand));
+            } else {
+                loadMoreButtonEl.classList.add('hidden');
+            }
+        }
+
         function sortProductsByDiscount(products) {
-            // console.log("Sorting products:", JSON.stringify(products.map(p => ({name: p.name, price: p.price, special: p.special_price})), null, 2));
-            const sorted = products.sort((a, b) => {
-                // Check if a has a valid discount
+            return products.sort((a, b) => {
                 const priceA = typeof a.price === 'number' && !isNaN(a.price) ? a.price : 0;
                 const specialPriceA = typeof a.special_price === 'number' && !isNaN(a.special_price) ? a.special_price : null;
                 const hasDiscountA = specialPriceA !== null && specialPriceA < priceA;
-
-                // Check if b has a valid discount
                 const priceB = typeof b.price === 'number' && !isNaN(b.price) ? b.price : 0;
                 const specialPriceB = typeof b.special_price === 'number' && !isNaN(b.special_price) ? b.special_price : null;
                 const hasDiscountB = specialPriceB !== null && specialPriceB < priceB;
-
-                if (hasDiscountA && !hasDiscountB) {
-                    return -1; // a (discounted) comes before b (not discounted)
-                }
-                if (!hasDiscountA && hasDiscountB) {
-                    return 1;  // b (discounted) comes before a (not discounted)
-                }
+                if (hasDiscountA && !hasDiscountB) return -1;
+                if (!hasDiscountA && hasDiscountB) return 1;
                 return 0; 
             });
-            return sorted;
         }
 
         function extractRamRomFromName(productName) {
@@ -493,10 +589,8 @@ Impian Kamu</h1>
             const name = productName.toUpperCase();
             let matchSlash = name.match(/(\d+)\s*\/\s*(\d+)\s*(GB|TB)/);
             if (matchSlash) return { ram: matchSlash[1] + "GB", rom: matchSlash[2] + matchSlash[3] };
-
             const ramMatch = name.match(/(\d+)\s*GB\s*RAM/);
             if (ramMatch) ram = ramMatch[1] + "GB";
-
             const romMatches = [...name.matchAll(/(\d+)\s*(GB|TB)(?:\s*(?:STORAGE|ROM|INTERNAL|MEMORY))?/g)];
             if (romMatches.length > 0) {
                 for (const rm of romMatches) {
@@ -519,37 +613,26 @@ Impian Kamu</h1>
                     if (s1 < s2) { ram = v1; rom = v2; } else { ram = v2; rom = v1; }
                 }
             } else if (name.includes("APPLE") || name.includes("IPHONE")) {
-                if (ram === "N/A") ram = "N/A";
+                if (ram === "N/A") ram = "N/A"; 
                 if (rom === "N/A") { const generic = [...name.matchAll(/(\d+)\s*(GB|TB)/g)]; if (generic.length > 0) { for (const gm of generic) { const cv = gm[1] + gm[2]; if (cv !== ram) { rom = cv; break; } } if (rom === "N/A" && generic.length > 0 && ram === "N/A") rom = generic[0][1] + generic[0][2]; } }
             }
             return { ram, rom };
         }
 
         async function fetchData(url, cacheKey) {
-            if (apiCache.has(cacheKey)) {
-                return apiCache.get(cacheKey);
-            }
+            if (apiCache.has(cacheKey)) return apiCache.get(cacheKey);
             try {
                 const response = await fetch(url);
                 if (!response.ok) { console.warn(`API call failed for ${url}: ${response.status}`); apiCache.set(cacheKey, null); return null; }
                 const data = await response.json();
-                if (data && typeof data.data !== 'undefined') { 
-                    apiCache.set(cacheKey, data.data);
-                    return data.data;
-                }
+                if (data && typeof data.data !== 'undefined') { apiCache.set(cacheKey, data.data); return data.data; }
                 console.warn(`Unexpected data format from ${url}:`, data); apiCache.set(cacheKey, null); return null;
             } catch (error) { console.error(`Error fetching ${url}:`, error); apiCache.set(cacheKey, null); return null; }
         }
 
-
         const fetchProductConfigurationOptions = (productBaseId) => fetchData(`https://jeanne.eraspace.com/products/api/v4.1/products/${productBaseId}/variants?store_code=eraspace`, `config_${productBaseId}`);
         const fetchProductSpecifications = (productId) => fetchData(`https://jeanne.eraspace.com/products/api/v4.1/products/${productId}/specification?store_code=eraspace`, `spec_${productId}`);
-
-        function getBaseProductIdFromSku(sku, productName) {
-            if (typeof sku !== 'string') return sku;
-            if (sku.endsWith("-CON") || sku.endsWith("-CFG")) return sku;
-            return sku;
-        }
+        function getBaseProductIdFromSku(sku, productName) { return (typeof sku === 'string' && (sku.endsWith("-CON") || sku.endsWith("-CFG"))) ? sku : sku; }
 
         async function fetchProducts(brand, page) {
             try {
@@ -557,126 +640,89 @@ Impian Kamu</h1>
                 if (!brandConfig) throw new Error(`Konfigurasi untuk merek ${brand} tidak ditemukan.`);
                 const { apiBrand, categoryId } = brandConfig;
                 const listUrl = `https://jeanne.eraspace.com/products/api/v4.1/products/?page=${page}&limit=${limitPerPage}&category_id=${categoryId}&store_code=eraspace&facets%5Bproduct_brand_filter%5D=${encodeURIComponent(apiBrand)}`;
-
                 const listResponse = await fetch(listUrl);
-                if (!listResponse.ok) throw new Error(`HTTP error mengambil daftar produk! Status: ${listResponse.status}`);
+                if (!listResponse.ok) throw new Error(`HTTP error ${listResponse.status}`);
                 const listData = await listResponse.json();
-                if (!listData.data?.items) throw new Error('Format data daftar produk tidak valid dari server.');
+                if (!listData.data?.items) throw new Error('Format data produk tidak valid.');
+                
+                if (currentBrand === brand) { 
+                     totalItemsByBrand[brand] = listData.data.total_count || 0;
+                }
 
-                totalItems = listData.data.total_count || 0;
-
-                const processedItems = await Promise.all(listData.data.items.map(async (item) => {
-                     let actualColorLabel = "N/A", actualRam = "N/A", actualRom = "N/A", colorValueForSwatch = null;
+                return await Promise.all(listData.data.items.map(async (item) => {
+                    let actualColorLabel = "N/A", actualRam = "N/A", actualRom = "N/A", colorValueForSwatch = null;
                     let productBaseId = getBaseProductIdFromSku(item.sku, item.name);
-
                     if (item.custom_attributes?.length) {
                         const attrs = item.custom_attributes.reduce((acc, attr) => { acc[attr.attribute_code] = String(attr.value ?? '').trim(); return acc; }, {});
                         actualColorLabel = attrs.color ?? attrs.warna_smartphone ?? attrs.pilihan_warna ?? attrs.product_color_group_name ?? attrs.product_color_name ?? actualColorLabel;
                         actualRom = attrs.storage ?? attrs.kapasitas_penyimpanan ?? attrs.product_storage_capacity ?? attrs.smartphone_rom ?? actualRom;
                         actualRam = attrs.ram ?? attrs.ram_kapasitas ?? attrs.kapasitas_ram ?? attrs.product_ram ?? attrs.smartphone_ram ?? actualRam;
                     }
-
                     const fromName = extractRamRomFromName(item.name);
                     if (actualRam === "N/A" && fromName.ram !== "N/A") actualRam = fromName.ram;
                     if (actualRom === "N/A" && fromName.rom !== "N/A") actualRom = fromName.rom;
-
                     if (actualColorLabel === "N/A" && item.name) {
                         const nameParts = item.name.toLowerCase().split(/[\s/-]+/);
                         const knownColors = ["blue", "gray", "graphite", "black", "white", "green", "red", "silver", "gold", "pink", "purple", "violet", "yellow", "orange", "bronze", "cream", "beige", "lemon", "lilac", "navy", "ice", "sky", "awesome"];
-                        for (let i = nameParts.length - 1; i >= 0; i--) {
-                            let part = nameParts[i], potentialColor = "";
-                            if (part === "awesome" && i < nameParts.length -1 && knownColors.includes(nameParts[i+1]) ) potentialColor = "Awesome " + nameParts[i+1].charAt(0).toUpperCase() + nameParts[i+1].slice(1);
-                            else if (knownColors.includes(part)) { potentialColor = part.charAt(0).toUpperCase() + part.slice(1); if (i > 0 && nameParts[i-1] === "awesome") potentialColor = "Awesome " + potentialColor; }
-                            if (potentialColor) { actualColorLabel = potentialColor; break; }
-                        }
+                        for (let i = nameParts.length - 1; i >= 0; i--) { let part = nameParts[i], potentialColor = ""; if (part === "awesome" && i < nameParts.length -1 && knownColors.includes(nameParts[i+1]) ) potentialColor = "Awesome " + nameParts[i+1].charAt(0).toUpperCase() + nameParts[i+1].slice(1); else if (knownColors.includes(part)) { potentialColor = part.charAt(0).toUpperCase() + part.slice(1); if (i > 0 && nameParts[i-1] === "awesome") potentialColor = "Awesome " + potentialColor; } if (potentialColor) { actualColorLabel = potentialColor; break; } }
                     }
-
-                     if (actualColorLabel !== "N/A" && productBaseId) {
-                        try { 
-                            const configOptions = await fetchProductConfigurationOptions(productBaseId);
-                            if (configOptions) {
-                                const colorAttrOpts = configOptions.find(attr => attr.attribute_label?.toLowerCase().includes("warna") || attr.attribute_name?.toLowerCase().includes("color"));
-                                if (colorAttrOpts?.options) {
-                                    const matchedOpt = colorAttrOpts.options.find(opt => { const oLN = opt.option_label?.trim().toLowerCase(), aLN = actualColorLabel.trim().toLowerCase(); return oLN === aLN || aLN.includes(oLN) || oLN.includes(aLN); });
-                                    if (matchedOpt && colorAttrOpts.is_swatch) colorValueForSwatch = typeof matchedOpt.option_value === 'string' ? matchedOpt.option_value : null;
-                                }
-                            }
-                        } catch (configError) {
-                            console.warn(`Error fetching config for ${productBaseId}:`, configError);
-                        }
-                    }
-
+                    if (actualColorLabel !== "N/A" && productBaseId) { try { const configOptions = await fetchProductConfigurationOptions(productBaseId); if (configOptions) { const colorAttrOpts = configOptions.find(attr => attr.attribute_label?.toLowerCase().includes("warna") || attr.attribute_name?.toLowerCase().includes("color")); if (colorAttrOpts?.options) { const matchedOpt = colorAttrOpts.options.find(opt => { const oLN = opt.option_label?.trim().toLowerCase(), aLN = actualColorLabel.trim().toLowerCase(); return oLN === aLN || aLN.includes(oLN) || oLN.includes(aLN); }); if (matchedOpt && colorAttrOpts.is_swatch) colorValueForSwatch = typeof matchedOpt.option_value === 'string' ? matchedOpt.option_value : null; } } } catch (configError) { console.warn(`Error config for ${productBaseId}:`, configError); } }
                     const imageGalleries = (item.media_gallery_entries || []).filter(e => e.media_type === 'image' && e.file).map(e => e.file.startsWith('http') ? e.file : ERASPACE_IMAGE_BASE_URL + (e.file.startsWith('/') ? e.file : '/' + e.file));
                     let productThumbnail = item.thumbnail || 'https://placehold.co/200x200/fafafa/ccc?text=Tidak+Ada+Gambar';
-                    if (productThumbnail && !productThumbnail.startsWith('http') && !productThumbnail.includes('placehold.co')) {
-                         const thumbPath = productThumbnail.startsWith('/') ? productThumbnail : '/' + productThumbnail;
-                         let useBase = true; if (item.thumbnail_url) { try { useBase = (new URL(item.thumbnail_url).hostname === new URL(ERASPACE_IMAGE_BASE_URL).hostname); } catch (e) {} }
-                         productThumbnail = useBase ? ERASPACE_IMAGE_BASE_URL + thumbPath : (item.thumbnail_url || productThumbnail);
-                    } else if (item.thumbnail_url && productThumbnail.includes('placehold.co')) productThumbnail = item.thumbnail_url;
-
-                    const price = parseFloat(item.price);
-                    const special_price = item.special_price ? parseFloat(item.special_price) : null; 
-
-                    return {
-                        sku: item.sku,
-                        name: item.name,
-                        product_base_id: productBaseId,
-                        price: !isNaN(price) ? price : 0, 
-                        special_price: !isNaN(special_price) ? special_price : null, 
-                        thumbnail: productThumbnail,
-                        ram_api: actualRam,
-                        rom_api: actualRom,
-                        color_label: actualColorLabel,
-                        color_value: colorValueForSwatch,
-                        media_galleries: imageGalleries
-                    };
+                    if (productThumbnail && !productThumbnail.startsWith('http') && !productThumbnail.includes('placehold.co')) { const thumbPath = productThumbnail.startsWith('/') ? productThumbnail : '/' + productThumbnail; let useBase = true; if (item.thumbnail_url) { try { useBase = (new URL(item.thumbnail_url).hostname === new URL(ERASPACE_IMAGE_BASE_URL).hostname); } catch (e) {} } productThumbnail = useBase ? ERASPACE_IMAGE_BASE_URL + thumbPath : (item.thumbnail_url || productThumbnail); } else if (item.thumbnail_url && productThumbnail.includes('placehold.co')) productThumbnail = item.thumbnail_url;
+                    const price = parseFloat(item.price); const special_price = item.special_price ? parseFloat(item.special_price) : null;
+                    return { sku: item.sku, name: item.name, product_base_id: productBaseId, price: !isNaN(price) ? price : 0, special_price: !isNaN(special_price) ? special_price : null, thumbnail: productThumbnail, ram_api: actualRam, rom_api: actualRom, color_label: actualColorLabel, color_value: colorValueForSwatch, media_galleries: imageGalleries };
                 }));
-
-                return processedItems;
-
-            } catch (error) { console.error("Gagal mengambil data produk utama:", error); uiUtils.showError(`Gagal memuat produk ${brand}: ${error.message}`); return []; }
+            } catch (error) { 
+                console.error(`Gagal fetch produk untuk brand ${brand}:`, error);
+                if (currentBrand !== "__PRICE_FILTER_ALL_BRANDS__" || (currentBrand === brand && page === 1)) { 
+                     uiUtils.showError(`Gagal memuat produk ${brand}.`);
+                }
+                return []; 
+            }
         }
 
-        function renderProducts(productsToRender) {
+        function renderProducts(productsToRender) { 
             if (!productResultsEl) return;
             productResultsEl.innerHTML = '';
-
-            if (productsToRender.length === 0) {
+            if (productsToRender.length === 0) { 
                 if (loadingIndicatorEl.classList.contains('hidden')) {
-                    productResultsEl.innerHTML = '<p class="col-span-full text-center text-gray-500 py-8">Tidak ada produk untuk merek ini.</p>';
+                    let noProductMsg = "Tidak ada produk yang cocok dengan kriteria.";
+                    if (currentBrand === "__PRICE_FILTER_ALL_BRANDS__" && currentPriceFilterLowerBound !== null) {
+                         noProductMsg = `Tidak ada produk dari semua brand yang cocok dengan rentang harga yang dipilih.`;
+                    } else if (currentBrand && currentBrand !== "__PRICE_FILTER_ALL_BRANDS__" && currentPriceFilterLowerBound !== null) {
+                        noProductMsg = `Tidak ada produk merek <span class="text-highlight">${currentBrand}</span> dalam rentang harga yang dipilih.`;
+                    } else if (currentBrand && currentBrand !== "__PRICE_FILTER_ALL_BRANDS__" && allProductsMasterList.length === 0) {
+                        noProductMsg = `Tidak ada produk untuk merek <span class="text-highlight">${currentBrand}</span>.`;
+                    } else if (!currentBrand && !currentPriceFilterLowerBound) {
+                         noProductMsg = `Pilih brand atau <br> masukkan filter harga untuk memulai.`;
+                    }
+                    productResultsEl.innerHTML = `<p class="col-span-full text-center text-gray-500 py-8">${noProductMsg}</p>`;
                 }
-                loadMoreButtonEl.classList.add('hidden');
                 productResultsEl.classList.remove('blur-sm'); 
-                return;
+                return; 
             }
 
             productsToRender.forEach(product => {
-                const discount = product.special_price !== null && product.price > 0 && product.special_price < product.price
-                    ? Math.round((1 - product.special_price / product.price) * 100)
-                    : 0;
+                const discount = product.special_price !== null && product.price > 0 && product.special_price < product.price ? Math.round((1 - product.special_price / product.price) * 100) : 0;
                 const displayPrice = discount > 0 ? product.special_price : product.price;
                 const originalPrice = discount > 0 ? product.price : null;
-
                 const ramText = (product.ram_api !== 'N/A' && product.ram_api) ? product.ram_api : '';
                 const romText = (product.rom_api !== 'N/A' && product.rom_api) ? product.rom_api : '';
                 let specText = `${ramText}${ramText && romText ? ' / ' : ''}${romText}`.trim();
                 let colorDisplayText = (product.color_label !== 'N/A' && product.color_label) ? product.color_label : "";
-
                 const detailPromptText = "Klik gambar untuk detail spesifikasi";
                 let showDetailPrompt = (!colorDisplayText || colorDisplayText === "Warna tidak tersedia") && (!specText || specText === "Spek tidak tersedia" || specText === "");
-
-                if (showDetailPrompt) { colorDisplayText = ""; specText = detailPromptText; }
-                else {
-                    if (!colorDisplayText) colorDisplayText = "Warna tidak tersedia";
-                    if (!specText || specText === "/" || specText === "N/A") specText = "Spek tidak tersedia";
-                }
+                if (showDetailPrompt) { colorDisplayText = ""; specText = detailPromptText; } else { if (!colorDisplayText) colorDisplayText = "Warna tidak tersedia"; if (!specText || specText === "/" || specText === "N/A") specText = "Spek tidak tersedia"; }
 
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl shadow-md overflow-hidden flex flex-col transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer';
+                card.className = 'bg-white rounded-xl shadow-md overflow-hidden flex flex-col transition-all duration-300 ease-in-out hover:shadow-xl';
                 card.dataset.sku = product.sku; card.dataset.baseId = product.product_base_id;
                 card.innerHTML = `
-                    <div class="w-full h-48 bg-ios-gray-100 flex items-center justify-center p-1 aspect-square pointer-events-none"><img src="${product.thumbnail}" alt="${product.name}" class="max-w-full max-h-full object-contain"></div>
-                    <div class="p-3 flex flex-col flex-grow pointer-events-none">
+                    <div class="w-full h-48 bg-ios-gray-100 flex items-center justify-center p-1 aspect-square cursor-pointer product-image-area">
+                        <img src="${product.thumbnail}" alt="${product.name}" class="max-w-full max-h-full object-contain pointer-events-none">
+                    </div>
+                    <div class="p-3 flex flex-col flex-grow">
                         <h3 class="text-sm font-semibold text-ios-text mb-1 leading-tight">${product.name}</h3>
                         <div class="flex items-center mb-1 text-xs text-ios-gray-600 min-h-[1.25rem]">${product.color_value && CSS.supports('background-color', product.color_value) && !showDetailPrompt ? `<span class="color-swatch" style="background-color: ${product.color_value};"></span>` : ''}<span>${showDetailPrompt ? '' : colorDisplayText}</span></div>
                         <div class="flex items-center justify-between mb-2 min-h-[1.25rem]"><p class="text-xs text-ios-gray-600 ${showDetailPrompt ? 'italic' : ''} flex-grow pr-1">${specText}</p>${discount > 0 && !showDetailPrompt ? `<span class="discount-badge text-xs whitespace-nowrap">${discount}% OFF</span>` : '<span class="w-10"></span>'}</div>
@@ -684,68 +730,53 @@ Impian Kamu</h1>
                             <div class="flex items-baseline mb-1"><span class="text-base font-bold text-ios-blue">${displayPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</span></div>
                             ${originalPrice ? `<p class="text-xs text-ios-gray-400 line-through h-[18px]">${originalPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 })}</p>` : '<div class="h-[18px]"></div>'}
                             <div class="flex items-center text-xs text-ios-gray-600 mt-2"><svg class="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.38 2.454a1 1 0 00-.364 1.118l1.287 3.97c.3.921-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.197-1.539-1.118l1.287-3.97a1 1 0 00-.364-1.118L2.28 9.397c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.97z"></path></svg><span class="font-medium">5.0</span><span class="ml-1 text-ios-gray-400">(Review)</span></div>
-                        </div></div>`;
-                card.addEventListener('click', (e) => {
-                    const clickedSku = e.currentTarget.dataset.sku;
-                    const clickedProduct = allProducts.find(p => p.sku === clickedSku);
-                    if (clickedProduct) {
-                         openImageModal(clickedProduct.sku, clickedProduct.product_base_id);
-                    } else {
-                        console.warn("Product data not found for SKU:", clickedSku);
-                    }
-                });
+                        </div>
+                    </div>
+                    <div class="p-3 pt-0 flex justify-end border-t border-ios-gray-200 mt-auto">
+                        <button class="share-button p-2 rounded-full hover:bg-ios-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-ios-blue focus:ring-opacity-50" title="Bagikan Produk">
+     <svg fill="#0000ff" width="20px" height="20px" viewBox="0 0 200 200" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><title></title><path d="M170,104.75a10,10,0,0,0-10,10v22.5a20.06,20.06,0,0,1-20,20H60a20.06,20.06,0,0,1-20-20v-70a10,10,0,0,1,10-10H74.5a10,10,0,0,0,0-20H50a30.09,30.09,0,0,0-30,30v70a40.12,40.12,0,0,0,40,40h80a40.12,40.12,0,0,0,40,40v-22.5A10,10,0,0,0,170,104.75Z"></path><path d="M97.5,137.25a10,10,0,0,0,10-10V89.75a20.06,20.06,0,0,1,20-20H148l-12,12a9.9,9.9,0,0,0,14,14l21-21a19.74,19.74,0,0,0,6-14v-1a3.75,3.75,0,0,0-.5-2.5,18,18,0,0,0-5.5-10.5l-21-21a9.67,9.67,0,0,0-14,0,9.67,9.67,0,0,0,0,14l10.5,10.5h-19a40.12,40.12,0,0,0-40,40v37A10,10,0,0,0,97.5,137.25Z"></path></g></svg>
+                        </button>
+                    </div>`;
+                const imageArea = card.querySelector('.product-image-area');
+                if(imageArea) imageArea.addEventListener('click', (e) => { const clickedSku = card.dataset.sku; const productForModal = allProductsMasterList.find(p => p.sku === clickedSku) || productsToRender.find(p => p.sku === clickedSku); if (productForModal) openImageModal(productForModal.sku, productForModal.product_base_id); else console.warn("Product data not found (image click):", clickedSku); });
+                const shareButton = card.querySelector('.share-button');
+                if (shareButton) shareButton.addEventListener('click', (e) => { e.stopPropagation(); const productToShare = allProductsMasterList.find(p => p.sku === card.dataset.sku) || productsToRender.find(p => p.sku === card.dataset.sku); if (productToShare) handleShare(productToShare); });
                 productResultsEl.appendChild(card);
             });
-
-            loadMoreButtonEl.classList.toggle('hidden', !(allProducts.length > 0 && allProducts.length < totalItems));
-             productResultsEl.classList.remove('blur-sm');
+            productResultsEl.classList.remove('blur-sm');
         }
 
-
         async function openImageModal(productSku, productBaseId) {
-            const product = allProducts.find(p => p.sku === productSku);
-            if (!product) {
-                console.error("Cannot open modal, product data not found for SKU:", productSku);
-                return;
-            }
+            const product = allProductsMasterList.find(p => p.sku === productSku); 
+            if (!product) { console.error("Modal: Produk tidak ditemukan", productSku); return; }
             modalProductNameEl.textContent = product.name;
             currentModalImages = product.media_galleries?.length ? product.media_galleries : [product.thumbnail];
             if (!currentModalImages[0] || currentModalImages[0].includes('placehold.co')) currentModalImages = ['https://placehold.co/600x600/E5E5EA/AEAEB2?text=Gambar+Tidak+Tersedia&fontsize=20'];
-            currentModalImageIndex = 0;
-            updateModalImageView();
+            currentModalImageIndex = 0; updateModalImageView();
             modalSpecificationsEl.innerHTML = ''; modalSpecLoadingEl.classList.remove('hidden'); modalSpecErrorEl.classList.add('hidden');
-            imageModalEl.classList.remove('hidden'); imageModalEl.classList.add('opacity-100'); document.body.style.overflow = 'hidden';
-            const idForSpec = productBaseId || product.product_base_id || product.sku;
-
+            imageModalEl.classList.remove('hidden'); imageModalEl.classList.add('opacity-100'); document.body.classList.add('modal-open');
+            const idForSpec = productBaseId || product.sku;
             try {
                 const specs = await fetchProductSpecifications(idForSpec);
                 modalSpecLoadingEl.classList.add('hidden');
-                if (specs?.length) {
-                    displaySpecificationsInModal(specs);
-                } else {
-                    modalSpecErrorEl.classList.remove('hidden');
-                    modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi detail tidak tersedia untuk produk ini.</p>';
-                }
-            } catch (specError) {
-                 console.error(`Error fetching specs for ${idForSpec}:`, specError);
-                 modalSpecLoadingEl.classList.add('hidden');
-                 modalSpecErrorEl.classList.remove('hidden');
-                 modalSpecificationsEl.innerHTML = '<p class="text-center py-4 text-ios-red">Gagal memuat spesifikasi.</p>';
-            }
+                if (specs?.length) displaySpecificationsInModal(specs);
+                else { modalSpecErrorEl.classList.remove('hidden'); modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi detail tidak tersedia.</p>';}
+            } catch (specError) { console.error(`Error specs for ${idForSpec}:`, specError); modalSpecLoadingEl.classList.add('hidden'); modalSpecErrorEl.classList.remove('hidden'); modalSpecificationsEl.innerHTML = '<p class="text-center py-4 text-ios-red">Gagal memuat spesifikasi.</p>'; }
         }
 
         function displaySpecificationsInModal(specificationsArray) {
             if (!modalSpecificationsEl || !specificationsArray?.length) { modalSpecificationsEl.innerHTML = '<p class="text-center py-4">Spesifikasi tidak tersedia.</p>'; modalSpecErrorEl.classList.remove('hidden'); return; }
-            let tableHTML = '<table class="spec-table">'; // Class 'spec-table' will be targeted by new CSS
-            const ignoredAttrs = ["product_brand_filter", "meta_title", "meta_keyword", "meta_description", "url_key", "url_path", "is_active", "product_category_paths", "product_visibility", "product_status", "product_type_id", "image", "small_image", "thumbnail", "swatch_image", "links_title", "samples_title", "mpn", "gtin", "ean", "upc", "isbn"];
-            specificationsArray.forEach(spec => { if (spec.attribute_label && spec.value && !ignoredAttrs.includes(spec.attribute_code) && String(spec.value).trim() && !["tidak", "no"].includes(String(spec.value).toLowerCase())) tableHTML += `<tr><th>${spec.attribute_label}</th><td>${spec.value}</td></tr>`; });
+            let tableHTML = '<table class="spec-table">';
+            const ignoredAttrs = ["product_brand_filter", "meta_title", "meta_keyword", "meta_description", "url_key", "url_path", "is_active", "product_category_paths", "product_visibility", "product_status", "product_type_id", "image", "small_image", "thumbnail", "swatch_image", "links_title", "samples_title", "mpn", "gtin", "ean", "upc", "isbn", "is_returnable"];
+            specificationsArray.forEach(spec => { if (spec.attribute_label && spec.value && !ignoredAttrs.includes(spec.attribute_code) && String(spec.value).trim() && !["tidak", "no", "0"].includes(String(spec.value).toLowerCase())) tableHTML += `<tr><th>${spec.attribute_label}</th><td>${spec.value}</td></tr>`; });
             tableHTML += '</table>';
             modalSpecificationsEl.innerHTML = tableHTML;
             modalSpecErrorEl.classList.add('hidden');
         }
 
         function closeModal() {
-            imageModalEl.classList.add('hidden'); imageModalEl.classList.remove('opacity-100'); document.body.style.overflow = '';
+            imageModalEl.classList.add('hidden'); imageModalEl.classList.remove('opacity-100');
+            document.body.classList.remove('modal-open');
             if (modalThumbnailsEl) modalThumbnailsEl.innerHTML = ''; if (modalSpecificationsEl) modalSpecificationsEl.innerHTML = '';
             modalSpecLoadingEl.classList.add('hidden'); modalSpecErrorEl.classList.add('hidden');
         }
@@ -768,74 +799,213 @@ Impian Kamu</h1>
         const showNextImage = () => { currentModalImageIndex = (currentModalImageIndex + 1) % currentModalImages.length; updateModalImageView(); };
         const handleModalOverlayClick = (e) => { if (e.target === imageModalEl) closeModal(); };
 
-        // --- Event Listeners ---
-        if (brandListEl && smartphoneCategoryButtonEl && brandListContainerEl && smartphoneCaretEl) {
+        async function handleShare(product) {
+            const productName = product.name;
+            const productImageURL = product.thumbnail; // Untuk link "Lihat Gambar"
+
+            // Konstruksi RAM/ROM
+            const ramApiText = (product.ram_api !== 'N/A' && product.ram_api) ? product.ram_api : '';
+            const romApiText = (product.rom_api !== 'N/A' && product.rom_api) ? product.rom_api : '';
+            let ramRomDisplay = "";
+            if (ramApiText && romApiText) {
+                ramRomDisplay = `${ramApiText} RAM | ${romApiText} ROM`;
+            } else if (ramApiText) {
+                ramRomDisplay = `${ramApiText} RAM`;
+            } else if (romApiText) {
+                ramRomDisplay = `${romApiText} ROM`;
+            }
+
+            // Konstruksi Warna
+            const colorLabel = (product.color_label !== 'N/A' && product.color_label) ? product.color_label : "";
+
+            // Gabungan baris RAM/ROM dan Warna
+            let productDetailsLine = "";
+            if (ramRomDisplay && colorLabel) {
+                productDetailsLine = `${ramRomDisplay} – ${colorLabel}\n`;
+            } else if (ramRomDisplay) {
+                productDetailsLine = `${ramRomDisplay}\n`;
+            } else if (colorLabel) {
+                productDetailsLine = `${colorLabel}\n`;
+            }
+
+            // Konstruksi Harga
+            const discountPercent = product.special_price !== null && product.price > 0 && product.special_price < product.price
+                ? Math.round((1 - product.special_price / product.price) * 100)
+                : 0;
+            const displayPrice = discountPercent > 0 ? product.special_price : product.price;
+            const formattedDisplayPrice = displayPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 });
+
+            let priceText = `Harga Spesial:\n*${formattedDisplayPrice}*\n`;
+            if (discountPercent > 0 && product.price) {
+                const originalFormattedPrice = product.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 });
+                priceText += `~${originalFormattedPrice}~ (Hemat ${discountPercent}%)\n`;
+            }
+
+            // Konstruksi Fitur Unggulan
+            let fiturUnggulanText = "Fitur Unggulan:\n";
+            let hasFeatures = false;
+            if (ramRomDisplay) {
+                let memoriLegaText = ramRomDisplay.replace(' RAM', 'RAM').replace(' ROM', ' Storage');
+                fiturUnggulanText += `• Memori Lega: ${memoriLegaText}\n`;
+                hasFeatures = true;
+            }
+            if (colorLabel) {
+                fiturUnggulanText += `• Warna Stylish: ${colorLabel}\n`;
+                hasFeatures = true;
+            }
+            if (productName.toUpperCase().includes("5G")) {
+                fiturUnggulanText += `• Koneksi Cepat: Jaringan 5G\n`;
+                hasFeatures = true;
+            }
+            
+            if (!hasFeatures) {
+                fiturUnggulanText = ""; // Jika tidak ada fitur, hapus header "Fitur Unggulan"
+            }
+
+            const productPageUrl = `https://www.hpgaul.my.id/store-resmi.html#product=${encodeURIComponent(product.sku)}`;
+
+            const shareMessageText =
+                `✨ Intip Gadget Keren Ini! ✨\n\n` +
+                `*${productName}*\n` +
+                (productDetailsLine ? `${productDetailsLine}\n` : '\n') + // Tambah baris baru jika ada detail
+                `${priceText}\n` +
+                (fiturUnggulanText ? `${fiturUnggulanText}\n` : '') + // Tambah baris baru jika ada fitur
+                `🖼️ Lihat Gambar:\n${productImageURL}\n\n` +
+                `➡️ Cek Detail & Produk Lainnya di HpGaul:\n` +
+                `${productPageUrl}`;
+
+            const shareData = {
+                title: `Spesial dari HpGaul: ${productName}`,
+                text: shareMessageText,
+                url: productPageUrl
+            };
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    console.log('Produk berhasil dibagikan!');
+                } catch (err) {
+                    console.error('Error saat berbagi:', err);
+                    if (err.name !== 'AbortError') {
+                        alert('Gagal berbagi. Mungkin browser Anda tidak mendukung sepenuhnya atau terjadi kesalahan.');
+                    }
+                }
+            } else {
+                console.warn('Web Share API tidak didukung di browser ini.');
+                const fallbackText = shareMessageText;
+                try {
+                    await navigator.clipboard.writeText(fallbackText);
+                    alert('Fitur Share tidak didukung browser ini. Info lengkap produk telah disalin ke clipboard!');
+                } catch (clipErr) {
+                    alert('Fitur Share tidak didukung dan gagal menyalin info. Mohon salin info secara manual.');
+                    console.error('Clipboard fallback error:', clipErr);
+                }
+            }
+        }
+
+        // Event Listeners
+        if (smartphoneCategoryButtonEl && brandListContainerEl && smartphoneCaretEl) {
             smartphoneCategoryButtonEl.addEventListener('click', () => {
                 brandListContainerEl.classList.toggle('hidden');
                 smartphoneCaretEl.classList.toggle('rotate-180');
-                if (!brandListContainerEl.classList.contains('hidden') && !currentBrand) {
-                    const defaultButton = brandListEl.querySelector('button[data-brand="Oppo"]') || brandListEl.querySelector('button');
-                    if (defaultButton) defaultButton.click();
+                if (!brandListContainerEl.classList.contains('hidden') && !currentBrand && currentBrand !== "__PRICE_FILTER_ALL_BRANDS__") {
+                    const defaultButton = brandListContainerEl.querySelector('button[data-brand="Oppo"]') || brandListContainerEl.querySelector('button[data-brand]');
+                    if (defaultButton && !defaultButton.classList.contains('bg-ios-blue')) { 
+                        defaultButton.click();
+                    }
                 } else if (brandListContainerEl.classList.contains('hidden')) {
-                    productResultsEl.innerHTML = '';
-                    loadMoreButtonEl.classList.add('hidden');
+                    clearPriceFilter(false); 
                     currentBrand = '';
-                    brandListEl.querySelectorAll('button').forEach(btn => {
-                        btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
+                    allProductsMasterList = [];
+                    totalItemsByBrand = {};
+                    productResultsEl.innerHTML = ''; 
+                    loadMoreButtonEl.classList.add('hidden');
+                    brandListContainerEl.querySelectorAll('button[data-brand]').forEach(btn => {
+                        btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue', 'opacity-50', 'cursor-not-allowed');
                         btn.classList.add('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
                     });
                     productResultsEl.classList.remove('blur-sm');
                 }
             });
 
-            brandListEl.addEventListener('click', async (e) => {
+            brandListContainerEl.addEventListener('click', async (e) => {
                 const button = e.target.closest('button[data-brand]');
-                if (!button || button.dataset.brand === currentBrand) return;
+                if (!button || button.dataset.brand === currentBrand || button.classList.contains('cursor-not-allowed')) return;
 
-                productResultsEl.classList.add('blur-sm'); 
-                uiUtils.showLoading(); 
-
-                brandListEl.querySelectorAll('button').forEach(btn => {
+                if (currentPriceFilterLowerBound !== null || currentBrand === "__PRICE_FILTER_ALL_BRANDS__") {
+                    clearPriceFilter(false); 
+                    brandListContainerEl.querySelectorAll('button[data-brand]').forEach(btn => {
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    });
+                }
+                
+                uiUtils.showLoading();
+                brandListContainerEl.querySelectorAll('button[data-brand]').forEach(btn => {
                      btn.classList.remove('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
                      btn.classList.add('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
                 });
                 button.classList.remove('bg-ios-gray-200', 'text-gray-700', 'hover:bg-ios-gray-300');
                 button.classList.add('bg-ios-blue', 'text-white', 'ring-2', 'ring-ios-blue');
-
-                currentBrand = button.dataset.brand;
-                currentPage = 1;
-                allProducts = []; 
-
+                
+                currentBrand = button.dataset.brand; 
+                currentPage = 1; 
+                allProductsMasterList = []; 
+                totalItemsByBrand = {}; 
+                
                 const fetchedProducts = await fetchProducts(currentBrand, currentPage);
-                allProducts = fetchedProducts || [];
-                const sortedProducts = sortProductsByDiscount(allProducts); 
-                renderProducts(sortedProducts);
-                uiUtils.hideLoading(); 
+                allProductsMasterList = fetchedProducts || [];
+                
+                filterAndRenderProducts(); 
+                uiUtils.hideLoading();
             });
         }
 
-        if (loadMoreButtonEl) loadMoreButtonEl.addEventListener('click', async () => {
-            loadMoreButtonEl.classList.add('hidden'); 
-            loadingIndicatorEl.classList.remove('hidden'); 
+        if (loadMoreButtonEl) {
+            loadMoreButtonEl.addEventListener('click', async () => {
+                if (currentPriceFilterLowerBound !== null || currentBrand === "__PRICE_FILTER_ALL_BRANDS__" || !currentBrand) {
+                    loadMoreButtonEl.classList.add('hidden');
+                    return;
+                }
+                
+                loadMoreButtonEl.classList.add('hidden'); 
+                uiUtils.showLoading();
+                currentPage++;
+                const newProds = await fetchProducts(currentBrand, currentPage); 
+                if (newProds?.length) { 
+                    allProductsMasterList.push(...newProds); 
+                }
+                filterAndRenderProducts(); 
+                uiUtils.hideLoading();
+            });
+        }
 
-            currentPage++;
-            const newProds = await fetchProducts(currentBrand, currentPage);
-
-            if(newProds?.length) {
-                allProducts.push(...newProds); 
-                const sortedAllProducts = sortProductsByDiscount(allProducts); 
-                renderProducts(sortedAllProducts);
-            }
-             uiUtils.hideLoading();
-        });
+        if (searchPriceButtonEl) searchPriceButtonEl.addEventListener('click', applyPriceFilter);
+        if (clearPriceFilterButtonEl) clearPriceFilterButtonEl.addEventListener('click', () => clearPriceFilter(true)); 
+        if (priceInputEl) priceInputEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') searchPriceButtonEl.click(); });
 
         if (closeModalButtonEl) closeModalButtonEl.addEventListener('click', closeModal);
         if (modalPrevImageEl) modalPrevImageEl.addEventListener('click', showPrevImage);
         if (modalNextImageEl) modalNextImageEl.addEventListener('click', showNextImage);
         document.addEventListener('keydown', (e) => { if (!imageModalEl.classList.contains('hidden')) { if (e.key === 'Escape') closeModal(); else if (e.key === 'ArrowLeft' && currentModalImages.length > 1) showPrevImage(); else if (e.key === 'ArrowRight' && currentModalImages.length > 1) showNextImage(); } });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initial state: No brand selected
+        
+        document.addEventListener('DOMContentLoaded', () => { 
+            clearPriceFilter(false); 
+            // Periksa apakah ada hash produk di URL saat halaman dimuat
+            if (window.location.hash && window.location.hash.startsWith('#product=')) {
+                const skuFromHash = decodeURIComponent(window.location.hash.substring('#product='.length));
+                // Anda mungkin perlu logika tambahan di sini untuk memastikan produk sudah dimuat
+                // atau untuk memicu pemuatan produk yang sesuai sebelum membuka modal.
+                // Untuk saat ini, kita asumsikan produk ada di `allProductsMasterList` jika sudah ada interaksi.
+                // Atau, kita bisa menunda pembukaan modal hingga data produk tersedia.
+                // Ini adalah contoh sederhana dan mungkin perlu disesuaikan:
+                const productToOpen = allProductsMasterList.find(p => p.sku === skuFromHash);
+                if (productToOpen) {
+                    openImageModal(productToOpen.sku, productToOpen.product_base_id);
+                } else {
+                    // Jika produk belum ada, Anda bisa menunda atau memuat brand terkait dulu
+                    console.log("Produk dengan SKU dari hash belum dimuat:", skuFromHash);
+                }
+            }
         });
     </script>
 </body>
